@@ -20,7 +20,7 @@ describe("Raffle", function() {
     await raffle.deployed();
 
     expect(await raffle.ticketCount(accounts[2].address)).to.equal(0);
-    await raffle.purchaseTicket({ from: accounts[2], value: new BN('100') } )
+    await raffle.connect(accounts[2]).purchaseTicket({ from: accounts[2].address, value: 100 } )
     expect(await raffle.ticketCount(accounts[2].address)).to.equal(1);
   });
 });

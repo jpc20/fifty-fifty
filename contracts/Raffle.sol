@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Raffle is Ownable {
   uint public ticketCost;
   address payable public beneficiary;
+  mapping(address => uint) public ticketCount;
 
   constructor(uint _ticketCost, address payable _beneficiary) {
     console.log("Deploying a raffle with ticketCost: '%s' and beneficiary: '%s'", _ticketCost, _beneficiary);
@@ -14,8 +15,8 @@ contract Raffle is Ownable {
     beneficiary = _beneficiary;
   }
 
-  // function setGreeting(string memory _greeting) public {
-  //   console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
-  //   greeting = _greeting;
-  // }
+  function purchaseTicket() public payable {
+    require(msg.value == ticketCost, "Incorrect Ticket Price");
+    ticketCount[msg.sender] += 1;
+  }
 }
