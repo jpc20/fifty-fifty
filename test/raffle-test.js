@@ -37,4 +37,31 @@ describe("Raffle", function () {
         .purchaseTicket({ from: accounts[2].address, value: 10 })
     ).to.be.revertedWith("Incorrect Ticket Price");
   });
+
+  it("Allows the owner to distribute funds", async function () {
+    const accounts = await ethers.getSigners();
+    const Raffle = await ethers.getContractFactory("Raffle");
+    const raffle = await Raffle.deploy(100, accounts[1].address);
+    const beneficiaryBalance = await ethers.provider.getBalance(
+      accounts[1].address
+    );
+    const winnerBalance = await ethers.provider.getBalance(accounts[2].address);
+    await raffle.deployed();
+    await raffle
+      .connect(accounts[2])
+      .purchaseTicket({ from: accounts[2].address, value: 100 });
+
+    const raffleBalance = await ethers.provider.getBalance(raffle.address);
+    await raffle.connect(accounts[0]).distribute();
+    expect(await ethers.provider.getBalance(raffle.address)).to.equal(0);
+    // Need to figure out big numbers to implement
+
+    // expect(
+    //   await ethers.provider.getBalance(accounts[1].address) -
+    //     beneficiaryBalance
+    // ).to.equal(raffleBalance / 2);
+    // expect(await ethers.provider.getBalance(accounts[2].address)).to.equal(
+    //   winnerBalance + (raffleBalance / 2)
+    // );
+  });
 });
