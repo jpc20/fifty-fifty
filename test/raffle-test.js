@@ -1,4 +1,3 @@
-const BN = require("bn.js");
 const { expect } = require("chai");
 
 describe("Raffle", function () {
@@ -24,6 +23,7 @@ describe("Raffle", function () {
       .connect(accounts[2])
       .purchaseTicket({ from: accounts[2].address, value: 100 });
     expect(await raffle.ticketCount(accounts[2].address)).to.equal(1);
+    expect(await ethers.provider.getBalance(raffle.address)).to.equal(100);
   });
 
   it("Requires the exact ticket price", async function () {
@@ -31,8 +31,10 @@ describe("Raffle", function () {
     const Raffle = await ethers.getContractFactory("Raffle");
     const raffle = await Raffle.deploy(100, accounts[1].address);
     await raffle.deployed();
-    await raffle
-      .connect(accounts[2])
-      .purchaseTicket({ from: accounts[2].address, value: 10 });
+    await expect(
+      raffle
+        .connect(accounts[2])
+        .purchaseTicket({ from: accounts[2].address, value: 10 })
+    ).to.be.revertedWith("Incorrect Ticket Price");
   });
 });
