@@ -12,7 +12,7 @@ describe("Raffle", function () {
   it("Should deploy a raffle with an owner, ticket price, and beneficiary", async function () {
     const accounts = await ethers.getSigners();
     const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".0001")
+    const ticketPrice = ethers.utils.parseEther(".0001");
     const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
     await raffle.deployed();
 
@@ -24,11 +24,8 @@ describe("Raffle", function () {
   it("Allows an account to purchase a ticket", async function () {
     const accounts = await ethers.getSigners();
     const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".0001")
-    const raffle = await Raffle.deploy(
-      ticketPrice,
-      accounts[1].address
-    );
+    const ticketPrice = ethers.utils.parseEther(".0001");
+    const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
     await raffle.deployed();
 
     expect(await raffle.ticketCount(accounts[2].address)).to.equal(0);
@@ -36,13 +33,15 @@ describe("Raffle", function () {
       .connect(accounts[2])
       .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
     expect(await raffle.ticketCount(accounts[2].address)).to.equal(1);
-    expect(await ethers.provider.getBalance(raffle.address)).to.equal(ticketPrice);
+    expect(await ethers.provider.getBalance(raffle.address)).to.equal(
+      ticketPrice
+    );
   });
 
   it("Requires the exact ticket price", async function () {
     const accounts = await ethers.getSigners();
     const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".0001")
+    const ticketPrice = ethers.utils.parseEther(".0001");
     const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
     await raffle.deployed();
     await expect(
@@ -55,28 +54,35 @@ describe("Raffle", function () {
   it("Allows the owner to distribute funds", async function () {
     const accounts = await ethers.getSigners();
     const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".0001");
+    const ticketPrice = ethers.utils.parseEther(".1");
     const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
     const beneficiaryBalance = await ethers.provider.getBalance(
       accounts[1].address
     );
-    const winnerBalance = await ethers.provider.getBalance(accounts[2].address);
     await raffle.deployed();
     await raffle
-      .connect(accounts[2])
-      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
-
-    const raffleBalance = await ethers.provider.getBalance(raffle.address);
+    .connect(accounts[2])
+    .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
+    const winnerBalance = await ethers.provider.getBalance(accounts[2].address);
     await raffle.connect(accounts[0]).distribute();
-    expect(await ethers.provider.getBalance(raffle.address)).to.equal(0);
-    // Need to figure out big numbers to implement
 
-    // expect(
-    //   await ethers.provider.getBalance(accounts[1].address) -
-    //     beneficiaryBalance
-    // ).to.equal(raffleBalance / 2);
-    // expect(await ethers.provider.getBalance(accounts[2].address)).to.equal(
-    //   winnerBalance + (raffleBalance / 2)
-    // );
+    expect(await ethers.provider.getBalance(raffle.address)).to.equal(0);
+    const newBeneBal = await ethers.provider.getBalance(accounts[1].address);
+    const beneficiaryBalanceEth = await ethers.utils.formatEther(
+      beneficiaryBalance
+    );
+    const newBeneficiaryBalanceEth = await ethers.utils.formatEther(newBeneBal);
+    expect(
+      Math.round((newBeneficiaryBalanceEth - beneficiaryBalanceEth) * 100) / 100
+    ).to.equal(0.05);
+
+    const winnerBalanceEth = await ethers.utils.formatEther(winnerBalance);
+    const newWinnerBalance = await ethers.provider.getBalance(
+      accounts[2].address
+    );
+    const newWinnerBalanceEth = await ethers.utils.formatEther(newWinnerBalance);
+    expect(
+      Math.round((newWinnerBalanceEth - winnerBalanceEth) * 100) / 100
+    ).to.equal(0.05);
   });
 });
