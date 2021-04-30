@@ -5,26 +5,24 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Raffle is Ownable {
-    uint256 public ticketCost;
+    uint256 public ticketPrice;
     address payable public beneficiary;
     mapping(address => uint256) public ticketCount;
     address[] public allTicketHolders;
 
-    constructor(uint256 _ticketCost, address payable _beneficiary) {
+    constructor(uint256 _ticketPrice, address payable _beneficiary) {
         console.log(
-            "Deploying a raffle with ticketCost: '%s' and beneficiary: '%s'",
-            _ticketCost,
+            "Deploying a raffle with ticketPrice: '%s' and beneficiary: '%s'",
+            _ticketPrice,
             _beneficiary
         );
-        ticketCost = _ticketCost;
+        ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
     }
 
     function purchaseTicket() public payable {
-        require(msg.value == ticketCost, "Incorrect Ticket Price");
-        if (ticketCount[msg.sender] == 0) {
-            allTicketHolders.push(msg.sender);
-        }
+        require(msg.value == ticketPrice, "Incorrect Ticket Price");
+        allTicketHolders.push(msg.sender);
         ticketCount[msg.sender] += 1;
     }
 
