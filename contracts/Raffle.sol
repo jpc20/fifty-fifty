@@ -29,7 +29,7 @@ contract Raffle is Ownable {
     function distribute() public payable onlyOwner {
         (bool sentToBene, bytes memory beneData) =
             beneficiary.call{value: address(this).balance / 2}("");
-            // set up function to pick a random winner
+        // set up function to pick a random winner
         (bool sentToWinner, bytes memory winnerData) =
             allTicketHolders[0].call{value: address(this).balance}("");
         require(sentToBene, "Failed to send Ether to Beneficiary");

@@ -61,8 +61,8 @@ describe("Raffle", function () {
     );
     await raffle.deployed();
     await raffle
-    .connect(accounts[2])
-    .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
+      .connect(accounts[2])
+      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
     const winnerBalance = await ethers.provider.getBalance(accounts[2].address);
     await raffle.connect(accounts[0]).distribute();
 
@@ -80,7 +80,9 @@ describe("Raffle", function () {
     const newWinnerBalance = await ethers.provider.getBalance(
       accounts[2].address
     );
-    const newWinnerBalanceEth = await ethers.utils.formatEther(newWinnerBalance);
+    const newWinnerBalanceEth = await ethers.utils.formatEther(
+      newWinnerBalance
+    );
     expect(
       Math.round((newWinnerBalanceEth - winnerBalanceEth) * 100) / 100
     ).to.equal(0.05);
