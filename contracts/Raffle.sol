@@ -1,8 +1,9 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.3;
+pragma solidity ^0.8.3 || >=0.6.0;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract Raffle is Ownable {
     uint256 public ticketPrice;
