@@ -1,8 +1,11 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.3;
+// pragma solidity ^0.8.3 || >=0.6.0;
+// pragma solidity >=0.6.0 <9.0.0;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract Raffle is Ownable {
     uint256 public ticketPrice;
@@ -26,12 +29,22 @@ contract Raffle is Ownable {
         ticketCount[msg.sender] += 1;
     }
 
+    function randomNum() private view returns(uint) {
+        // integrate Chainlink VRF
+       return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, allTicketHolders)));
+    }
+
+    function pickWinner() public view onlyOwner returns(address) {
+        uint index = randomNum() % allTicketHolders.length;
+        console.log(allTicketHolders[index]);
+        return allTicketHolders[index];
+    }
+
     function distribute() public payable onlyOwner {
         (bool sentToBene, bytes memory beneData) =
             beneficiary.call{value: address(this).balance / 2}("");
-            // set up function to pick a random winner
         (bool sentToWinner, bytes memory winnerData) =
-            allTicketHolders[0].call{value: address(this).balance}("");
+            pickWinner().call{value: address(this).balance}("");
         require(sentToBene, "Failed to send Ether to Beneficiary");
         require(sentToWinner, "Failed to send Ether to Winner");
     }

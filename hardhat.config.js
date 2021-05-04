@@ -19,7 +19,26 @@ task("accounts", "Prints the list of accounts", async () => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.3",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.3",
+      },
+      {
+        version: "0.6.0",
+      },
+    ],
+    overrides: {
+      "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol": {
+        version: "0.6.0",
+        settings: {},
+      },
+      "@chainlink/contracts/src/v0.6/VRFRequestIDBase.sol": {
+        version: "0.6.0",
+        settings: {},
+      },
+    },
+  },
   paths: {
     artifacts: "./src/artifacts",
   },
@@ -33,4 +52,3 @@ module.exports = {
     },
   },
 };
-
