@@ -1,33 +1,26 @@
 const { expect } = require("chai");
 
+var accounts;
+var Raffle;
+var raffle;
+var ticketPrice;
+
+beforeEach(async function () {
+  accounts = await ethers.getSigners();
+  Raffle = await ethers.getContractFactory("Raffle");
+  ticketPrice = ethers.utils.parseEther(".1");
+  raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
+  await raffle.deployed();
+});
+
 describe("Raffle", function () {
-  // before(async function(done) {
-  //   const accounts = await ethers.getSigners();
-  //   const Raffle = await ethers.getContractFactory("Raffle");
-  //   const raffle = await Raffle.deploy(100, accounts[1].address);
-  //   await raffle.deployed();
-  //   done();
-  // });
-
   it("Should deploy a raffle with an owner, ticket price, and beneficiary", async function () {
-    const accounts = await ethers.getSigners();
-    const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".0001");
-    const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
-    await raffle.deployed();
-
     expect(await raffle.owner()).to.equal(accounts[0].address);
     expect(await raffle.beneficiary()).to.equal(accounts[1].address);
     expect(await raffle.ticketPrice()).to.equal(ticketPrice);
   });
 
   it("Allows an account to purchase a ticket", async function () {
-    const accounts = await ethers.getSigners();
-    const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".0001");
-    const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
-    await raffle.deployed();
-
     expect(await raffle.ticketCount(accounts[2].address)).to.equal(0);
     await raffle
       .connect(accounts[2])
@@ -39,11 +32,6 @@ describe("Raffle", function () {
   });
 
   it("Requires the exact ticket price", async function () {
-    const accounts = await ethers.getSigners();
-    const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".0001");
-    const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
-    await raffle.deployed();
     await expect(
       raffle
         .connect(accounts[2])
@@ -52,14 +40,9 @@ describe("Raffle", function () {
   });
 
   it("Allows the owner to distribute funds", async function () {
-    const accounts = await ethers.getSigners();
-    const Raffle = await ethers.getContractFactory("Raffle");
-    const ticketPrice = ethers.utils.parseEther(".1");
-    const raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
     const beneficiaryBalance = await ethers.provider.getBalance(
       accounts[1].address
     );
-    await raffle.deployed();
     await raffle
       .connect(accounts[2])
       .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
