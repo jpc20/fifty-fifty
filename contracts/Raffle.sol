@@ -12,6 +12,7 @@ contract RaffleFactory {
 
     function createRaffle(uint _ticketPrice, address payable _beneficiary) public {
         Raffle newRaffle = new Raffle(_ticketPrice, _beneficiary, msg.sender);
+        console.log("Raffle Address: '%s'", address(newRaffle));
         deployedRaffles.push(address(newRaffle));
     }
 
