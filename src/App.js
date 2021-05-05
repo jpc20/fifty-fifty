@@ -1,61 +1,77 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import Greeter from "./artifacts/contracts/Greeter.sol/Greeter.json";
+import RaffleFactory from "./artifacts/contracts/Raffle.sol/RaffleFactory.json";
+import Raffle from "./artifacts/contracts/Raffle.sol/Raffle.json";
 
-// const greeterAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3"; // local
-const greeterAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
+const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
+// const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
 
 function App() {
-  const [greeting, setGreetingValue] = useState('');
+  const [ticketPrice, setTicketPriceValue] = useState(0.01);
+  const [beneficiary, setBeneficiaryValue] = useState("");
+  const [raffles, setRafflesValue] = useState([]);
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-  async function fetchGreeting() {
+  useEffect(async () => {
+    await requestAccount();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
+    setBeneficiaryValue(address);
+    const factory = new ethers.Contract(
+      raffleFactoryAddress,
+      RaffleFactory.abi,
+      signer
+    );
+    const allRaffles = await factory.getDeployedRaffles();
+    setRafflesValue([...allRaffles]);
+  });
+
+  async function deployRaffle() {
+    if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      console.log({ provider });
-      const contract = new ethers.Contract(
-        greeterAddress,
-        Greeter.abi,
-        provider
+      const signer = provider.getSigner();
+      const factory = new ethers.Contract(
+        raffleFactoryAddress,
+        RaffleFactory.abi,
+        signer
       );
+      const formattedPrice = ethers.utils.parseEther(ticketPrice.toString());
       try {
-        const data = await contract.greet();
-        console.log("data: ", data);
+        await factory.createRaffle(formattedPrice, beneficiary);
       } catch (err) {
         console.log("Error: ", err);
       }
     }
   }
 
-  async function setGreeting() {
-    if (!greeting) return;
-    if (typeof window.ethereum !== "undefined") {
-      await requestAccount();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      console.log({ provider });
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(greeterAddress, Greeter.abi, signer);
-      const transaction = await contract.setGreeting(greeting);
-      setGreetingValue('')
-      await transaction.wait();
-      fetchGreeting();
-    }
+   function renderRaffles() {
+    return (raffles.map((raffle) => {
+      return <p>{raffle}</p>
+    }))
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={fetchGreeting}>Fetch Greeting</button>
-        <button onClick={setGreeting}>Set Greeting</button>
+        <button onClick={deployRaffle}>Deploy Raffle</button>
         <input
-          onChange={(e) => setGreetingValue(e.target.value)}
-          placeholder="Set greeting"
-          value={greeting}
+          onChange={(e) => setTicketPriceValue(e.target.value)}
+          placeholder="Set ticket price"
+          value={ticketPrice}
         />
+        <input
+          onChange={(e) => setBeneficiaryValue(e.target.value)}
+          placeholder="Beneficiary"
+          value={beneficiary}
+        />
+        <section>{renderRaffles()}</section>
       </header>
     </div>
   );

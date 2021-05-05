@@ -9,7 +9,7 @@ beforeEach(async function () {
   accounts = await ethers.getSigners();
   Raffle = await ethers.getContractFactory("Raffle");
   ticketPrice = ethers.utils.parseEther(".1");
-  raffle = await Raffle.deploy(ticketPrice, accounts[1].address);
+  raffle = await Raffle.deploy(ticketPrice, accounts[1].address, accounts[0].address);
   await raffle.deployed();
 });
 
