@@ -2,17 +2,14 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
 
-const Raffle = ({ raffleAddress, requestAccount, userAddress }) => {
+const Raffle = ({ raffleAddress, requestAccount, userAddress, getSignerAndProvider }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState("");
-  // const [userAddress, setUserAddressValue] = useState("");
   const [userTicketCount, setUserTicketCountValue] = useState("");
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState("");
 
   useEffect(async () => {
-    await requestAccount();
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+    const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
       RaffleContract.abi,
@@ -20,10 +17,8 @@ const Raffle = ({ raffleAddress, requestAccount, userAddress }) => {
     );
     const raffleTicketPrice = await deployedRaffle.ticketPrice();
     const raffleBeneficiary = await deployedRaffle.beneficiary();
-    // const address = await signer.getAddress();
     const ticketCount = await deployedRaffle.ticketCount(userAddress);
     const contractBalance = await provider.getBalance(raffleAddress);
-    // setUserAddressValue(address);
     setRaffleTickerPriceValue(ethers.utils.formatEther(raffleTicketPrice.toString()))
     setUserTicketCountValue(ticketCount.toString());
     setBeneficiaryValue(raffleBeneficiary);
@@ -31,9 +26,7 @@ const Raffle = ({ raffleAddress, requestAccount, userAddress }) => {
   });
 
   async function purchaseTicket() {
-    await requestAccount();
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+    const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
       RaffleContract.abi,

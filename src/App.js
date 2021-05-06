@@ -17,11 +17,16 @@ function App() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-  useEffect(async () => {
+  async function getSignerAndProvider() {
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const address = await signer.getAddress();
+    return [provider, signer, address];
+  }
+
+  useEffect(async () => {
+    const [provider, signer, address] = await getSignerAndProvider();
     setBeneficiaryValue(address);
     setUserAddressValue(address);
     const factory = new ethers.Contract(
@@ -37,8 +42,7 @@ function App() {
     if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const [provider, signer, address] = await getSignerAndProvider();
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
@@ -71,6 +75,7 @@ function App() {
           raffles={raffles}
           requestAccount={requestAccount}
           userAddress={userAddress}
+          getSignerAndProvider={getSignerAndProvider}
         />
       </header>
     </div>

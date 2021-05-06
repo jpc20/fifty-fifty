@@ -1,6 +1,6 @@
 import Raffle from "./Raffle";
 
-const DeployedRaffles = ({ raffles, ticketPrice, requestAccount, userAddress }) => {
+const DeployedRaffles = ({ raffles, requestAccount, userAddress, getSignerAndProvider }) => {
   const raffleComponents = raffles.map((raffleAddress) => {
     return (
       <Raffle
@@ -8,6 +8,7 @@ const DeployedRaffles = ({ raffles, ticketPrice, requestAccount, userAddress }) 
         key={raffleAddress}
         requestAccount={requestAccount}
         userAddress={userAddress}
+        getSignerAndProvider={getSignerAndProvider}
       />
     );
   });
