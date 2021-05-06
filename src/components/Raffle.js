@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
 
-const Raffle = ({ raffleAddress, ticketPrice, requestAccount }) => {
+const Raffle = ({ raffleAddress, requestAccount, userAddress }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState("");
-  const [userAddress, setUserAddressValue] = useState("");
+  // const [userAddress, setUserAddressValue] = useState("");
   const [userTicketCount, setUserTicketCountValue] = useState("");
+  const [raffleTicketPrice, setRaffleTickerPriceValue] = useState("");
 
   useEffect(async () => {
     await requestAccount();
@@ -19,10 +20,11 @@ const Raffle = ({ raffleAddress, ticketPrice, requestAccount }) => {
     );
     const raffleTicketPrice = await deployedRaffle.ticketPrice();
     const raffleBeneficiary = await deployedRaffle.beneficiary();
-    const address = await signer.getAddress();
-    const ticketCount = await deployedRaffle.ticketCount(address);
+    // const address = await signer.getAddress();
+    const ticketCount = await deployedRaffle.ticketCount(userAddress);
     const contractBalance = await provider.getBalance(raffleAddress);
-    setUserAddressValue(address);
+    // setUserAddressValue(address);
+    setRaffleTickerPriceValue(ethers.utils.formatEther(raffleTicketPrice.toString()))
     setUserTicketCountValue(ticketCount.toString());
     setBeneficiaryValue(raffleBeneficiary);
     setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
@@ -37,7 +39,7 @@ const Raffle = ({ raffleAddress, ticketPrice, requestAccount }) => {
       RaffleContract.abi,
       signer
     );
-    const ethTicketPrice = ethers.utils.parseEther(ticketPrice.toString());
+    const ethTicketPrice = ethers.utils.parseEther(raffleTicketPrice.toString());
     try {
       await deployedRaffle.purchaseTicket({
         from: userAddress,
@@ -51,7 +53,7 @@ const Raffle = ({ raffleAddress, ticketPrice, requestAccount }) => {
   return (
     <div>
       <button onClick={purchaseTicket}>Purchase Ticket</button>
-      Ticket Price: {ticketPrice} ETH, Balance: {balance} ETH, Beneficiary:{" "}
+      Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH, Beneficiary:{" "}
       {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
     </div>
   );
