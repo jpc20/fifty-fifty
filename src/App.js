@@ -65,7 +65,7 @@ function App() {
           placeholder="Beneficiary"
           value={beneficiary}
         />
-        <DeployedRaffles raffles={raffles} ticketPrice={ticketPrice} />
+        <DeployedRaffles raffles={raffles} ticketPrice={ticketPrice} requestAccount={requestAccount} />
       </header>
     </div>
   );

@@ -2,15 +2,11 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
 
-const Raffle = ({ raffleAddress, ticketPrice }) => {
+const Raffle = ({ raffleAddress, ticketPrice, requestAccount }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState("");
   const [userAddress, setUserAddressValue] = useState("");
   const [userTicketCount, setUserTicketCountValue] = useState("");
-
-  async function requestAccount() {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-  }
 
   useEffect(async () => {
     await requestAccount();
