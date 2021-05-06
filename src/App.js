@@ -27,16 +27,19 @@ function App() {
 
   useEffect(async () => {
     const [provider, signer, address] = await getSignerAndProvider();
-    setBeneficiaryValue(address);
+    const getRaffles = async () => {
+      const factory = new ethers.Contract(
+        raffleFactoryAddress,
+        RaffleFactory.abi,
+        signer
+      );
+      const raffles = await factory.getDeployedRaffles();
+      setRafflesValue([...raffles]);
+    };
+    getRaffles();
     setUserAddressValue(address);
-    const factory = new ethers.Contract(
-      raffleFactoryAddress,
-      RaffleFactory.abi,
-      signer
-    );
-    const allRaffles = await factory.getDeployedRaffles();
-    setRafflesValue([...allRaffles]);
-  }, []);
+    setBeneficiaryValue(address);
+  }, [getSignerAndProvider]);
 
   async function deployRaffle() {
     if (!ticketPrice || !beneficiary) return;

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
 
-const Raffle = ({ raffleAddress, requestAccount, userAddress, getSignerAndProvider }) => {
+const Raffle = ({ raffleAddress, userAddress, getSignerAndProvider }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState("");
   const [userTicketCount, setUserTicketCountValue] = useState("");
@@ -19,11 +19,13 @@ const Raffle = ({ raffleAddress, requestAccount, userAddress, getSignerAndProvid
     const raffleBeneficiary = await deployedRaffle.beneficiary();
     const ticketCount = await deployedRaffle.ticketCount(userAddress);
     const contractBalance = await provider.getBalance(raffleAddress);
-    setRaffleTickerPriceValue(ethers.utils.formatEther(raffleTicketPrice.toString()))
+    setRaffleTickerPriceValue(
+      ethers.utils.formatEther(raffleTicketPrice.toString())
+    );
     setUserTicketCountValue(ticketCount.toString());
     setBeneficiaryValue(raffleBeneficiary);
     setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
-  });
+  }, [getSignerAndProvider, raffleAddress, userAddress]);
 
   async function purchaseTicket() {
     const [provider, signer, address] = await getSignerAndProvider();
