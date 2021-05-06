@@ -2,16 +2,14 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
 
-const Raffle = ({ raffleAddress }) => {
-  // pass some of these down as props
-  const [ticketPrice, setTicketPriceValue] = useState('Loading...');
-  const [beneficiary, setBeneficiaryValue] = useState('');
-  const [balance, setBalanceValue] = useState('');
-  const [userAddress, setUserAddressValue] = useState('');
-  const [userTicketCount, setUserTicketCountValue] = useState('');
+const Raffle = ({ raffleAddress, ticketPrice }) => {
+  const [beneficiary, setBeneficiaryValue] = useState("");
+  const [balance, setBalanceValue] = useState("");
+  const [userAddress, setUserAddressValue] = useState("");
+  const [userTicketCount, setUserTicketCountValue] = useState("");
 
   async function requestAccount() {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
+    await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
   useEffect(async () => {
@@ -27,10 +25,8 @@ const Raffle = ({ raffleAddress }) => {
     const raffleBeneficiary = await deployedRaffle.beneficiary();
     const address = await signer.getAddress();
     const ticketCount = await deployedRaffle.ticketCount(address);
-    const formattedPrice = ethers.utils.formatEther(raffleTicketPrice.toString());
-    const contractBalance = await provider.getBalance(raffleAddress)
-    setUserAddressValue(address)
-    setTicketPriceValue(formattedPrice);
+    const contractBalance = await provider.getBalance(raffleAddress);
+    setUserAddressValue(address);
     setUserTicketCountValue(ticketCount.toString());
     setBeneficiaryValue(raffleBeneficiary);
     setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
@@ -55,15 +51,14 @@ const Raffle = ({ raffleAddress }) => {
       console.log(error);
     }
   }
-  
+
   return (
     <div>
       <button onClick={purchaseTicket}>Purchase Ticket</button>
       Ticket Price: {ticketPrice} ETH, Balance: {balance} ETH, Beneficiary:{" "}
-      {beneficiary.slice(0, 5)}...
-      TicketsOwned: {userTicketCount}
+      {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
     </div>
   );
-}
+};
 
 export default Raffle;
