@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "./artifacts/contracts/Raffle.sol/RaffleFactory.json";
-import Raffle from "./artifacts/contracts/Raffle.sol/Raffle.json";
+import DeployedRaffles from "./components/DeployedRaffles";
 
 const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
 // const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
@@ -29,7 +29,7 @@ function App() {
     );
     const allRaffles = await factory.getDeployedRaffles();
     setRafflesValue([...allRaffles]);
-  });
+  }, []);
 
   async function deployRaffle() {
     if (!ticketPrice || !beneficiary) return;
@@ -51,12 +51,6 @@ function App() {
     }
   }
 
-   function renderRaffles() {
-    return (raffles.map((raffle) => {
-      return <p>{raffle}</p>
-    }))
-  }
-
   return (
     <div className="App">
       <header className="App-header">
@@ -71,7 +65,7 @@ function App() {
           placeholder="Beneficiary"
           value={beneficiary}
         />
-        <section>{renderRaffles()}</section>
+        <DeployedRaffles raffles={raffles}/>
       </header>
     </div>
   );
