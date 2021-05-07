@@ -27,6 +27,7 @@ contract Raffle is Ownable {
     mapping(address => uint256) public ticketCount;
     address[] public allTicketHolders;
     event TicketPurchase(address purchaser, uint purchaserTicketCount);
+    event Distribute(address beneficiary, address winner, uint totalAmount);
 
     constructor(uint256 _ticketPrice, address payable _beneficiary, address _owner) {
         console.log(
@@ -59,11 +60,14 @@ contract Raffle is Ownable {
     }
 
     function distribute() public payable onlyOwner {
+        address winner = pickWinner();
+        uint totalAmount = address(this).balance;
         (bool sentToBene, bytes memory beneData) =
-            beneficiary.call{value: address(this).balance / 2}("");
+            beneficiary.call{value: totalAmount / 2}("");
         (bool sentToWinner, bytes memory winnerData) =
-            pickWinner().call{value: address(this).balance}("");
+            winner.call{value: address(this).balance }("");
         require(sentToBene, "Failed to send Ether to Beneficiary");
         require(sentToWinner, "Failed to send Ether to Winner");
+        emit Distribute(beneficiary, winner, totalAmount);
     }
 }
