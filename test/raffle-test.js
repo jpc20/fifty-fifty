@@ -9,7 +9,11 @@ beforeEach(async function () {
   accounts = await ethers.getSigners();
   Raffle = await ethers.getContractFactory("Raffle");
   ticketPrice = ethers.utils.parseEther(".1");
-  raffle = await Raffle.deploy(ticketPrice, accounts[1].address, accounts[0].address);
+  raffle = await Raffle.deploy(
+    ticketPrice,
+    accounts[1].address,
+    accounts[0].address
+  );
   await raffle.deployed();
 });
 
@@ -37,6 +41,16 @@ describe("Raffle", function () {
         .connect(accounts[2])
         .purchaseTicket({ from: accounts[2].address, value: 100 })
     ).to.be.revertedWith("Incorrect Ticket Price");
+  });
+
+  it("Emits an event after a successful purchase", async function () {
+    await expect(
+      raffle
+        .connect(accounts[2])
+        .purchaseTicket({ from: accounts[2].address, value: ticketPrice })
+    )
+      .to.emit(raffle, "TicketPurchase")
+      .withArgs(accounts[2].address, 1);
   });
 
   it("Allows the owner to distribute funds", async function () {
@@ -69,5 +83,14 @@ describe("Raffle", function () {
     expect(
       Math.round((newWinnerBalanceEth - winnerBalanceEth) * 100) / 100
     ).to.equal(0.05);
+  });
+
+  it("Emits an event when funds are distributed", async function () {
+    await raffle
+      .connect(accounts[2])
+      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
+    expect(await raffle.connect(accounts[0]).distribute())
+      .to.emit(raffle, "Distribute")
+      .withArgs(accounts[1].address, accounts[2].address, ticketPrice );
   });
 });

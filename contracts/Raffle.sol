@@ -5,18 +5,21 @@ pragma solidity ^0.8.3;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
 // import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract RaffleFactory {
     address[] public deployedRaffles;
 
-    function createRaffle(uint _ticketPrice, address payable _beneficiary) public {
+    function createRaffle(uint256 _ticketPrice, address payable _beneficiary)
+        public
+    {
         Raffle newRaffle = new Raffle(_ticketPrice, _beneficiary, msg.sender);
         console.log("Raffle Address: '%s'", address(newRaffle));
         deployedRaffles.push(address(newRaffle));
     }
 
-    function getDeployedRaffles() public view returns(address[] memory) {
+    function getDeployedRaffles() public view returns (address[] memory) {
         return deployedRaffles;
     }
 }
@@ -26,8 +29,14 @@ contract Raffle is Ownable {
     address payable public beneficiary;
     mapping(address => uint256) public ticketCount;
     address[] public allTicketHolders;
+    event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
+    event Distribute(address beneficiary, address winner, uint256 totalAmount);
 
-    constructor(uint256 _ticketPrice, address payable _beneficiary, address _owner) {
+    constructor(
+        uint256 _ticketPrice,
+        address payable _beneficiary,
+        address _owner
+    ) {
         console.log(
             "Deploying a raffle with ticketPrice: '%s', beneficiary: '%s', and owner: '%s'",
             _ticketPrice,
@@ -42,26 +51,39 @@ contract Raffle is Ownable {
     function purchaseTicket() public payable {
         require(msg.value == ticketPrice, "Incorrect Ticket Price");
         allTicketHolders.push(msg.sender);
-        ticketCount[msg.sender] += 1;
+        uint256 purchaserTicketCount = ticketCount[msg.sender] += 1;
+        emit TicketPurchase(msg.sender, purchaserTicketCount);
     }
 
-    function randomNum() private view returns(uint) {
+    function randomNum() private view returns (uint256) {
         // integrate Chainlink VRF
-       return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, allTicketHolders)));
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        block.difficulty,
+                        block.timestamp,
+                        allTicketHolders
+                    )
+                )
+            );
     }
 
-    function pickWinner() public view onlyOwner returns(address) {
-        uint index = randomNum() % allTicketHolders.length;
+    function pickWinner() public view onlyOwner returns (address) {
+        uint256 index = randomNum() % allTicketHolders.length;
         console.log(allTicketHolders[index]);
         return allTicketHolders[index];
     }
 
     function distribute() public payable onlyOwner {
+        address winner = pickWinner();
+        uint256 totalAmount = address(this).balance;
         (bool sentToBene, bytes memory beneData) =
-            beneficiary.call{value: address(this).balance / 2}("");
+            beneficiary.call{value: totalAmount / 2}("");
         (bool sentToWinner, bytes memory winnerData) =
-            pickWinner().call{value: address(this).balance}("");
+            winner.call{value: address(this).balance}("");
         require(sentToBene, "Failed to send Ether to Beneficiary");
         require(sentToWinner, "Failed to send Ether to Winner");
+        emit Distribute(beneficiary, winner, totalAmount);
     }
 }
