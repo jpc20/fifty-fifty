@@ -39,6 +39,16 @@ describe("Raffle", function () {
     ).to.be.revertedWith("Incorrect Ticket Price");
   });
 
+  it("Emits an event after a successful purchase", async function () {
+    await expect(
+      raffle
+        .connect(accounts[2])
+        .purchaseTicket({ from: accounts[2].address, value: ticketPrice })
+    )
+      .to.emit(raffle, "TicketPurchase")
+      .withArgs(accounts[2].address, 1);
+  });
+
   it("Allows the owner to distribute funds", async function () {
     const beneficiaryBalance = await ethers.provider.getBalance(
       accounts[1].address
