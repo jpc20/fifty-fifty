@@ -26,6 +26,7 @@ contract Raffle is Ownable {
     address payable public beneficiary;
     mapping(address => uint256) public ticketCount;
     address[] public allTicketHolders;
+    event TicketPurchase(address purchaser, uint purchaserTicketCount);
 
     constructor(uint256 _ticketPrice, address payable _beneficiary, address _owner) {
         console.log(
@@ -42,7 +43,8 @@ contract Raffle is Ownable {
     function purchaseTicket() public payable {
         require(msg.value == ticketPrice, "Incorrect Ticket Price");
         allTicketHolders.push(msg.sender);
-        ticketCount[msg.sender] += 1;
+        uint purchaserTicketCount = ticketCount[msg.sender] += 1;
+        emit TicketPurchase(msg.sender, purchaserTicketCount);
     }
 
     function randomNum() private view returns(uint) {
