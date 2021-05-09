@@ -10,7 +10,6 @@ const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // lo
 function App() {
   const [ticketPrice, setTicketPriceValue] = useState(0.01);
   const [beneficiary, setBeneficiaryValue] = useState("");
-  const [raffles, setRafflesValue] = useState([]);
   const [userAddress, setUserAddressValue] = useState("");
 
   async function requestAccount() {
@@ -25,21 +24,14 @@ function App() {
     return [provider, signer, address];
   }
 
-  useEffect(async () => {
-    const [provider, signer, address] = await getSignerAndProvider();
-    const getRaffles = async () => {
-      const factory = new ethers.Contract(
-        raffleFactoryAddress,
-        RaffleFactory.abi,
-        signer
-      );
-      const raffles = await factory.getDeployedRaffles();
-      setRafflesValue([...raffles]);
+  useEffect(() => {
+    const getAddresses = async () => {
+      const [provider, signer, address] = await getSignerAndProvider();
+      setUserAddressValue(address);
+      setBeneficiaryValue(address);
     };
-    getRaffles();
-    setUserAddressValue(address);
-    setBeneficiaryValue(address);
-  }, [getSignerAndProvider]);
+    getAddresses();
+  }, []);
 
   async function deployRaffle() {
     if (!ticketPrice || !beneficiary) return;
@@ -75,10 +67,9 @@ function App() {
           value={beneficiary}
         />
         <DeployedRaffles
-          raffles={raffles}
-          requestAccount={requestAccount}
           userAddress={userAddress}
           getSignerAndProvider={getSignerAndProvider}
+          raffleFactoryAddress={raffleFactoryAddress}
         />
       </header>
     </div>

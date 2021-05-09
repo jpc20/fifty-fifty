@@ -25,7 +25,7 @@ const Raffle = ({ raffleAddress, userAddress, getSignerAndProvider }) => {
     setUserTicketCountValue(ticketCount.toString());
     setBeneficiaryValue(raffleBeneficiary);
     setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
-  }, [getSignerAndProvider, raffleAddress, userAddress]);
+  }, [getSignerAndProvider, raffleAddress, userAddress, userTicketCount]);
 
   async function purchaseTicket() {
     const [provider, signer, address] = await getSignerAndProvider();
