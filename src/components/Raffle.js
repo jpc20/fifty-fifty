@@ -47,7 +47,21 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       });
       provider.once(purchaseTx.hash, (transaction) => {
         setUserTicketCountValue(userTicketCount + 1);
-      })
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function distributeFunds() {
+    const [provider, signer, address] = await getSignerAndProvider();
+    const deployedRaffle = new ethers.Contract(
+      raffleAddress,
+      RaffleContract.abi,
+      signer
+    );
+    try {
+      await deployedRaffle.distribute();
     } catch (error) {
       console.log(error);
     }
@@ -56,6 +70,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   return (
     <div>
       <button onClick={purchaseTicket}>Purchase Ticket</button>
+      <button onClick={distributeFunds}>Distribute Funds</button>
       Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
       Beneficiary: {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
     </div>
