@@ -2,30 +2,33 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
 
-const Raffle = ({ raffleAddress, userAddress, getSignerAndProvider }) => {
+const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
-  const [balance, setBalanceValue] = useState("");
-  const [userTicketCount, setUserTicketCountValue] = useState("");
-  const [raffleTicketPrice, setRaffleTickerPriceValue] = useState("");
+  const [balance, setBalanceValue] = useState(0);
+  const [userTicketCount, setUserTicketCountValue] = useState(0);
+  const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
 
-  useEffect(async () => {
-    const [provider, signer, address] = await getSignerAndProvider();
-    const deployedRaffle = new ethers.Contract(
-      raffleAddress,
-      RaffleContract.abi,
-      signer
-    );
-    const raffleTicketPrice = await deployedRaffle.ticketPrice();
-    const raffleBeneficiary = await deployedRaffle.beneficiary();
-    const ticketCount = await deployedRaffle.ticketCount(userAddress);
-    const contractBalance = await provider.getBalance(raffleAddress);
-    setRaffleTickerPriceValue(
-      ethers.utils.formatEther(raffleTicketPrice.toString())
-    );
-    setUserTicketCountValue(ticketCount.toString());
-    setBeneficiaryValue(raffleBeneficiary);
-    setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
-  }, [getSignerAndProvider, raffleAddress, userAddress, userTicketCount]);
+  useEffect(() => {
+    const getRaffle = async () => {
+      const [provider, signer, address] = await getSignerAndProvider();
+      const deployedRaffle = new ethers.Contract(
+        raffleAddress,
+        RaffleContract.abi,
+        signer
+      );
+      const raffleTicketPrice = await deployedRaffle.ticketPrice();
+      const raffleBeneficiary = await deployedRaffle.beneficiary();
+      const ticketCount = await deployedRaffle.ticketCount(address);
+      const contractBalance = await provider.getBalance(raffleAddress);
+      setRaffleTickerPriceValue(
+        ethers.utils.formatEther(raffleTicketPrice.toString())
+      );
+      setUserTicketCountValue(ticketCount.toNumber());
+      setBeneficiaryValue(raffleBeneficiary);
+      setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
+    };
+    getRaffle();
+  }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
 
   async function purchaseTicket() {
     const [provider, signer, address] = await getSignerAndProvider();
@@ -34,10 +37,12 @@ const Raffle = ({ raffleAddress, userAddress, getSignerAndProvider }) => {
       RaffleContract.abi,
       signer
     );
-    const ethTicketPrice = ethers.utils.parseEther(raffleTicketPrice.toString());
+    const ethTicketPrice = ethers.utils.parseEther(
+      raffleTicketPrice.toString()
+    );
     try {
       await deployedRaffle.purchaseTicket({
-        from: userAddress,
+        from: address,
         value: ethTicketPrice,
       });
     } catch (error) {
@@ -48,8 +53,8 @@ const Raffle = ({ raffleAddress, userAddress, getSignerAndProvider }) => {
   return (
     <div>
       <button onClick={purchaseTicket}>Purchase Ticket</button>
-      Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH, Beneficiary:{" "}
-      {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
+      Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
+      Beneficiary: {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
     </div>
   );
 };

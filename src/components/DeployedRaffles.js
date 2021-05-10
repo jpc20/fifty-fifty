@@ -4,7 +4,6 @@ import { ethers } from "ethers";
 import RaffleFactory from "../artifacts/contracts/Raffle.sol/RaffleFactory.json";
 
 const DeployedRaffles = ({
-  userAddress,
   getSignerAndProvider,
   raffleFactoryAddress,
 }) => {
@@ -22,14 +21,13 @@ const DeployedRaffles = ({
       setRafflesValue([...raffles]);
     };
     getRaffles();
-  }, [raffles]);
+  }, [getSignerAndProvider, raffleFactoryAddress, raffles]);
 
   const raffleComponents = raffles.map((raffleAddress) => {
     return (
       <Raffle
         raffleAddress={raffleAddress}
         key={raffleAddress}
-        userAddress={userAddress}
         getSignerAndProvider={getSignerAndProvider}
       />
     );
