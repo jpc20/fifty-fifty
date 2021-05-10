@@ -10,8 +10,6 @@ const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // lo
 function App() {
   const [ticketPrice, setTicketPriceValue] = useState(0.01);
   const [beneficiary, setBeneficiaryValue] = useState("");
-  const [raffles, setRafflesValue] = useState([]);
-  const [userAddress, setUserAddressValue] = useState("");
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -25,26 +23,17 @@ function App() {
     return [provider, signer, address];
   }
 
-  useEffect(async () => {
-    const [provider, signer, address] = await getSignerAndProvider();
-    const getRaffles = async () => {
-      const factory = new ethers.Contract(
-        raffleFactoryAddress,
-        RaffleFactory.abi,
-        signer
-      );
-      const raffles = await factory.getDeployedRaffles();
-      setRafflesValue([...raffles]);
+  useEffect(() => {
+    const getAddress = async () => {
+      const [provider, signer, address] = await getSignerAndProvider();
+      setBeneficiaryValue(address);
     };
-    getRaffles();
-    setUserAddressValue(address);
-    setBeneficiaryValue(address);
+    getAddress();
   }, [getSignerAndProvider]);
 
   async function deployRaffle() {
     if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
-      await requestAccount();
       const [provider, signer, address] = await getSignerAndProvider();
       const factory = new ethers.Contract(
         raffleFactoryAddress,
@@ -75,10 +64,8 @@ function App() {
           value={beneficiary}
         />
         <DeployedRaffles
-          raffles={raffles}
-          requestAccount={requestAccount}
-          userAddress={userAddress}
           getSignerAndProvider={getSignerAndProvider}
+          raffleFactoryAddress={raffleFactoryAddress}
         />
       </header>
     </div>
