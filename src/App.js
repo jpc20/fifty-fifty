@@ -1,4 +1,5 @@
 import "./App.css";
+import { useState } from "react";
 import { ethers } from "ethers";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import { Button, Divider, Grid, Typography } from "@material-ui/core";
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
+  const [raffleFilter, setRaffleFilter] = useState("open")
   const classes = useStyles();
 
   async function requestAccount() {
@@ -41,6 +43,10 @@ function App() {
     return [provider, signer, address];
   }
 
+  function changeRaffleFilter(newFilter) {
+      setRaffleFilter(newFilter);
+  }
+
   return (
     <div className={classes.root}>
       <Typography variant="h1" gutterBottom>
@@ -51,9 +57,12 @@ function App() {
         getSignerAndProvider={getSignerAndProvider}
       />
       <Divider className={classes.divider} />
+      <Button onClick={(e) => changeRaffleFilter("open")}>Open Raffles</Button>
+      <Button onClick={(e) => changeRaffleFilter("closed")}>Closed Raffles</Button>
       <DeployedRaffles
         getSignerAndProvider={getSignerAndProvider}
         raffleFactoryAddress={raffleFactoryAddress}
+        raffleFilter={raffleFilter}
       />
     </div>
   );

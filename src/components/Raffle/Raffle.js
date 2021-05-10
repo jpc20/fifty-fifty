@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
+const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState(0);
   const [userTicketCount, setUserTicketCountValue] = useState(0);
@@ -55,6 +55,9 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
     getRaffle();
   }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
 
+  useEffect(() => {
+    
+  })
   async function purchaseTicket() {
     setPurchaseLoadingValue(true);
     const [provider, signer, address] = await getSignerAndProvider();
@@ -100,8 +103,18 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
     }
   }
 
+  const checkRaffleFilter = () => {
+    if (raffleFilter === "open" && open) {
+      return 'block';
+    } else if (raffleFilter === "closed" && !open) {
+      return 'block';
+    } else {
+      return "none";
+    }
+  }
+
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{display: checkRaffleFilter()}}>
       <Paper className={classes.paper}>
         <Grid
           container

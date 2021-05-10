@@ -6,6 +6,7 @@ import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.js
 const DeployedRaffles = ({
   getSignerAndProvider,
   raffleFactoryAddress,
+  raffleFilter
 }) => {
   const [raffles, setRafflesValue] = useState([]);
 
@@ -29,6 +30,7 @@ const DeployedRaffles = ({
         raffleAddress={raffleAddress}
         key={raffleAddress}
         getSignerAndProvider={getSignerAndProvider}
+        raffleFilter={raffleFilter}
       />
     );
   });
