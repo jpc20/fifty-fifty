@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
+import {Button, Typography} from "@material-ui/core";
 
 const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
@@ -74,14 +75,20 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   }
 
   return (
-    <div className={!open && 'closed'}>
-      {open && <button onClick={purchaseTicket}>Purchase Ticket</button>}
+    <Typography className={!open ? "closed" : ""} variant="h6" gutterBottom>
+      {open && (
+        <Button variant="contained" color="primary" onClick={purchaseTicket}>
+          Purchase Ticket
+        </Button>
+      )}
       {isOwner && open && (
-        <button onClick={distributeFunds}>Distribute Funds</button>
+        <Button variant="contained" color="primary" onClick={distributeFunds}>
+          Distribute Funds
+        </Button>
       )}
       Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
       Beneficiary: {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
-    </div>
+    </Typography>
   );
 };
 
