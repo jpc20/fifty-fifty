@@ -41,10 +41,13 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       raffleTicketPrice.toString()
     );
     try {
-      await deployedRaffle.purchaseTicket({
+      const purchaseTx = await deployedRaffle.purchaseTicket({
         from: address,
         value: ethTicketPrice,
       });
+      provider.once(purchaseTx.hash, (transaction) => {
+        setUserTicketCountValue(userTicketCount + 1);
+      })
     } catch (error) {
       console.log(error);
     }
