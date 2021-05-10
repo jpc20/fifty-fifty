@@ -72,7 +72,7 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h2" gutterBottom>
+      <Typography variant="h1" gutterBottom>
         50/50 Raffle
       </Typography>
       <Grid container spacing={3} className={classes.root}>

@@ -1,7 +1,21 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
-import {Button, Typography} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Button, Grid, Typography, Paper } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    overflow: "hidden",
+    padding: theme.spacing(0, 3),
+  },
+  paper: {
+    margin: `${theme.spacing(1)}px auto`,
+    padding: theme.spacing(2),
+    maxWidth: "80%",
+  },
+}));
 
 const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
@@ -10,6 +24,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
   const [isOwner, setIsOwnerValue] = useState(false);
   const [open, setOpenValue] = useState(true);
+  const classes = useStyles();
 
   useEffect(() => {
     const getRaffle = async () => {
@@ -31,8 +46,8 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       setUserTicketCountValue(ticketCount.toNumber());
       setBeneficiaryValue(raffleBeneficiary);
       setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
-      setOpenValue(openStatus)
-      setIsOwnerValue(checkOwner === address)
+      setOpenValue(openStatus);
+      setIsOwnerValue(checkOwner === address);
     };
     getRaffle();
   }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
@@ -75,20 +90,46 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   }
 
   return (
-    <Typography className={!open ? "closed" : ""} variant="h6" gutterBottom>
-      {open && (
-        <Button variant="contained" color="primary" onClick={purchaseTicket}>
-          Purchase Ticket
-        </Button>
-      )}
-      {isOwner && open && (
-        <Button variant="contained" color="primary" onClick={distributeFunds}>
-          Distribute Funds
-        </Button>
-      )}
-      Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-      Beneficiary: {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
-    </Typography>
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <Grid
+          container
+          wrap="nowrap"
+          spacing={1}
+          className={!open ? "closed" : ""}
+        >
+          {open && (
+            <Grid item xs={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={purchaseTicket}
+              >
+                Purchase Ticket
+              </Button>
+            </Grid>
+          )}
+          {isOwner && open && (
+            <Grid item xs={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={distributeFunds}
+              >
+                Distribute Funds
+              </Button>
+            </Grid>
+          )}
+          <Grid item xs={10}>
+            <Typography variant="h6" noWrap >
+              Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
+              TicketsOwned: {userTicketCount}
+              {/* Beneficiary: {beneficiary.slice(0, 10)}... */}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Paper>
+    </div>
   );
 };
 
