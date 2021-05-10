@@ -4,6 +4,7 @@ import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.js
 import { Grid, TextField, Button, CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
+import LoadingButton from "../LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -98,7 +99,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            {submitButton()}
+            <LoadingButton buttonText="Deploy Raffle" loading={loading} />
           </Grid>
         </Grid>
       </form>
