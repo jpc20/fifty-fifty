@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "./artifacts/contracts/Raffle.sol/RaffleFactory.json";
 import DeployedRaffles from "./components/DeployedRaffles";
+import Button from "@material-ui/core/Button";
 
 const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
 // const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
@@ -52,7 +53,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={deployRaffle}>Deploy Raffle</button>
+        <Button variant="contained" color="primary" onClick={deployRaffle}>
+          Deploy Raffle
+        </Button>
         <input
           onChange={(e) => setTicketPriceValue(e.target.value)}
           placeholder="Set ticket price"
