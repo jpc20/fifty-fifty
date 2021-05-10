@@ -1,9 +1,9 @@
 import "./App.css";
 import { ethers } from "ethers";
-import DeployedRaffles from "./components/DeployedRaffles";
+import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import { Button, Divider, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import NewRaffle from "./components/NewRaffle";
+import NewRaffle from "./components/Raffle/NewRaffle";
 
 const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
 // const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
+import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid, Typography, Paper } from "@material-ui/core";
 

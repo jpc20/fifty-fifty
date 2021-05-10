@@ -1,7 +1,7 @@
 import Raffle from "./Raffle";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import RaffleFactory from "../artifacts/contracts/Raffle.sol/RaffleFactory.json";
+import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
 
 const DeployedRaffles = ({
   getSignerAndProvider,
