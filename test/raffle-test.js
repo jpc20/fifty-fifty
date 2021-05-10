@@ -22,6 +22,7 @@ describe("Raffle", function () {
     expect(await raffle.owner()).to.equal(accounts[0].address);
     expect(await raffle.beneficiary()).to.equal(accounts[1].address);
     expect(await raffle.ticketPrice()).to.equal(ticketPrice);
+    expect(await raffle.open()).to.equal(true);
   });
 
   it("Allows an account to purchase a ticket", async function () {

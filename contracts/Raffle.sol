@@ -31,6 +31,7 @@ contract Raffle is Ownable {
     address[] public allTicketHolders;
     event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
     event Distribute(address beneficiary, address winner, uint256 totalAmount);
+    bool public open;
 
     constructor(
         uint256 _ticketPrice,
@@ -45,6 +46,7 @@ contract Raffle is Ownable {
         );
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
+        open = true;
         transferOwnership(_owner);
     }
 
