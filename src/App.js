@@ -29,7 +29,7 @@ function App() {
       setBeneficiaryValue(address);
     };
     getAddress();
-  }, [getSignerAndProvider]);
+  }, []);
 
   async function deployRaffle() {
     if (!ticketPrice || !beneficiary) return;

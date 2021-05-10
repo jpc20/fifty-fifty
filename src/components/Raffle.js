@@ -7,6 +7,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   const [balance, setBalanceValue] = useState(0);
   const [userTicketCount, setUserTicketCountValue] = useState(0);
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
+  const [isOwner, setIsOwnerValue] = useState(false);
 
   useEffect(() => {
     const getRaffle = async () => {
@@ -20,12 +21,14 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       const raffleBeneficiary = await deployedRaffle.beneficiary();
       const ticketCount = await deployedRaffle.ticketCount(address);
       const contractBalance = await provider.getBalance(raffleAddress);
+      const checkOwner = await deployedRaffle.owner();
       setRaffleTickerPriceValue(
         ethers.utils.formatEther(raffleTicketPrice.toString())
       );
       setUserTicketCountValue(ticketCount.toNumber());
       setBeneficiaryValue(raffleBeneficiary);
       setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
+      setIsOwnerValue(checkOwner === address)
     };
     getRaffle();
   }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
@@ -47,7 +50,21 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       });
       provider.once(purchaseTx.hash, (transaction) => {
         setUserTicketCountValue(userTicketCount + 1);
-      })
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function distributeFunds() {
+    const [provider, signer, address] = await getSignerAndProvider();
+    const deployedRaffle = new ethers.Contract(
+      raffleAddress,
+      RaffleContract.abi,
+      signer
+    );
+    try {
+      await deployedRaffle.distribute();
     } catch (error) {
       console.log(error);
     }
@@ -56,6 +73,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   return (
     <div>
       <button onClick={purchaseTicket}>Purchase Ticket</button>
+      {isOwner && <button onClick={distributeFunds}>Distribute Funds</button>}
       Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
       Beneficiary: {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
     </div>
