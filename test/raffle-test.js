@@ -86,12 +86,13 @@ describe("Raffle", function () {
     ).to.equal(0.05);
   });
 
-  it("Emits an event when funds are distributed", async function () {
+  it("Emits an event when and closes the raffle funds are distributed", async function () {
     await raffle
       .connect(accounts[2])
       .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
     expect(await raffle.connect(accounts[0]).distribute())
       .to.emit(raffle, "Distribute")
-      .withArgs(accounts[1].address, accounts[2].address, ticketPrice );
+      .withArgs(accounts[1].address, accounts[2].address, ticketPrice);
+    expect(await raffle.open()).to.equal(false);
   });
 });

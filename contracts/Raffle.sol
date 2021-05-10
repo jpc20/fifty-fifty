@@ -86,6 +86,7 @@ contract Raffle is Ownable {
             winner.call{value: address(this).balance}("");
         require(sentToBene, "Failed to send Ether to Beneficiary");
         require(sentToWinner, "Failed to send Ether to Winner");
+        open = false;
         emit Distribute(beneficiary, winner, totalAmount);
     }
 }
