@@ -34,7 +34,7 @@ const DeployedRaffles = ({
   });
   return (
     <div>
-      {raffleComponents}
+      {raffleComponents.length > 0 ? raffleComponents : "No Raffles"}
     </div>
   );
 };
