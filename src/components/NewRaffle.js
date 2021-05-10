@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../artifacts/contracts/Raffle.sol/RaffleFactory.json";
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField, Button, CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
 
@@ -21,9 +21,26 @@ const useStyles = makeStyles((theme) => ({
 const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
+  const [loading, setLoadingValue] = useState(false);
   const classes = useStyles();
 
+  const submitButton = () => {
+    if (loading) {
+      return (
+        <Button>
+          <CircularProgress />
+        </Button>
+      );
+    } else {
+      return (
+        <Button type="submit" variant="contained" color="primary">
+          Deploy Raffle
+        </Button>
+      );
+    }
+  };
   async function deployRaffle(event) {
+    setLoadingValue(true)
     event.preventDefault();
     if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
@@ -35,9 +52,13 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
       );
       const formattedPrice = ethers.utils.parseEther(ticketPrice.toString());
       try {
-        await factory.createRaffle(formattedPrice, beneficiary);
-      } catch (err) {
+        const deployTxn = await factory.createRaffle(formattedPrice, beneficiary);
+        provider.once(deployTxn.hash, (transaction) => {
+            setLoadingValue(false);
+        });
+    } catch (err) {
         console.log("Error: ", err);
+        setLoadingValue(false);
       }
     }
   }
@@ -55,7 +76,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
         className={classes.root}
         noValidate
         autoComplete="off"
-        onSubmit={(e) => deployRaffle(e) }
+        onSubmit={(e) => deployRaffle(e)}
       >
         <Grid container spacing={3} className={classes.root}>
           <Grid item xs={12}>
@@ -77,9 +98,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Deploy Raffle
-            </Button>
+            {submitButton()}
           </Grid>
         </Grid>
       </form>
