@@ -31,6 +31,7 @@ contract Raffle is Ownable {
     address[] public allTicketHolders;
     event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
     event Distribute(address beneficiary, address winner, uint256 totalAmount);
+    bool public open;
 
     constructor(
         uint256 _ticketPrice,
@@ -45,6 +46,7 @@ contract Raffle is Ownable {
         );
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
+        open = true;
         transferOwnership(_owner);
     }
 
@@ -84,6 +86,7 @@ contract Raffle is Ownable {
             winner.call{value: address(this).balance}("");
         require(sentToBene, "Failed to send Ether to Beneficiary");
         require(sentToWinner, "Failed to send Ether to Winner");
+        open = false;
         emit Distribute(beneficiary, winner, totalAmount);
     }
 }

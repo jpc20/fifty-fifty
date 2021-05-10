@@ -8,6 +8,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   const [userTicketCount, setUserTicketCountValue] = useState(0);
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
   const [isOwner, setIsOwnerValue] = useState(false);
+  const [open, setOpenValue] = useState(true);
 
   useEffect(() => {
     const getRaffle = async () => {
@@ -22,12 +23,14 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       const ticketCount = await deployedRaffle.ticketCount(address);
       const contractBalance = await provider.getBalance(raffleAddress);
       const checkOwner = await deployedRaffle.owner();
+      const openStatus = await deployedRaffle.open();
       setRaffleTickerPriceValue(
         ethers.utils.formatEther(raffleTicketPrice.toString())
       );
       setUserTicketCountValue(ticketCount.toNumber());
       setBeneficiaryValue(raffleBeneficiary);
       setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
+      setOpenValue(openStatus)
       setIsOwnerValue(checkOwner === address)
     };
     getRaffle();
@@ -71,9 +74,11 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
   }
 
   return (
-    <div>
-      <button onClick={purchaseTicket}>Purchase Ticket</button>
-      {isOwner && <button onClick={distributeFunds}>Distribute Funds</button>}
+    <div className={!open && 'closed'}>
+      {open && <button onClick={purchaseTicket}>Purchase Ticket</button>}
+      {isOwner && open && (
+        <button onClick={distributeFunds}>Distribute Funds</button>
+      )}
       Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
       Beneficiary: {beneficiary.slice(0, 5)}... TicketsOwned: {userTicketCount}
     </div>
