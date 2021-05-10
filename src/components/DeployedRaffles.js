@@ -32,7 +32,11 @@ const DeployedRaffles = ({
       />
     );
   });
-  return <div>{raffleComponents}</div>;
+  return (
+    <div>
+      {raffleComponents}
+    </div>
+  );
 };
 
 export default DeployedRaffles;
