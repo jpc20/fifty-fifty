@@ -1,24 +1,30 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../artifacts/contracts/Raffle.sol/RaffleFactory.json";
-import {Grid, TextField, Button} from "@material-ui/core";
+import { Grid, TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
       width: "25ch",
+      flexGrow: 1,
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
     },
   },
 }));
 
 const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
-  const [ticketPrice, setTicketPriceValue] = useState(0.01);
+  const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
   const classes = useStyles();
 
-  async function deployRaffle() {
+  async function deployRaffle(event) {
+    event.preventDefault();
     if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
       const [provider, signer, address] = await getSignerAndProvider();
@@ -35,37 +41,48 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
       }
     }
   }
-    useEffect(() => {
-      const getAddress = async () => {
-        const [provider, signer, address] = await getSignerAndProvider();
-        setBeneficiaryValue(address);
-      };
-      getAddress();
-    }, []);
+  useEffect(() => {
+    const getAddress = async () => {
+      const [provider, signer, address] = await getSignerAndProvider();
+      setBeneficiaryValue(address);
+    };
+    getAddress();
+  }, []);
 
   return (
     <div>
-      <Grid container spacing={3} className={classes.root}>
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={deployRaffle}>
-            Deploy Raffle
-          </Button>
+      <form
+        className={classes.root}
+        noValidate
+        autoComplete="off"
+        onSubmit={(e) => deployRaffle(e) }
+      >
+        <Grid container spacing={3} className={classes.root}>
+          <Grid item xs={12}>
+            <TextField
+              id="outlined-required"
+              variant="outlined"
+              onChange={(e) => setBeneficiaryValue(e.target.value)}
+              value={beneficiary}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <NumberFormat
+              value={ticketPrice}
+              customInput={TextField}
+              prefix={"Ξ"}
+              decimalScale={10}
+              type="text"
+              onChange={(e) => setTicketPriceValue(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary">
+              Deploy Raffle
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <input
-            onChange={(e) => setTicketPriceValue(e.target.value)}
-            placeholder="Set ticket price"
-            value={ticketPrice}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <input
-            onChange={(e) => setBeneficiaryValue(e.target.value)}
-            placeholder="Beneficiary"
-            value={beneficiary}
-          />
-        </Grid>
-      </Grid>
+      </form>
     </div>
   );
 };
