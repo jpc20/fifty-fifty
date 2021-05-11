@@ -28,6 +28,7 @@ const DeployedRaffles = ({
       <RaffleTabs
         raffles={raffles}
         getSignerAndProvider={getSignerAndProvider}
+        raffleFactoryAddress={raffleFactoryAddress}
       />
     </div>
   );

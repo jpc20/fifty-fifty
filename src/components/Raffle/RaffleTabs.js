@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import Raffle from "./Raffle";
+import NewRaffle from "./NewRaffle";
 import { makeStyles } from "@material-ui/core/styles";
 import { Tabs, Tab, AppBar, Box, Typography } from "@material-ui/core";
 
@@ -44,7 +45,7 @@ function a11yProps(index) {
   };
 }
 
-const RaffleTabs = ({ raffles, getSignerAndProvider }) => {
+const RaffleTabs = ({ raffles, getSignerAndProvider, raffleFactoryAddress }) => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
@@ -77,6 +78,7 @@ const RaffleTabs = ({ raffles, getSignerAndProvider }) => {
           <Tab label="Open Raffles" {...a11yProps(0)} />
           <Tab label="Closed Raffles" {...a11yProps(1)} />
           <Tab label="Your Raffles" {...a11yProps(2)} />
+          <Tab label="Create New Raffle" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -87,6 +89,12 @@ const RaffleTabs = ({ raffles, getSignerAndProvider }) => {
       </TabPanel>
       <TabPanel value={value} index={2}>
         {raffleComponents("owned")}
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <NewRaffle
+          raffleFactoryAddress={raffleFactoryAddress}
+          getSignerAndProvider={getSignerAndProvider}
+        />
       </TabPanel>
     </div>
   );

@@ -4,7 +4,6 @@ import { ethers } from "ethers";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import { Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import NewRaffle from "./components/Raffle/NewRaffle";
 
 const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
 // const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
@@ -49,22 +48,19 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h1" gutterBottom>
+      <Typography variant="h1" >
         50/50 Raffle
       </Typography>
-      <NewRaffle
-        raffleFactoryAddress={raffleFactoryAddress}
-        getSignerAndProvider={getSignerAndProvider}
-      />
+      <Typography variant="subtitle1" gutterBottom>
+        Built by @jpc20
+      </Typography>
+      <Typography variant="caption" color="secondary" gutterBottom>
+        [Rinkbey Testnet]
+      </Typography>
       <Divider className={classes.divider} />
-      {/* <Button onClick={(e) => changeRaffleFilter("open")}>Open Raffles</Button>
-      <Button onClick={(e) => changeRaffleFilter("closed")}>Closed Raffles</Button>
-      <Button onClick={(e) => changeRaffleFilter("owned")}>Your Raffles</Button> */}
-      {/* <RaffleTabs /> */}
       <DeployedRaffles
         getSignerAndProvider={getSignerAndProvider}
         raffleFactoryAddress={raffleFactoryAddress}
-        // raffleFilter={raffleFilter}
       />
     </div>
   );
