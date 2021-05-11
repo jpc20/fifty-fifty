@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import RaffleContract from "../artifacts/contracts/Raffle.sol/Raffle.json";
+import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid, Typography, Paper } from "@material-ui/core";
+import LoadingButton from "../LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,13 +18,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
+const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState(0);
   const [userTicketCount, setUserTicketCountValue] = useState(0);
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
   const [isOwner, setIsOwnerValue] = useState(false);
   const [open, setOpenValue] = useState(true);
+  const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
+  const [distributeLoading, setDistributeLoadingValue] = useState(false);
   const classes = useStyles();
 
   useEffect(() => {
@@ -52,7 +55,9 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
     getRaffle();
   }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
 
+  useEffect(() => {});
   async function purchaseTicket() {
+    setPurchaseLoadingValue(true);
     const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
@@ -69,13 +74,16 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       });
       provider.once(purchaseTx.hash, (transaction) => {
         setUserTicketCountValue(userTicketCount + 1);
+        setPurchaseLoadingValue(false);
       });
     } catch (error) {
       console.log(error);
+      setPurchaseLoadingValue(false);
     }
   }
 
   async function distributeFunds() {
+    setDistributeLoadingValue(true);
     const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
@@ -83,14 +91,30 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
       signer
     );
     try {
-      await deployedRaffle.distribute();
+      const distributeTx = await deployedRaffle.distribute();
+      provider.once(distributeTx.hash, (transaction) => {
+        setDistributeLoadingValue(false);
+      });
     } catch (error) {
       console.log(error);
+      setDistributeLoadingValue(false);
     }
   }
 
+  const checkRaffleFilter = () => {
+    if (raffleFilter === "open" && open) {
+      return "block";
+    } else if (raffleFilter === "closed" && !open) {
+      return "block";
+    } else if (raffleFilter === "owned" && isOwner) {
+      return "block";
+    } else {
+      return "none";
+    }
+  };
+
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ display: checkRaffleFilter() }}>
       <Paper className={classes.paper}>
         <Grid
           container
@@ -98,33 +122,33 @@ const Raffle = ({ raffleAddress, getSignerAndProvider }) => {
           spacing={1}
           className={!open ? "closed" : ""}
         >
-          {open && (
+          {open && raffleFilter === "open" ? (
             <Grid item xs={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={purchaseTicket}
-              >
-                Purchase Ticket
-              </Button>
+              <LoadingButton
+                buttonText="Purchase Ticket"
+                loading={purchaseLoading}
+                onClickHandler={purchaseTicket}
+              />
             </Grid>
+          ) : (
+            ""
           )}
-          {isOwner && open && (
+          {isOwner && open && raffleFilter === "owned" ? (
             <Grid item xs={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={distributeFunds}
-              >
-                Distribute Funds
-              </Button>
+              <LoadingButton
+                buttonText="Distribute Funds"
+                loading={distributeLoading}
+                onClickHandler={distributeFunds}
+              />
             </Grid>
+          ) : (
+            ""
           )}
           <Grid item xs={10}>
-            <Typography variant="h6" noWrap >
+            <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-              TicketsOwned: {userTicketCount}
-              {/* Beneficiary: {beneficiary.slice(0, 10)}... */}
+              TicketsOwned: {userTicketCount},
+              {/* Beneficiary: {beneficiary.slice(0, 4)}... */}
             </Typography>
           </Grid>
         </Grid>
