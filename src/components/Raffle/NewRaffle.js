@@ -22,6 +22,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
+  const [validAddress, setValidAddressValue] = useState(true);
   const classes = useStyles();
 
   async function deployRaffle(event) {
@@ -58,6 +59,18 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
     getAddress();
   }, []);
 
+  useEffect(() => {
+    const checkAddress = async () => {
+      try {
+        await ethers.utils.getAddress(beneficiary);
+        setValidAddressValue(true);
+      } catch (error) {
+        setValidAddressValue(false);
+      }
+    };
+    checkAddress();
+  }, [beneficiary]);
+
   return (
     <form
       className={classes.root}
@@ -67,12 +80,23 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
     >
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={12}>
-          <TextField
-            label="Address"
-            variant="outlined"
-            onChange={(e) => setBeneficiaryValue(e.target.value)}
-            value={beneficiary}
-          />
+          {validAddress ? (
+            <TextField
+              label="Address"
+              variant="outlined"
+              onChange={(e) => setBeneficiaryValue(e.target.value)}
+              value={beneficiary}
+            />
+          ) : (
+            <TextField
+              error
+              label="Address"
+              variant="outlined"
+              helperText="Please Enter a Valid Address"
+              onChange={(e) => setBeneficiaryValue(e.target.value)}
+              value={beneficiary}
+            />
+          )}
         </Grid>
         <Grid item xs={12}>
           <NumberFormat
