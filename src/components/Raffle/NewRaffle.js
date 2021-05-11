@@ -95,7 +95,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
               prefix={"Ξ"}
               decimalScale={10}
               type="text"
-              onChange={(e) => setTicketPriceValue(e.target.value)}
+              onChange={(e) => setTicketPriceValue(e.target.value.substring(1))}
             />
           </Grid>
           <Grid item xs={12}>
