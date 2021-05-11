@@ -40,7 +40,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
     }
   };
   async function deployRaffle(event) {
-    setLoadingValue(true)
+    setLoadingValue(true);
     event.preventDefault();
     if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
@@ -52,11 +52,14 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
       );
       const formattedPrice = ethers.utils.parseEther(ticketPrice.toString());
       try {
-        const deployTxn = await factory.createRaffle(formattedPrice, beneficiary);
+        const deployTxn = await factory.createRaffle(
+          formattedPrice,
+          beneficiary
+        );
         provider.once(deployTxn.hash, (transaction) => {
-            setLoadingValue(false);
+          setLoadingValue(false);
         });
-    } catch (err) {
+      } catch (err) {
         console.log("Error: ", err);
         setLoadingValue(false);
       }
@@ -71,39 +74,37 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
   }, []);
 
   return (
-    <div>
-      <form
-        className={classes.root}
-        noValidate
-        autoComplete="off"
-        onSubmit={(e) => deployRaffle(e)}
-      >
-        <Grid container spacing={3} className={classes.root}>
-          <Grid item xs={12}>
-            <TextField
-              label="Address"
-              variant="outlined"
-              onChange={(e) => setBeneficiaryValue(e.target.value)}
-              value={beneficiary}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <NumberFormat
-              value={ticketPrice}
-              customInput={TextField}
-              label="Ticket Price(ETH)"
-              prefix={"Ξ"}
-              decimalScale={10}
-              type="text"
-              onChange={(e) => setTicketPriceValue(e.target.value.substring(1))}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <LoadingButton buttonText="Deploy Raffle" loading={loading} />
-          </Grid>
+    <form
+      className={classes.root}
+      noValidate
+      autoComplete="off"
+      onSubmit={(e) => deployRaffle(e)}
+    >
+      <Grid container spacing={3} className={classes.root}>
+        <Grid item xs={12}>
+          <TextField
+            label="Address"
+            variant="outlined"
+            onChange={(e) => setBeneficiaryValue(e.target.value)}
+            value={beneficiary}
+          />
         </Grid>
-      </form>
-    </div>
+        <Grid item xs={12}>
+          <NumberFormat
+            value={ticketPrice}
+            customInput={TextField}
+            label="Ticket Price(ETH)"
+            prefix={"Ξ"}
+            decimalScale={10}
+            type="text"
+            onChange={(e) => setTicketPriceValue(e.target.value.substring(1))}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <LoadingButton buttonText="Deploy Raffle" loading={loading} />
+        </Grid>
+      </Grid>
+    </form>
   );
 };
 
