@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
       flexGrow: 1,
       textAlign: "center",
       justifyContent: "center",
-      alignItems: "center",
     },
   },
 }));
@@ -82,7 +81,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
         <Grid container spacing={3} className={classes.root}>
           <Grid item xs={12}>
             <TextField
-              id="outlined-required"
+              label="Address"
               variant="outlined"
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
@@ -92,6 +91,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
             <NumberFormat
               value={ticketPrice}
               customInput={TextField}
+              label="Ticket Price(ETH)"
               prefix={"Ξ"}
               decimalScale={10}
               type="text"
