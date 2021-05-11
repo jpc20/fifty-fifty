@@ -68,7 +68,12 @@ const RaffleTabs = ({ raffles, getSignerAndProvider }) => {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="raffle-tabs">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="raffle-tabs"
+          centered
+        >
           <Tab label="Open Raffles" {...a11yProps(0)} />
           <Tab label="Closed Raffles" {...a11yProps(1)} />
           <Tab label="Your Raffles" {...a11yProps(2)} />
