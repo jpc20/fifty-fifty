@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import FlashMessage from "react-flash-message";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
-import { Grid, TextField, Button, CircularProgress } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
 import LoadingButton from "../LoadingButton";
@@ -23,6 +24,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
   const [validAddress, setValidAddressValue] = useState(true);
+  const [showMessage, setshowMessageValue] = useState(false);
   const classes = useStyles();
 
   async function deployRaffle(event) {
@@ -44,6 +46,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
         );
         provider.once(deployTxn.hash, (transaction) => {
           setLoadingValue(false);
+          setshowMessageValue(true);
         });
       } catch (err) {
         console.log("Error: ", err);
@@ -78,6 +81,13 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
       autoComplete="off"
       onSubmit={(e) => deployRaffle(e)}
     >
+      {showMessage && (
+        <div>
+          <FlashMessage duration={5000}>
+            <strong>Successfully Deployed Raffle!</strong>
+          </FlashMessage>
+        </div>
+      )}
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={12}>
           {validAddress ? (
