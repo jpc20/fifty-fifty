@@ -2,12 +2,11 @@ import Raffle from "./Raffle";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
+import RaffleTabs from "./RaffleTabs";
 
 const DeployedRaffles = ({
   getSignerAndProvider,
-  raffleFactoryAddress,
-  raffleFilter
-}) => {
+  raffleFactoryAddress}) => {
   const [raffles, setRafflesValue] = useState([]);
 
   useEffect(() => {
@@ -24,19 +23,12 @@ const DeployedRaffles = ({
     getRaffles();
   }, [getSignerAndProvider, raffleFactoryAddress, raffles]);
 
-  const raffleComponents = raffles.map((raffleAddress) => {
-    return (
-      <Raffle
-        raffleAddress={raffleAddress}
-        key={raffleAddress}
-        getSignerAndProvider={getSignerAndProvider}
-        raffleFilter={raffleFilter}
-      />
-    );
-  });
   return (
     <div>
-      {raffleComponents.length > 0 ? raffleComponents : "No Raffles"}
+      <RaffleTabs
+        raffles={raffles}
+        getSignerAndProvider={getSignerAndProvider}
+      />
     </div>
   );
 };

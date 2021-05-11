@@ -122,7 +122,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
           spacing={1}
           className={!open ? "closed" : ""}
         >
-          {(open && raffleFilter === "open") ? (
+          {open && raffleFilter === "open" ? (
             <Grid item xs={3}>
               <LoadingButton
                 buttonText="Purchase Ticket"
@@ -130,21 +130,25 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
                 onClickHandler={purchaseTicket}
               />
             </Grid>
-          ) : ''}
-          {(isOwner && open && raffleFilter === "owned") ? (
-              <Grid item xs={3}>
-                <LoadingButton
-                  buttonText="Distribute Funds"
-                  loading={distributeLoading}
-                  onClickHandler={distributeFunds}
-                />
-              </Grid>
-            ) : ''}
+          ) : (
+            ""
+          )}
+          {isOwner && open && raffleFilter === "owned" ? (
+            <Grid item xs={3}>
+              <LoadingButton
+                buttonText="Distribute Funds"
+                loading={distributeLoading}
+                onClickHandler={distributeFunds}
+              />
+            </Grid>
+          ) : (
+            ""
+          )}
           <Grid item xs={10}>
             <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-              TicketsOwned: {userTicketCount}
-              {/* Beneficiary: {beneficiary.slice(0, 10)}... */}
+              TicketsOwned: {userTicketCount},
+              {/* Beneficiary: {beneficiary.slice(0, 4)}... */}
             </Typography>
           </Grid>
         </Grid>

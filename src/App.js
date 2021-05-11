@@ -2,7 +2,7 @@ import "./App.css";
 import { useState } from "react";
 import { ethers } from "ethers";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
-import { Button, Divider, Grid, Typography } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NewRaffle from "./components/Raffle/NewRaffle";
 
@@ -57,13 +57,14 @@ function App() {
         getSignerAndProvider={getSignerAndProvider}
       />
       <Divider className={classes.divider} />
-      <Button onClick={(e) => changeRaffleFilter("open")}>Open Raffles</Button>
+      {/* <Button onClick={(e) => changeRaffleFilter("open")}>Open Raffles</Button>
       <Button onClick={(e) => changeRaffleFilter("closed")}>Closed Raffles</Button>
-      <Button onClick={(e) => changeRaffleFilter("owned")}>Your Raffles</Button>
+      <Button onClick={(e) => changeRaffleFilter("owned")}>Your Raffles</Button> */}
+      {/* <RaffleTabs /> */}
       <DeployedRaffles
         getSignerAndProvider={getSignerAndProvider}
         raffleFactoryAddress={raffleFactoryAddress}
-        raffleFilter={raffleFilter}
+        // raffleFilter={raffleFilter}
       />
     </div>
   );
