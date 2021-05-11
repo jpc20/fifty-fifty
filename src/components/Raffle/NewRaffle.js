@@ -24,21 +24,6 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
   const [loading, setLoadingValue] = useState(false);
   const classes = useStyles();
 
-  const submitButton = () => {
-    if (loading) {
-      return (
-        <Button>
-          <CircularProgress />
-        </Button>
-      );
-    } else {
-      return (
-        <Button type="submit" variant="contained" color="primary">
-          Deploy Raffle
-        </Button>
-      );
-    }
-  };
   async function deployRaffle(event) {
     setLoadingValue(true);
     event.preventDefault();
