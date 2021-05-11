@@ -59,6 +59,7 @@ function App() {
       <Divider className={classes.divider} />
       <Button onClick={(e) => changeRaffleFilter("open")}>Open Raffles</Button>
       <Button onClick={(e) => changeRaffleFilter("closed")}>Closed Raffles</Button>
+      <Button onClick={(e) => changeRaffleFilter("owned")}>Your Raffles</Button>
       <DeployedRaffles
         getSignerAndProvider={getSignerAndProvider}
         raffleFactoryAddress={raffleFactoryAddress}

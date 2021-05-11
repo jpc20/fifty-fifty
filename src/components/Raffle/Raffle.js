@@ -55,9 +55,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
     getRaffle();
   }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
 
-  useEffect(() => {
-    
-  })
+  useEffect(() => {});
   async function purchaseTicket() {
     setPurchaseLoadingValue(true);
     const [provider, signer, address] = await getSignerAndProvider();
@@ -76,16 +74,16 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
       });
       provider.once(purchaseTx.hash, (transaction) => {
         setUserTicketCountValue(userTicketCount + 1);
-        setPurchaseLoadingValue(false)
+        setPurchaseLoadingValue(false);
       });
     } catch (error) {
       console.log(error);
-      setPurchaseLoadingValue(false)
+      setPurchaseLoadingValue(false);
     }
   }
 
   async function distributeFunds() {
-    setDistributeLoadingValue(true)
+    setDistributeLoadingValue(true);
     const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
@@ -105,16 +103,18 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
 
   const checkRaffleFilter = () => {
     if (raffleFilter === "open" && open) {
-      return 'block';
+      return "block";
     } else if (raffleFilter === "closed" && !open) {
-      return 'block';
+      return "block";
+    } else if (raffleFilter === "owned" && isOwner) {
+      return "block";
     } else {
       return "none";
     }
-  }
+  };
 
   return (
-    <div className={classes.root} style={{display: checkRaffleFilter()}}>
+    <div className={classes.root} style={{ display: checkRaffleFilter() }}>
       <Paper className={classes.paper}>
         <Grid
           container
@@ -122,7 +122,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
           spacing={1}
           className={!open ? "closed" : ""}
         >
-          {open && (
+          {(open && raffleFilter === "open") ? (
             <Grid item xs={3}>
               <LoadingButton
                 buttonText="Purchase Ticket"
@@ -130,16 +130,16 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
                 onClickHandler={purchaseTicket}
               />
             </Grid>
-          )}
-          {isOwner && open && (
-            <Grid item xs={3}>
-              <LoadingButton
-                buttonText="Distribute Funds"
-                loading={distributeLoading}
-                onClickHandler={distributeFunds}
-              />
-            </Grid>
-          )}
+          ) : ''}
+          {(isOwner && open && raffleFilter === "owned") ? (
+              <Grid item xs={3}>
+                <LoadingButton
+                  buttonText="Distribute Funds"
+                  loading={distributeLoading}
+                  onClickHandler={distributeFunds}
+                />
+              </Grid>
+            ) : ''}
           <Grid item xs={10}>
             <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
