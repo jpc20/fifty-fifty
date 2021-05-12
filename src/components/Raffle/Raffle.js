@@ -22,6 +22,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState(0);
   const [userTicketCount, setUserTicketCountValue] = useState(0);
+  const [totalTicketCount, setTotalTicketCountValue] = useState(0);
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
   const [isOwner, setIsOwnerValue] = useState(false);
   const [open, setOpenValue] = useState(true);
@@ -39,14 +40,16 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
       );
       const raffleTicketPrice = await deployedRaffle.ticketPrice();
       const raffleBeneficiary = await deployedRaffle.beneficiary();
-      const ticketCount = await deployedRaffle.ticketCount(address);
+      const userTickets = await deployedRaffle.ticketCount(address);
+      const allTicketHolders = await deployedRaffle.getTicketHolders();
       const contractBalance = await provider.getBalance(raffleAddress);
       const checkOwner = await deployedRaffle.owner();
       const openStatus = await deployedRaffle.open();
       setRaffleTickerPriceValue(
         ethers.utils.formatEther(raffleTicketPrice.toString())
       );
-      setUserTicketCountValue(ticketCount.toNumber());
+      setUserTicketCountValue(userTickets.toNumber());
+      setTotalTicketCountValue(allTicketHolders.length);
       setBeneficiaryValue(raffleBeneficiary);
       setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
       setOpenValue(openStatus);
@@ -148,6 +151,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
             <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
               TicketsOwned: {userTicketCount},
+              TicketCount: {totalTicketCount},
               {/* Beneficiary: {beneficiary.slice(0, 4)}... */}
             </Typography>
           </Grid>
