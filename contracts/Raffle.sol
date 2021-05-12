@@ -89,4 +89,8 @@ contract Raffle is Ownable {
         open = false;
         emit Distribute(beneficiary, winner, totalAmount);
     }
+
+    function getTicketHolders() public view returns (address[] memory) {
+        return allTicketHolders;
+    }
 }
