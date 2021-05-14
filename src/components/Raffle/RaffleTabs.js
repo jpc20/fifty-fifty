@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Raffle from "./Raffle";
 import NewRaffle from "./NewRaffle";
 import { makeStyles } from "@material-ui/core/styles";
-import { Tabs, Tab, AppBar, Box, Typography } from "@material-ui/core";
+import { Tabs, Tab, AppBar, Box } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
