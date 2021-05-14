@@ -13,17 +13,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, currentTab, index, ...other } = props;
 
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
+      hidden={currentTab !== index}
       id={`wrapped-tabpanel-${index}`}
       aria-labelledby={`wrapped-tab-${index}`}
       {...other}
     >
-      {value === index && (
+      {currentTab === index && (
         <Box p={3}>
           <div>{children}</div>
         </Box>
@@ -35,7 +35,7 @@ function TabPanel(props) {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  currentTab: PropTypes.any.isRequired,
 };
 
 function a11yProps(index) {
@@ -47,10 +47,10 @@ function a11yProps(index) {
 
 const RaffleTabs = ({ raffles, getSignerAndProvider, raffleFactoryAddress }) => {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
+  const [currentTab, setCurrentTabValue] = useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleChange = (event, newTab) => {
+    setCurrentTabValue(newTab);
   };
 
   const raffleComponents = (raffleFilter) => {
@@ -70,7 +70,7 @@ const RaffleTabs = ({ raffles, getSignerAndProvider, raffleFactoryAddress }) => 
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs
-          value={value}
+          value={currentTab}
           onChange={handleChange}
           aria-label="raffle-tabs"
           centered
@@ -81,19 +81,20 @@ const RaffleTabs = ({ raffles, getSignerAndProvider, raffleFactoryAddress }) => 
           <Tab label="Create New Raffle" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
+      <TabPanel currentTab={currentTab} index={0}>
         {raffleComponents("open")}
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel currentTab={currentTab} index={1}>
         {raffleComponents("closed")}
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel currentTab={currentTab} index={2}>
         {raffleComponents("owned")}
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      <TabPanel currentTab={currentTab} index={3}>
         <NewRaffle
           raffleFactoryAddress={raffleFactoryAddress}
           getSignerAndProvider={getSignerAndProvider}
+          setCurrentTabValue={setCurrentTabValue}
         />
       </TabPanel>
     </div>

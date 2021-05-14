@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
+const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabValue }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
@@ -44,6 +44,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
         );
         provider.once(deployTxn.hash, (transaction) => {
           setLoadingValue(false);
+          setCurrentTabValue(2);
         });
       } catch (err) {
         console.log("Error: ", err);
