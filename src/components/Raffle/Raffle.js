@@ -56,7 +56,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
       setIsOwnerValue(checkOwner === address);
     };
     getRaffle();
-  }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
+  }, []);
 
   async function purchaseTicket() {
     setPurchaseLoadingValue(true);
@@ -75,8 +75,9 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
         value: ethTicketPrice,
       });
       provider.once(purchaseTx.hash, (transaction) => {
-        setUserTicketCountValue(userTicketCount + 1);
+        setUserTicketCountValue((userTicketCount) => userTicketCount + 1);
         setPurchaseLoadingValue(false);
+        setBalanceValue(parseFloat(balance) + parseFloat(raffleTicketPrice));
       });
     } catch (error) {
       console.log(error);
