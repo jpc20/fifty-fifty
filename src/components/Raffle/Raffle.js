@@ -25,7 +25,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
   const [totalTicketCount, setTotalTicketCountValue] = useState(0);
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
   const [isOwner, setIsOwnerValue] = useState(false);
-  const [open, setOpenValue] = useState(true);
+  const [open, setOpenValue] = useState(null);
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
   const classes = useStyles();
@@ -58,7 +58,6 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
     getRaffle();
   }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
 
-  useEffect(() => {});
   async function purchaseTicket() {
     setPurchaseLoadingValue(true);
     const [provider, signer, address] = await getSignerAndProvider();
@@ -107,7 +106,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
   const checkRaffleFilter = () => {
     if (raffleFilter === "open" && open) {
       return "block";
-    } else if (raffleFilter === "closed" && !open) {
+    } else if (raffleFilter === "closed" && open === false) {
       return "block";
     } else if (raffleFilter === "owned" && isOwner) {
       return "block";
@@ -150,8 +149,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
           <Grid item xs={10}>
             <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-              TicketsOwned: {userTicketCount},
-              TicketCount: {totalTicketCount},
+              TicketsOwned: {userTicketCount}, TicketCount: {totalTicketCount},
               {/* Beneficiary: {beneficiary.slice(0, 4)}... */}
             </Typography>
           </Grid>

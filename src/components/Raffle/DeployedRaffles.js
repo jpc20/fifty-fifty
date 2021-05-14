@@ -29,7 +29,7 @@ const DeployedRaffles = ({
       }
     };
     getRaffles();
-  }, [getSignerAndProvider, raffleFactoryAddress, raffles]);
+  }, [getSignerAndProvider, raffleFactoryAddress]);
 
   return (
     <div>
