@@ -1,4 +1,3 @@
-import Raffle from "./Raffle";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
@@ -23,7 +22,7 @@ const DeployedRaffles = ({
         setRafflesValue([...raffles]);
       } catch (error) {
         const network = await checkNetwork();
-        if (network && network !== 'riankeby') {
+        if (network && network !== 'rinkeby') {
           console.log('Wrong Network -- Switch to Rinkeby')
         };
       }
