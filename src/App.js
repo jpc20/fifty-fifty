@@ -27,30 +27,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  const [raffleFilter, setRaffleFilter] = useState("open")
   const classes = useStyles();
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-  async function getSignerAndProvider() {
-    await requestAccount();
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const address = await signer.getAddress();
-    return [provider, signer, address];
+  const checkNetwork = async () => {
+    const networks = {
+      "0x1": "mainnet",
+      "0x2a": "koval",
+      "0x5": "goerli",
+      "0x3": "ropsten",
+      "0x4": "rinkeby",
+    };
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    return networks[chainId];
   }
 
-  function changeRaffleFilter(newFilter) {
-      setRaffleFilter(newFilter);
+  async function getSignerAndProvider() {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      return [provider, signer, address];
   }
 
   return (
     <div className={classes.root}>
-      <Typography variant="h1" >
-        50/50 Raffle
-      </Typography>
+      <Typography variant="h1">50/50 Raffle</Typography>
       <Typography variant="subtitle1" gutterBottom>
         Built by @jpc20
       </Typography>
@@ -61,6 +66,7 @@ function App() {
       <DeployedRaffles
         getSignerAndProvider={getSignerAndProvider}
         raffleFactoryAddress={raffleFactoryAddress}
+        checkNetwork={checkNetwork}
       />
     </div>
   );

@@ -6,22 +6,30 @@ import RaffleTabs from "./RaffleTabs";
 
 const DeployedRaffles = ({
   getSignerAndProvider,
-  raffleFactoryAddress}) => {
+  raffleFactoryAddress,
+  checkNetwork,}) => {
   const [raffles, setRafflesValue] = useState([]);
 
   useEffect(() => {
     const getRaffles = async () => {
-      const [provider, signer, address] = await getSignerAndProvider();
-      const factory = new ethers.Contract(
-        raffleFactoryAddress,
-        RaffleFactory.abi,
-        signer
-      );
-      const raffles = await factory.getDeployedRaffles();
-      setRafflesValue([...raffles]);
+      try {
+        const [provider, signer, address] = await getSignerAndProvider();
+        const factory = new ethers.Contract(
+          raffleFactoryAddress,
+          RaffleFactory.abi,
+          signer
+        );
+        const raffles = await factory.getDeployedRaffles();
+        setRafflesValue([...raffles]);
+      } catch (error) {
+        const network = await checkNetwork();
+        if (network && network !== 'riankeby') {
+          console.log('Wrong Network -- Switch to Rinkeby')
+        };
+      }
     };
     getRaffles();
-  }, [getSignerAndProvider, raffleFactoryAddress, raffles]);
+  }, [getSignerAndProvider, raffleFactoryAddress]);
 
   return (
     <div>

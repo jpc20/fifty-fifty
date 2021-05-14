@@ -22,9 +22,10 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [balance, setBalanceValue] = useState(0);
   const [userTicketCount, setUserTicketCountValue] = useState(0);
+  const [totalTicketCount, setTotalTicketCountValue] = useState(0);
   const [raffleTicketPrice, setRaffleTickerPriceValue] = useState(0);
   const [isOwner, setIsOwnerValue] = useState(false);
-  const [open, setOpenValue] = useState(true);
+  const [open, setOpenValue] = useState(null);
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
   const classes = useStyles();
@@ -39,14 +40,16 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
       );
       const raffleTicketPrice = await deployedRaffle.ticketPrice();
       const raffleBeneficiary = await deployedRaffle.beneficiary();
-      const ticketCount = await deployedRaffle.ticketCount(address);
+      const userTickets = await deployedRaffle.ticketCount(address);
+      const allTicketHolders = await deployedRaffle.getTicketHolders();
       const contractBalance = await provider.getBalance(raffleAddress);
       const checkOwner = await deployedRaffle.owner();
       const openStatus = await deployedRaffle.open();
       setRaffleTickerPriceValue(
         ethers.utils.formatEther(raffleTicketPrice.toString())
       );
-      setUserTicketCountValue(ticketCount.toNumber());
+      setUserTicketCountValue(userTickets.toNumber());
+      setTotalTicketCountValue(allTicketHolders.length);
       setBeneficiaryValue(raffleBeneficiary);
       setBalanceValue(ethers.utils.formatEther(contractBalance.toString()));
       setOpenValue(openStatus);
@@ -55,7 +58,6 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
     getRaffle();
   }, [getSignerAndProvider, raffleAddress, userTicketCount, balance]);
 
-  useEffect(() => {});
   async function purchaseTicket() {
     setPurchaseLoadingValue(true);
     const [provider, signer, address] = await getSignerAndProvider();
@@ -104,7 +106,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
   const checkRaffleFilter = () => {
     if (raffleFilter === "open" && open) {
       return "block";
-    } else if (raffleFilter === "closed" && !open) {
+    } else if (raffleFilter === "closed" && open === false) {
       return "block";
     } else if (raffleFilter === "owned" && isOwner) {
       return "block";
@@ -147,7 +149,7 @@ const Raffle = ({ raffleAddress, getSignerAndProvider, raffleFilter }) => {
           <Grid item xs={10}>
             <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-              TicketsOwned: {userTicketCount},
+              TicketsOwned: {userTicketCount}, TicketCount: {totalTicketCount},
               {/* Beneficiary: {beneficiary.slice(0, 4)}... */}
             </Typography>
           </Grid>
