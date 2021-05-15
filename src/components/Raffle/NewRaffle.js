@@ -66,7 +66,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabVa
         await ethers.utils.getAddress(beneficiary);
         setValidAddressValue(true);
       } catch (error) {
-        setValidAddressValue(false);
+        if (beneficiary.length !== 0) setValidAddressValue(false);
       }
     };
     checkAddress();
