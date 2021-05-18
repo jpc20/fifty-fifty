@@ -45,25 +45,46 @@ function a11yProps(index) {
   };
 }
 
-const RaffleTabs = ({ raffles, getSignerAndProvider, raffleFactoryAddress }) => {
+const FILTER_MAP = {
+  open: (raffle) => raffle.openStatus,
+  closed: (raffle) => !raffle.openStatus,
+  owned: (raffle) => raffle.owner,
+};
+
+const FILTER_NAMES = Object.keys(FILTER_MAP);
+
+const RaffleTabs = ({
+  raffles,
+  getSignerAndProvider,
+  raffleFactoryAddress,
+}) => {
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
+  const [filter, setFilter] = useState("open");
 
   const handleChange = (event, newTab) => {
     setCurrentTabValue(newTab);
   };
 
-  const raffleComponents = (raffleFilter) => {
-    return raffles.map((raffleAddress) => {
+  const RaffleComponents = ({ raffles, filter }) => {
+    const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
       return (
         <Raffle
-          raffleAddress={raffleAddress}
-          key={raffleAddress}
           getSignerAndProvider={getSignerAndProvider}
-          raffleFilter={raffleFilter}
+          raffleTicketPrice={raffle.ticketPrice}
+          beneficiary={raffle.beneficiary}
+          userTicketCount={raffle.userTicketCount}
+          totalTicketCount={raffle.totalTicketCount}
+          balance={raffle.balance}
+          isOwner={raffle.owner}
+          open={raffle.openStatus}
+          raffleAddress={raffle.raffleAddress}
+          key={raffle.raffleAddress}
+          raffleFilter={filter}
         />
       );
     });
+    return filtered;
   };
 
   return (
@@ -75,20 +96,32 @@ const RaffleTabs = ({ raffles, getSignerAndProvider, raffleFactoryAddress }) => 
           aria-label="raffle-tabs"
           centered
         >
-          <Tab label="Open Raffles" {...a11yProps(0)} />
-          <Tab label="Closed Raffles" {...a11yProps(1)} />
-          <Tab label="Your Raffles" {...a11yProps(2)} />
+          <Tab
+            label="Open Raffles"
+            {...a11yProps(0)}
+            onClick={() => setFilter("open")}
+          />
+          <Tab
+            label="Closed Raffles"
+            {...a11yProps(1)}
+            onClick={() => setFilter("closed")}
+          />
+          <Tab
+            label="Your Raffles"
+            {...a11yProps(2)}
+            onClick={() => setFilter("owned")}
+          />
           <Tab label="Create New Raffle" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <TabPanel currentTab={currentTab} index={0}>
-        {raffleComponents("open")}
+        <RaffleComponents filter={filter} raffles={raffles} />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
-        {raffleComponents("closed")}
+        <RaffleComponents filter={filter} raffles={raffles} />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={2}>
-        {raffleComponents("owned")}
+        <RaffleComponents filter={filter} raffles={raffles} />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={3}>
         <NewRaffle
