@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
 import RaffleTabs from "./RaffleTabs";
@@ -7,11 +7,13 @@ import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 const DeployedRaffles = ({
   getSignerAndProvider,
   raffleFactoryAddress,
-  checkNetwork,}) => {
+  checkNetwork,
+}) => {
   const [raffles, setRafflesValue] = useState([]);
 
-  const getRaffles = async () => {
+  const getRaffles = useCallback(async () => {
     try {
+      setRafflesValue([]);
       const [provider, signer, address] = await getSignerAndProvider();
       const factory = new ethers.Contract(
         raffleFactoryAddress,
@@ -42,26 +44,28 @@ const DeployedRaffles = ({
           openStatus: openStatus,
           raffleAddress: raffleAddress,
         };
-        setRafflesValue(raffs => [...raffs, raffle])
+        setRafflesValue((raffs) => [...raffs, raffle]);
       });
     } catch (error) {
       const network = await checkNetwork();
-      if (network && network !== 'rinkeby') {
-        console.log('Wrong Network -- Switch to Rinkeby')
-      };
+      if (network && network !== "rinkeby") {
+        console.log("Wrong Network -- Switch to Rinkeby");
+      }
     }
-  };
+  }, []);
+  
   useEffect(() => {
     getRaffles();
   }, []);
 
   return (
     <div>
-        <RaffleTabs
-          raffles={raffles}
-          getSignerAndProvider={getSignerAndProvider}
-          raffleFactoryAddress={raffleFactoryAddress}
-        />
+      <RaffleTabs
+        raffles={raffles}
+        getSignerAndProvider={getSignerAndProvider}
+        raffleFactoryAddress={raffleFactoryAddress}
+        getRaffles={getRaffles}
+      />
     </div>
   );
 };

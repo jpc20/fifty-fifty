@@ -57,6 +57,7 @@ const RaffleTabs = ({
   raffles,
   getSignerAndProvider,
   raffleFactoryAddress,
+  getRaffles
 }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
@@ -128,6 +129,8 @@ const RaffleTabs = ({
           raffleFactoryAddress={raffleFactoryAddress}
           getSignerAndProvider={getSignerAndProvider}
           setCurrentTabValue={setCurrentTabValue}
+          setFilter={setFilter}
+          getRaffles={getRaffles}
         />
       </TabPanel>
     </div>
