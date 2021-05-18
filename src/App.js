@@ -1,5 +1,4 @@
 import "./App.css";
-import { useState } from "react";
 import { ethers } from "ethers";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import { Divider, Typography } from "@material-ui/core";
@@ -45,7 +44,7 @@ function App() {
     return networks[chainId];
   }
 
-  async function getSignerAndProvider() {
+  const getSignerAndProvider = async () => {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();

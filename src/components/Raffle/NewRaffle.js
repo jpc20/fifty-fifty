@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
-import { Grid, TextField, Button, CircularProgress } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
 import LoadingButton from "../LoadingButton";
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
+const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabValue }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
@@ -44,6 +44,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
         );
         provider.once(deployTxn.hash, (transaction) => {
           setLoadingValue(false);
+          setCurrentTabValue(2);
         });
       } catch (err) {
         console.log("Error: ", err);
@@ -65,7 +66,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider }) => {
         await ethers.utils.getAddress(beneficiary);
         setValidAddressValue(true);
       } catch (error) {
-        setValidAddressValue(false);
+        if (beneficiary.length !== 0) setValidAddressValue(false);
       }
     };
     checkAddress();
