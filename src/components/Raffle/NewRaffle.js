@@ -121,7 +121,7 @@ const NewRaffle = ({
           />
         </Grid>
         <Grid item xs={12}>
-          <LoadingButton buttonText="Deploy Raffle" loading={loading} />
+          <LoadingButton buttonText="Deploy Raffle" loading={loading} disabled={!validAddress} />
         </Grid>
       </Grid>
     </form>
