@@ -53,7 +53,7 @@ const DeployedRaffles = ({
       }
     }
   }, []);
-  
+
   useEffect(() => {
     getRaffles();
   }, []);

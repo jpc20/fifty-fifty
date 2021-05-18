@@ -67,7 +67,7 @@ const RaffleTabs = ({
     setCurrentTabValue(newTab);
   };
 
-  const RaffleComponents = ({ raffles, filter, getRaffles }) => {
+  const RaffleComponents = ({ raffles, filter, getRaffles, setFilter }) => {
     const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
       return (
         <Raffle
@@ -117,13 +117,21 @@ const RaffleTabs = ({
         </Tabs>
       </AppBar>
       <TabPanel currentTab={currentTab} index={0}>
-        <RaffleComponents filter={filter} raffles={raffles} getRaffles={getRaffles} />
+        <RaffleComponents
+          filter={filter}
+          raffles={raffles}
+          getRaffles={getRaffles}
+        />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
         <RaffleComponents filter={filter} raffles={raffles} />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={2}>
-        <RaffleComponents filter={filter} raffles={raffles} />
+        <RaffleComponents
+          filter={filter}
+          raffles={raffles}
+          getRaffles={getRaffles}
+        />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={3}>
         <NewRaffle

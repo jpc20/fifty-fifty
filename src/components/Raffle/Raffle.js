@@ -73,6 +73,7 @@ const Raffle = ({
       const distributeTx = await deployedRaffle.distribute();
       provider.once(distributeTx.hash, (transaction) => {
         setDistributeLoadingValue(false);
+        getRaffles()
       });
     } catch (error) {
       console.log(error);

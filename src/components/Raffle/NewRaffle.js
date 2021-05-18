@@ -93,6 +93,7 @@ const NewRaffle = ({
             <TextField
               label="Address"
               variant="outlined"
+              disabled={loading}
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
             />
@@ -115,6 +116,7 @@ const NewRaffle = ({
             prefix={"Ξ"}
             decimalScale={10}
             type="text"
+            disabled={loading}
             onChange={(e) => setTicketPriceValue(e.target.value.substring(1))}
           />
         </Grid>
