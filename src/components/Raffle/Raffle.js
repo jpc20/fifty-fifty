@@ -29,6 +29,7 @@ const Raffle = ({
   open,
   raffleAddress,
   raffleFilter,
+  getRaffles,
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
@@ -51,9 +52,8 @@ const Raffle = ({
         value: ethTicketPrice,
       });
       provider.once(purchaseTx.hash, (transaction) => {
-        // setUserTicketCountValue((userTicketCount) => userTicketCount + 1);
         setPurchaseLoadingValue(false);
-        // setBalanceValue(parseFloat(balance) + parseFloat(raffleTicketPrice));
+        getRaffles();
       });
     } catch (error) {
       console.log(error);
