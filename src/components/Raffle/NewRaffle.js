@@ -20,10 +20,12 @@ const useStyles = makeStyles((theme) => ({
 
 const NewRaffle = ({
   raffleFactoryAddress,
-  getSignerAndProvider,
   setCurrentTabValue,
   setFilter,
   getRaffles,
+  signer,
+  provider,
+  userAddress,
 }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
@@ -36,7 +38,6 @@ const NewRaffle = ({
     event.preventDefault();
     if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
-      const [provider, signer, address] = await getSignerAndProvider();
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
@@ -62,11 +63,10 @@ const NewRaffle = ({
   }
   useEffect(() => {
     const getAddress = async () => {
-      const [provider, signer, address] = await getSignerAndProvider();
-      setBeneficiaryValue(address);
+      setBeneficiaryValue(userAddress);
     };
     getAddress();
-  }, []);
+  }, [userAddress]);
 
   useEffect(() => {
     const checkAddress = async () => {
@@ -121,7 +121,11 @@ const NewRaffle = ({
           />
         </Grid>
         <Grid item xs={12}>
-          <LoadingButton buttonText="Deploy Raffle" loading={loading} disabled={!validAddress} />
+          <LoadingButton
+            buttonText="Deploy Raffle"
+            loading={loading}
+            disabled={!validAddress}
+          />
         </Grid>
       </Grid>
     </form>

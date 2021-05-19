@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Raffle = ({
-  getSignerAndProvider,
   raffleTicketPrice,
   beneficiary,
   userTicketCount,
@@ -30,6 +29,9 @@ const Raffle = ({
   raffleAddress,
   raffleFilter,
   getRaffles,
+  signer,
+  provider,
+  userAddress,
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
@@ -37,7 +39,6 @@ const Raffle = ({
 
   async function purchaseTicket() {
     setPurchaseLoadingValue(true);
-    const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
       RaffleContract.abi,
@@ -48,7 +49,7 @@ const Raffle = ({
     );
     try {
       const purchaseTx = await deployedRaffle.purchaseTicket({
-        from: address,
+        from: userAddress,
         value: ethTicketPrice,
       });
       provider.once(purchaseTx.hash, (transaction) => {
@@ -63,7 +64,6 @@ const Raffle = ({
 
   async function distributeFunds() {
     setDistributeLoadingValue(true);
-    const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
       RaffleContract.abi,
@@ -73,7 +73,7 @@ const Raffle = ({
       const distributeTx = await deployedRaffle.distribute();
       provider.once(distributeTx.hash, (transaction) => {
         setDistributeLoadingValue(false);
-        getRaffles()
+        getRaffles();
       });
     } catch (error) {
       console.log(error);

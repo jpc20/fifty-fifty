@@ -55,9 +55,11 @@ const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 const RaffleTabs = ({
   raffles,
-  getSignerAndProvider,
   raffleFactoryAddress,
-  getRaffles
+  getRaffles,
+  signer,
+  provider,
+  userAddress,
 }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
@@ -67,11 +69,10 @@ const RaffleTabs = ({
     setCurrentTabValue(newTab);
   };
 
-  const RaffleComponents = ({ raffles, filter, getRaffles, setFilter }) => {
+  const RaffleComponents = ({ raffles, filter, getRaffles, signer, provider, userAddress }) => {
     const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
       return (
         <Raffle
-          getSignerAndProvider={getSignerAndProvider}
           raffleTicketPrice={raffle.ticketPrice}
           beneficiary={raffle.beneficiary}
           userTicketCount={raffle.userTicketCount}
@@ -83,6 +84,9 @@ const RaffleTabs = ({
           key={raffle.raffleAddress}
           raffleFilter={filter}
           getRaffles={getRaffles}
+          signer={signer}
+          provider={provider}
+          userAddress={userAddress}
         />
       );
     });
@@ -121,25 +125,40 @@ const RaffleTabs = ({
           filter={filter}
           raffles={raffles}
           getRaffles={getRaffles}
+          signer={signer}
+          provider={provider}
+          userAddress={userAddress}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
-        <RaffleComponents filter={filter} raffles={raffles} />
+        <RaffleComponents
+          filter={filter}
+          raffles={raffles}
+          getRaffles={getRaffles}
+          signer={signer}
+          provider={provider}
+          userAddress={userAddress}
+        />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={2}>
         <RaffleComponents
           filter={filter}
           raffles={raffles}
           getRaffles={getRaffles}
+          signer={signer}
+          provider={provider}
+          userAddress={userAddress}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={3}>
         <NewRaffle
           raffleFactoryAddress={raffleFactoryAddress}
-          getSignerAndProvider={getSignerAndProvider}
           setCurrentTabValue={setCurrentTabValue}
           setFilter={setFilter}
           getRaffles={getRaffles}
+          signer={signer}
+          provider={provider}
+          userAddress={userAddress}
         />
       </TabPanel>
     </div>
