@@ -108,6 +108,7 @@ const Raffle = ({
                 buttonText="Purchase Ticket"
                 loading={purchaseLoading}
                 onClickHandler={purchaseTicket}
+                buttonType="purchase-ticket"
               />
             </Grid>
           ) : (
@@ -119,6 +120,7 @@ const Raffle = ({
                 buttonText="Distribute Funds"
                 loading={distributeLoading}
                 onClickHandler={distributeFunds}
+                buttonType="distribute"
               />
             </Grid>
           ) : (

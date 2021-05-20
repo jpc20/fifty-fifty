@@ -82,16 +82,17 @@ function App() {
     <div className={classes.root}>
       <div className="App-header">
         <div className="account-button">
-        <LoadingButton
-          buttonText={
-            connected
-              ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
-              : "Connect Account"
-          }
-          onClickHandler={connectAccount}
-          loading={accountLoading}
-          variant="outlined"
-        />
+          <LoadingButton
+            buttonText={
+              connected
+                ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
+                : "Connect Account"
+            }
+            onClickHandler={connectAccount}
+            loading={accountLoading}
+            variant="outlined"
+            buttonType="account"
+          />
         </div>
       </div>
       <Typography variant="h2">50/50 Raffle</Typography>
