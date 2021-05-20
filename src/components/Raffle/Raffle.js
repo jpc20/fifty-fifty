@@ -112,7 +112,7 @@ const Raffle = ({
                 loading={purchaseLoading}
                 onClickHandler={purchaseTicket}
                 buttonType="purchase-ticket"
-                disabled={!userConnected}
+                userConnected={userConnected}
               />
             </Grid>
           ) : (
@@ -125,7 +125,7 @@ const Raffle = ({
                 loading={distributeLoading}
                 onClickHandler={distributeFunds}
                 buttonType="distribute"
-                disabled={!userConnected}
+                userConnected={userConnected}
               />
             </Grid>
           ) : (

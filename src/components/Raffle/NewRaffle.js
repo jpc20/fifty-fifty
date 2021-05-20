@@ -26,6 +26,7 @@ const NewRaffle = ({
   signer,
   provider,
   userAddress,
+  userConnected
 }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
@@ -125,6 +126,7 @@ const NewRaffle = ({
             buttonText="Deploy Raffle"
             loading={loading}
             disabled={!validAddress}
+            userConnected={userConnected}
           />
         </Grid>
       </Grid>

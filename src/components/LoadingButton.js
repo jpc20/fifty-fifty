@@ -1,3 +1,4 @@
+import {useState, useEffect } from 'react';
 import { Button, CircularProgress } from "@material-ui/core";
 import { AccountBalance, AccountCircle, ReceiptSharp } from "@material-ui/icons";
 
@@ -5,10 +6,12 @@ const LoadingButton = ({
   buttonText,
   loading,
   onClickHandler,
-  disabled,
+  userConnected,
   variant,
-  buttonType
+  buttonType,
+  disabled
 }) => {
+
   const renderButton = () => {
     if (loading) {
       return (
@@ -23,7 +26,7 @@ const LoadingButton = ({
           variant={variant || "contained"}
           color="primary"
           onClick={onClickHandler}
-          disabled={disabled}
+          disabled={disabled ? disabled : buttonType !== "account" && !userConnected }
           size="small"
         >
           {buttonType === "account" && <AccountCircle fontSize="small" />}

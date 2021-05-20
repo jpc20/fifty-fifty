@@ -73,25 +73,27 @@ function App() {
     setProvider(providerResp);
     setSigner(signerResp);
     setApiConnected(true);
+    setUserConnected(false);
+  }, []);
+
+  const isMetaMaskConnected = useCallback(async () => {
+    const { ethereum } = window;
+    if (ethereum) {
+      var provider = new ethers.providers.Web3Provider(ethereum);
+    }
+    const accounts = await provider.listAccounts();
+    return accounts.length > 0;
   }, []);
 
   useEffect(() => {
-    const isMetaMaskConnected = async () => {
-      const { ethereum } = window;
-      if (ethereum) {
-        var provider = new ethers.providers.Web3Provider(ethereum);
+    isMetaMaskConnected().then((metaMaskResp) => {
+      if (metaMaskResp === true) {
+        connectAccount();
+      } else {
+        connectApi();
       }
-      const accounts = await provider.listAccounts();
-      return accounts.length > 0;
-    };
-    const metaMaspResp = isMetaMaskConnected();
-
-    if (metaMaspResp === true) {
-      connectAccount();
-    } else {
-      connectApi();
-    }
-  }, []);
+    });
+  }, [connectAccount, connectApi, isMetaMaskConnected]);
 
   return (
     <div className={classes.root}>

@@ -19,7 +19,6 @@ const DeployedRaffles = ({
     if (userConnected === false && apiConnected === false) return;
     try {
       setRafflesValue([]);
-      console.log(signer, provider, userAddress, userConnected);
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
@@ -81,6 +80,7 @@ const DeployedRaffles = ({
         signer={signer}
         provider={provider}
         userAddress={userAddress}
+        userConnected={userConnected}
       />
     </div>
   );
