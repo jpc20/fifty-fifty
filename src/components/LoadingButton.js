@@ -24,16 +24,13 @@ const LoadingButton = ({
           color="primary"
           onClick={onClickHandler}
           disabled={disabled}
+          size="small"
         >
-          {buttonType === 'account' && (
-            <AccountCircle fontSize="small" />
-          )}
-          {buttonType === 'purchase-ticket' && (
+          {buttonType === "account" && <AccountCircle fontSize="small" />}
+          {buttonType === "purchase-ticket" && (
             <ReceiptSharp fontSize="small" />
           )}
-          {buttonType === 'distribute' && (
-            <AccountBalance fontSize="small" />
-          )}
+          {buttonType === "distribute" && <AccountBalance fontSize="small" />}
           {buttonText}
         </Button>
       );
