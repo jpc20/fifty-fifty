@@ -31,7 +31,8 @@ function App() {
   const [signer, setSigner] = useState("");
   const [provider, setProvider] = useState("");
   const [userAddress, setUserAddress] = useState("");
-  const [connected, setConnected] = useState(false);
+  const [userConnected, setUserConnected] = useState(false);
+  const [apiConnected, setApiConnected] = useState(false);
   const [accountLoading, setAccountLoading] = useState(false);
   const classes = useStyles();
 
@@ -60,8 +61,18 @@ function App() {
     setSigner(signerResp);
     setProvider(providerResp);
     setUserAddress(address);
-    setConnected(true);
+    setUserConnected(true);
     setAccountLoading(false);
+  }, []);
+
+  const connectApi = useCallback(async () => {
+    const providerResp = new ethers.providers.JsonRpcProvider();
+    const signerResp = providerResp.getSigner();
+    const address = await signerResp.getAddress();
+    setUserAddress(address);
+    setProvider(providerResp);
+    setSigner(signerResp);
+    setApiConnected(true);
   }, []);
 
   useEffect(() => {
@@ -73,9 +84,13 @@ function App() {
       const accounts = await provider.listAccounts();
       return accounts.length > 0;
     };
-    isMetaMaskConnected().then((res) => {
-      if (res === true) connectAccount();
-    });
+    const metaMaspResp = isMetaMaskConnected();
+
+    if (metaMaspResp === true) {
+      connectAccount();
+    } else {
+      connectApi();
+    }
   }, []);
 
   return (
@@ -84,7 +99,7 @@ function App() {
         <div className="account-button">
           <LoadingButton
             buttonText={
-              connected
+              userConnected
                 ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
                 : "Connect Account"
             }
@@ -110,7 +125,8 @@ function App() {
         signer={signer}
         provider={provider}
         userAddress={userAddress}
-        connected={connected}
+        userConnected={userConnected}
+        apiConnected={apiConnected}
       />
     </div>
   );

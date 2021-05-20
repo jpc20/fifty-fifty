@@ -5,22 +5,21 @@ import RaffleTabs from "./RaffleTabs";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 
 const DeployedRaffles = ({
-  // getSignerAndProvider,
-  connectAccount,
   raffleFactoryAddress,
   checkNetwork,
   signer,
   provider,
   userAddress,
-  connected
+  userConnected,
+  apiConnected,
 }) => {
   const [raffles, setRafflesValue] = useState([]);
 
   const getRaffles = useCallback(async () => {
-    if (connected === false) return;
+    if (userConnected === false && apiConnected === false) return;
     try {
       setRafflesValue([]);
-      console.log(signer, provider, userAddress, connected,);
+      console.log(signer, provider, userAddress, userConnected);
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
@@ -59,11 +58,19 @@ const DeployedRaffles = ({
         console.log("Wrong Network -- Switch to Rinkeby");
       }
     }
-  }, [checkNetwork, connected, provider, raffleFactoryAddress, signer, userAddress]);
+  }, [
+    checkNetwork,
+    userConnected,
+    provider,
+    raffleFactoryAddress,
+    signer,
+    userAddress,
+    apiConnected,
+  ]);
 
   useEffect(() => {
     getRaffles();
-  }, [connected]);
+  }, [userConnected, apiConnected]);
 
   return (
     <div>
