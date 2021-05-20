@@ -51,8 +51,6 @@ const FILTER_MAP = {
   owned: (raffle) => raffle.owner,
 };
 
-const FILTER_NAMES = Object.keys(FILTER_MAP);
-
 const RaffleTabs = ({
   raffles,
   raffleFactoryAddress,

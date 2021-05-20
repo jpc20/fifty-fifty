@@ -1,6 +1,6 @@
 import { Button, CircularProgress } from "@material-ui/core";
 
-const LoadingButton = ({ buttonText, loading, onClickHandler, disabled }) => {
+const LoadingButton = ({ buttonText, loading, onClickHandler, disabled, variant }) => {
   const renderButton = () => {
     if (loading) {
       return (
@@ -12,7 +12,7 @@ const LoadingButton = ({ buttonText, loading, onClickHandler, disabled }) => {
       return (
         <Button
           type="submit"
-          variant="contained"
+          variant={variant || "contained"}
           color="primary"
           onClick={onClickHandler}
           disabled={disabled}

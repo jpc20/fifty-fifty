@@ -80,17 +80,26 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h1">50/50 Raffle</Typography>
+      <div className="App-header">
+        <div className="account-button">
+        <LoadingButton
+          buttonText={
+            connected
+              ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
+              : "Connect Account"
+          }
+          onClickHandler={connectAccount}
+          loading={accountLoading}
+          variant="outlined"
+        />
+        </div>
+      </div>
+      <Typography variant="h2">50/50 Raffle</Typography>
       <Typography variant="subtitle1" gutterBottom>
         Built by @jpc20
       </Typography>
       <Typography variant="caption" color="secondary" gutterBottom>
         [Rinkbey Testnet]
-        <LoadingButton
-          buttonText="Connect Account"
-          onClickHandler={connectAccount}
-          loading={accountLoading}
-        />
       </Typography>
       <Divider className={classes.divider} />
       <DeployedRaffles
