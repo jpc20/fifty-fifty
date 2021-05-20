@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Paper } from "@material-ui/core";
+import { Grid, Typography, Paper, IconButton } from "@material-ui/core";
+import { ExpandMore, ExpandLess} from "@material-ui/icons";
 import LoadingButton from "../LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +36,7 @@ const Raffle = ({
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
+  const [expanded, setExpandedalue] = useState(false);
   const classes = useStyles();
 
   async function purchaseTicket() {
@@ -129,8 +131,12 @@ const Raffle = ({
           <Grid item xs={10}>
             <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-              TicketsOwned: {userTicketCount}, TicketCount: {totalTicketCount},
-              {/* Beneficiary: {beneficiary.slice(0, 4)}... */}
+              TicketsOwned: {userTicketCount},
+              {/* TicketCount: {totalTicketCount},
+              Beneficiary: {beneficiary.slice(0, 4)}... */}
+              <IconButton onClick={() => setExpandedalue(!expanded)}>
+                {expanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
             </Typography>
           </Grid>
         </Grid>

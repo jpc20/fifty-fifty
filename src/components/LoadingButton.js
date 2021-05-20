@@ -1,7 +1,5 @@
 import { Button, CircularProgress } from "@material-ui/core";
-import { AccountBalance } from "@material-ui/icons";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ReceiptSharpIcon from "@material-ui/icons/ReceiptSharp";
+import { AccountBalance, AccountCircle, ReceiptSharp } from "@material-ui/icons";
 
 const LoadingButton = ({
   buttonText,
@@ -28,10 +26,10 @@ const LoadingButton = ({
           disabled={disabled}
         >
           {buttonType === 'account' && (
-            <AccountCircleIcon fontSize="small" />
+            <AccountCircle fontSize="small" />
           )}
           {buttonType === 'purchase-ticket' && (
-            <ReceiptSharpIcon fontSize="small" />
+            <ReceiptSharp fontSize="small" />
           )}
           {buttonType === 'distribute' && (
             <AccountBalance fontSize="small" />
