@@ -65,6 +65,7 @@ const RaffleTabs = ({
   signer,
   provider,
   userAddress,
+  userConnected
 }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
@@ -74,7 +75,7 @@ const RaffleTabs = ({
     setCurrentTabValue(newTab);
   };
 
-  const RaffleComponents = ({ raffles, filter, getRaffles, signer, provider, userAddress }) => {
+  const RaffleComponents = ({ raffles, filter, getRaffles, signer, provider, userAddress, userConnected }) => {
     const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
       return (
         <Raffle
@@ -92,6 +93,7 @@ const RaffleTabs = ({
           signer={signer}
           provider={provider}
           userAddress={userAddress}
+          userConnected={userConnected}
         />
       );
     });

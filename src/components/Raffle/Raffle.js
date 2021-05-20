@@ -33,6 +33,7 @@ const Raffle = ({
   signer,
   provider,
   userAddress,
+  userConnected
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
@@ -111,6 +112,7 @@ const Raffle = ({
                 loading={purchaseLoading}
                 onClickHandler={purchaseTicket}
                 buttonType="purchase-ticket"
+                disabled={!userConnected}
               />
             </Grid>
           ) : (
@@ -123,6 +125,7 @@ const Raffle = ({
                 loading={distributeLoading}
                 onClickHandler={distributeFunds}
                 buttonType="distribute"
+                disabled={!userConnected}
               />
             </Grid>
           ) : (
