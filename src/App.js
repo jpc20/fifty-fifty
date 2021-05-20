@@ -4,7 +4,7 @@ import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import { Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import LoadingButton from "./components/LoadingButton";
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
 // const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  const [signer, setSigner] = useState("")
-  const [provider, setProvider] = useState("")
-  const [userAddress, setUserAddress] = useState("")
-  const [connected, setConnected] = useState(false)
-  const [accountLoading, setAccountLoading] = useState(false)
+  const [signer, setSigner] = useState("");
+  const [provider, setProvider] = useState("");
+  const [userAddress, setUserAddress] = useState("");
+  const [connected, setConnected] = useState(false);
+  const [accountLoading, setAccountLoading] = useState(false);
   const classes = useStyles();
 
   async function requestAccount() {
@@ -49,24 +49,34 @@ function App() {
     };
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     return networks[chainId];
-  }
+  };
 
   const connectAccount = useCallback(async () => {
-      setAccountLoading(true)
-      await requestAccount();
-      const providerResp = new ethers.providers.Web3Provider(window.ethereum);
-      const signerResp = providerResp.getSigner();
-      const address = await signerResp.getAddress();
-      setSigner(signerResp)
-      setProvider(providerResp)
-      setUserAddress(address)
-      setConnected(true)
-      setAccountLoading(false);
-  }, [])
+    setAccountLoading(true);
+    await requestAccount();
+    const providerResp = new ethers.providers.Web3Provider(window.ethereum);
+    const signerResp = providerResp.getSigner();
+    const address = await signerResp.getAddress();
+    setSigner(signerResp);
+    setProvider(providerResp);
+    setUserAddress(address);
+    setConnected(true);
+    setAccountLoading(false);
+  }, []);
 
-  // useEffect(() => {
-  //   connectAccount();
-  // }, [connectAccount])
+  useEffect(() => {
+    const isMetaMaskConnected = async () => {
+      const { ethereum } = window;
+      if (ethereum) {
+        var provider = new ethers.providers.Web3Provider(ethereum);
+      }
+      const accounts = await provider.listAccounts();
+      return accounts.length > 0;
+    };
+    isMetaMaskConnected().then((res) => {
+      if (res === true) connectAccount();
+    });
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -76,7 +86,11 @@ function App() {
       </Typography>
       <Typography variant="caption" color="secondary" gutterBottom>
         [Rinkbey Testnet]
-      <LoadingButton buttonText="Connect Account" onClickHandler={connectAccount} loading={accountLoading} />
+        <LoadingButton
+          buttonText="Connect Account"
+          onClickHandler={connectAccount}
+          loading={accountLoading}
+        />
       </Typography>
       <Divider className={classes.divider} />
       <DeployedRaffles
