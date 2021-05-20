@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Paper } from "@material-ui/core";
+import { Grid, Typography, Paper, IconButton } from "@material-ui/core";
+import { ExpandMore, ExpandLess} from "@material-ui/icons";
 import LoadingButton from "../LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,12 +15,11 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
-    maxWidth: "80%",
+    maxWidth: "95%",
   },
 }));
 
 const Raffle = ({
-  getSignerAndProvider,
   raffleTicketPrice,
   beneficiary,
   userTicketCount,
@@ -29,14 +29,19 @@ const Raffle = ({
   open,
   raffleAddress,
   raffleFilter,
+  getRaffles,
+  signer,
+  provider,
+  userAddress,
+  userConnected
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
+  const [expanded, setExpandedalue] = useState(false);
   const classes = useStyles();
 
   async function purchaseTicket() {
     setPurchaseLoadingValue(true);
-    const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
       RaffleContract.abi,
@@ -47,13 +52,12 @@ const Raffle = ({
     );
     try {
       const purchaseTx = await deployedRaffle.purchaseTicket({
-        from: address,
+        from: userAddress,
         value: ethTicketPrice,
       });
       provider.once(purchaseTx.hash, (transaction) => {
-        // setUserTicketCountValue((userTicketCount) => userTicketCount + 1);
         setPurchaseLoadingValue(false);
-        // setBalanceValue(parseFloat(balance) + parseFloat(raffleTicketPrice));
+        getRaffles();
       });
     } catch (error) {
       console.log(error);
@@ -63,7 +67,6 @@ const Raffle = ({
 
   async function distributeFunds() {
     setDistributeLoadingValue(true);
-    const [provider, signer, address] = await getSignerAndProvider();
     const deployedRaffle = new ethers.Contract(
       raffleAddress,
       RaffleContract.abi,
@@ -73,6 +76,7 @@ const Raffle = ({
       const distributeTx = await deployedRaffle.distribute();
       provider.once(distributeTx.hash, (transaction) => {
         setDistributeLoadingValue(false);
+        getRaffles();
       });
     } catch (error) {
       console.log(error);
@@ -107,6 +111,8 @@ const Raffle = ({
                 buttonText="Purchase Ticket"
                 loading={purchaseLoading}
                 onClickHandler={purchaseTicket}
+                buttonType="purchase-ticket"
+                userConnected={userConnected}
               />
             </Grid>
           ) : (
@@ -118,6 +124,8 @@ const Raffle = ({
                 buttonText="Distribute Funds"
                 loading={distributeLoading}
                 onClickHandler={distributeFunds}
+                buttonType="distribute"
+                userConnected={userConnected}
               />
             </Grid>
           ) : (
@@ -126,8 +134,12 @@ const Raffle = ({
           <Grid item xs={10}>
             <Typography variant="h6" noWrap>
               Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-              TicketsOwned: {userTicketCount}, TicketCount: {totalTicketCount},
-              {/* Beneficiary: {beneficiary.slice(0, 4)}... */}
+              TicketsOwned: {userTicketCount},
+              {/* TicketCount: {totalTicketCount},
+              Beneficiary: {beneficiary.slice(0, 4)}... */}
+              <IconButton onClick={() => setExpandedalue(!expanded)}>
+                {expanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
             </Typography>
           </Grid>
         </Grid>

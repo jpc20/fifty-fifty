@@ -18,7 +18,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabValue }) => {
+const NewRaffle = ({
+  raffleFactoryAddress,
+  setCurrentTabValue,
+  setFilter,
+  getRaffles,
+  signer,
+  provider,
+  userAddress,
+  userConnected
+}) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
@@ -30,7 +39,6 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabVa
     event.preventDefault();
     if (!ticketPrice || !beneficiary) return;
     if (typeof window.ethereum !== "undefined") {
-      const [provider, signer, address] = await getSignerAndProvider();
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
@@ -45,6 +53,8 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabVa
         provider.once(deployTxn.hash, (transaction) => {
           setLoadingValue(false);
           setCurrentTabValue(2);
+          setFilter("owned");
+          getRaffles();
         });
       } catch (err) {
         console.log("Error: ", err);
@@ -54,11 +64,10 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabVa
   }
   useEffect(() => {
     const getAddress = async () => {
-      const [provider, signer, address] = await getSignerAndProvider();
-      setBeneficiaryValue(address);
+      setBeneficiaryValue(userAddress);
     };
     getAddress();
-  }, []);
+  }, [userAddress]);
 
   useEffect(() => {
     const checkAddress = async () => {
@@ -85,6 +94,7 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabVa
             <TextField
               label="Address"
               variant="outlined"
+              disabled={loading}
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
             />
@@ -107,11 +117,17 @@ const NewRaffle = ({ raffleFactoryAddress, getSignerAndProvider, setCurrentTabVa
             prefix={"Ξ"}
             decimalScale={10}
             type="text"
+            disabled={loading}
             onChange={(e) => setTicketPriceValue(e.target.value.substring(1))}
           />
         </Grid>
         <Grid item xs={12}>
-          <LoadingButton buttonText="Deploy Raffle" loading={loading} />
+          <LoadingButton
+            buttonText="Deploy Raffle"
+            loading={loading}
+            disabled={!validAddress}
+            userConnected={userConnected}
+          />
         </Grid>
       </Grid>
     </form>

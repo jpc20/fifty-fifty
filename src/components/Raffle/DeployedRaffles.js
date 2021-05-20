@@ -1,18 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
 import RaffleTabs from "./RaffleTabs";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 
 const DeployedRaffles = ({
-  getSignerAndProvider,
   raffleFactoryAddress,
-  checkNetwork,}) => {
+  checkNetwork,
+  signer,
+  provider,
+  userAddress,
+  userConnected,
+  apiConnected,
+}) => {
   const [raffles, setRafflesValue] = useState([]);
 
-  const getRaffles = async () => {
+  const getRaffles = useCallback(async () => {
+    if (userConnected === false && apiConnected === false) return;
     try {
-      const [provider, signer, address] = await getSignerAndProvider();
+      setRafflesValue([]);
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
@@ -27,7 +33,7 @@ const DeployedRaffles = ({
         );
         const raffleTicketPrice = await deployedRaffle.ticketPrice();
         const raffleBeneficiary = await deployedRaffle.beneficiary();
-        const userTickets = await deployedRaffle.ticketCount(address);
+        const userTickets = await deployedRaffle.ticketCount(userAddress);
         const allTicketHolders = await deployedRaffle.getTicketHolders();
         const contractBalance = await provider.getBalance(raffleAddress);
         const checkOwner = await deployedRaffle.owner();
@@ -38,30 +44,44 @@ const DeployedRaffles = ({
           userTicketCount: userTickets.toString(),
           totalTicketCount: allTicketHolders.length,
           balance: ethers.utils.formatEther(contractBalance.toString()),
-          owner: checkOwner === address,
+          owner: checkOwner === userAddress,
           openStatus: openStatus,
           raffleAddress: raffleAddress,
         };
-        setRafflesValue(raffs => [...raffs, raffle])
+        setRafflesValue((previousRaffles) => [...previousRaffles, raffle]);
       });
     } catch (error) {
+      console.log(error);
       const network = await checkNetwork();
-      if (network && network !== 'rinkeby') {
-        console.log('Wrong Network -- Switch to Rinkeby')
-      };
+      if (network && network !== "rinkeby") {
+        console.log("Wrong Network -- Switch to Rinkeby");
+      }
     }
-  };
+  }, [
+    checkNetwork,
+    userConnected,
+    provider,
+    raffleFactoryAddress,
+    signer,
+    userAddress,
+    apiConnected,
+  ]);
+
   useEffect(() => {
     getRaffles();
-  }, []);
+  }, [userConnected, apiConnected]);
 
   return (
     <div>
-        <RaffleTabs
-          raffles={raffles}
-          getSignerAndProvider={getSignerAndProvider}
-          raffleFactoryAddress={raffleFactoryAddress}
-        />
+      <RaffleTabs
+        raffles={raffles}
+        raffleFactoryAddress={raffleFactoryAddress}
+        getRaffles={getRaffles}
+        signer={signer}
+        provider={provider}
+        userAddress={userAddress}
+        userConnected={userConnected}
+      />
     </div>
   );
 };

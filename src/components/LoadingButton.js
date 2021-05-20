@@ -1,6 +1,17 @@
+import {useState, useEffect } from 'react';
 import { Button, CircularProgress } from "@material-ui/core";
+import { AccountBalance, AccountCircle, ReceiptSharp } from "@material-ui/icons";
 
-const LoadingButton = ({ buttonText, loading, onClickHandler }) => {
+const LoadingButton = ({
+  buttonText,
+  loading,
+  onClickHandler,
+  userConnected,
+  variant,
+  buttonType,
+  disabled
+}) => {
+
   const renderButton = () => {
     if (loading) {
       return (
@@ -12,10 +23,17 @@ const LoadingButton = ({ buttonText, loading, onClickHandler }) => {
       return (
         <Button
           type="submit"
-          variant="contained"
+          variant={variant || "contained"}
           color="primary"
           onClick={onClickHandler}
+          disabled={disabled ? disabled : buttonType !== "account" && !userConnected }
+          size="small"
         >
+          {buttonType === "account" && <AccountCircle fontSize="small" />}
+          {buttonType === "purchase-ticket" && (
+            <ReceiptSharp fontSize="small" />
+          )}
+          {buttonType === "distribute" && <AccountBalance fontSize="small" />}
           {buttonText}
         </Button>
       );
