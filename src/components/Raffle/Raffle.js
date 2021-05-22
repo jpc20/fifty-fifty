@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, IconButton } from "@material-ui/core";
-import { ExpandMore, ExpandLess} from "@material-ui/icons";
+import { ExpandMore, ExpandLess } from "@material-ui/icons";
 import LoadingButton from "../LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +33,7 @@ const Raffle = ({
   signer,
   provider,
   userAddress,
-  userConnected
+  userConnected,
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
@@ -98,7 +98,7 @@ const Raffle = ({
 
   return (
     <div className={classes.root} style={{ display: checkRaffleFilter() }}>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={3}>
         <Grid
           container
           wrap="nowrap"
@@ -132,15 +132,39 @@ const Raffle = ({
             ""
           )}
           <Grid item xs={10}>
-            <Typography variant="h6" noWrap>
-              Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-              TicketsOwned: {userTicketCount},
-              {/* TicketCount: {totalTicketCount},
-              Beneficiary: {beneficiary.slice(0, 4)}... */}
-              <IconButton onClick={() => setExpandedalue(!expanded)}>
-                {expanded ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
-            </Typography>
+            {!expanded && (
+              <Typography variant="h6" noWrap gutterBottom>
+                Description
+                <IconButton onClick={() => setExpandedalue(!expanded)}>
+                  {expanded ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
+              </Typography>
+            )}
+            {expanded && (
+              <>
+                <Typography variant="h6" noWrap gutterBottom>
+                  Description
+                  <IconButton onClick={() => setExpandedalue(!expanded)}>
+                    {expanded ? <ExpandLess /> : <ExpandMore />}
+                  </IconButton>
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
+                  TicketsOwned: {userTicketCount}, TicketCount:{" "}
+                  {totalTicketCount}
+                  <a
+                    href={"https://rinkeby.etherscan.io/address/" + userAddress}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Beneficiary:{" "}
+                    {userAddress.slice(0, 6) +
+                      "..." +
+                      userAddress.slice(37, -1)}
+                  </a>
+                </Typography>
+              </>
+            )}
           </Grid>
         </Grid>
       </Paper>

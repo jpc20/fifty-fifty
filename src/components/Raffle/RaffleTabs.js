@@ -28,6 +28,7 @@ function TabPanel(props) {
       hidden={currentTab !== index}
       id={`wrapped-tabpanel-${index}`}
       aria-labelledby={`wrapped-tab-${index}`}
+      className="tabpanel"
       {...other}
     >
       {currentTab === index && (
