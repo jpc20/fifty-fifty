@@ -27,3 +27,7 @@
   text-decoration-line: line-through;
   text-decoration-style: solid;
 }
+
+.tabpanel {
+  width: inherit;
+}

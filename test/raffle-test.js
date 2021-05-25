@@ -1,5 +1,7 @@
+/* eslint-disable no-undef */
 const { expect } = require("chai");
 
+var description;
 var accounts;
 var Raffle;
 var raffle;
@@ -9,7 +11,9 @@ beforeEach(async function () {
   accounts = await ethers.getSigners();
   Raffle = await ethers.getContractFactory("Raffle");
   ticketPrice = ethers.utils.parseEther(".1");
+  description = ethers.utils.formatBytes32String("test description");
   raffle = await Raffle.deploy(
+    description,
     ticketPrice,
     accounts[1].address,
     accounts[0].address
@@ -18,7 +22,7 @@ beforeEach(async function () {
 });
 
 describe("Raffle", function () {
-  it("Should deploy a raffle with an owner, ticket price, and beneficiary", async function () {
+  it("Should deploy a raffle with a description owner, ticket price, and beneficiary", async function () {
     expect(await raffle.owner()).to.equal(accounts[0].address);
     expect(await raffle.beneficiary()).to.equal(accounts[1].address);
     expect(await raffle.ticketPrice()).to.equal(ticketPrice);
