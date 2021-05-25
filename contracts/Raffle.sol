@@ -11,10 +11,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract RaffleFactory {
     address[] public deployedRaffles;
 
-    function createRaffle(uint256 _ticketPrice, address payable _beneficiary)
+    function createRaffle(bytes32 _description, uint256 _ticketPrice, address payable _beneficiary)
         public
     {
-        Raffle newRaffle = new Raffle(_ticketPrice, _beneficiary, msg.sender);
+        Raffle newRaffle = new Raffle(_description, _ticketPrice, _beneficiary, msg.sender);
         console.log("Raffle Address: '%s'", address(newRaffle));
         deployedRaffles.push(address(newRaffle));
     }
@@ -27,6 +27,7 @@ contract RaffleFactory {
 contract Raffle is Ownable {
     uint256 public ticketPrice;
     address payable public beneficiary;
+    bytes32 public description;
     mapping(address => uint256) public ticketCount;
     address[] public allTicketHolders;
     event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
@@ -34,16 +35,18 @@ contract Raffle is Ownable {
     bool public open;
 
     constructor(
+        bytes32 _description,
         uint256 _ticketPrice,
         address payable _beneficiary,
         address _owner
     ) {
         console.log(
-            "Deploying a raffle with ticketPrice: '%s', beneficiary: '%s', and owner: '%s'",
+            "Deploying a raffle with ticketPrice: '%s', beneficiary: '%s', owner: '%s', and description: ",
             _ticketPrice,
             _beneficiary,
             _owner
         );
+        console.logBytes32(_description);
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
