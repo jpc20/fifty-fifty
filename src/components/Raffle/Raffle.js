@@ -134,7 +134,7 @@ const Raffle = ({
           <Grid item xs={10}>
             {!expanded && (
               <Typography variant="h6" noWrap gutterBottom>
-                Description
+                12.20 Giants vs Rockies Raffle Test Test Test | Balance: {balance} ETH
                 <IconButton onClick={() => setExpandedalue(!expanded)}>
                   {expanded ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
@@ -143,15 +143,15 @@ const Raffle = ({
             {expanded && (
               <>
                 <Typography variant="h6" noWrap gutterBottom>
-                  Description
+                  Description | Balance: {balance} ETH
                   <IconButton onClick={() => setExpandedalue(!expanded)}>
                     {expanded ? <ExpandLess /> : <ExpandMore />}
                   </IconButton>
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  Ticket Price: {raffleTicketPrice} ETH, Balance: {balance} ETH,
-                  TicketsOwned: {userTicketCount}, TicketCount:{" "}
-                  {totalTicketCount}
+                  <div>Ticket Price: {raffleTicketPrice} ETH</div>
+                  <div>TicketsOwned: {userTicketCount}</div>
+                  <div>TicketCount: {totalTicketCount}</div>
                   <a
                     href={"https://rinkeby.etherscan.io/address/" + userAddress}
                     target="_blank"
