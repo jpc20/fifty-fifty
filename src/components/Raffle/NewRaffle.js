@@ -30,6 +30,7 @@ const NewRaffle = ({
 }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
+  const [description, setDescriptionValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
   const [validAddress, setValidAddressValue] = useState(true);
   const classes = useStyles();
@@ -45,8 +46,10 @@ const NewRaffle = ({
         signer
       );
       const formattedPrice = ethers.utils.parseEther(ticketPrice.toString());
+      const formattedDescription = ethers.utils.formatBytes32String(description);
       try {
         const deployTxn = await factory.createRaffle(
+          formattedDescription,
           formattedPrice,
           beneficiary
         );
@@ -92,8 +95,7 @@ const NewRaffle = ({
         <Grid item xs={12}>
           {validAddress ? (
             <TextField
-              label="Address"
-              variant="outlined"
+              label="Beneficiary Address"
               disabled={loading}
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
@@ -101,13 +103,21 @@ const NewRaffle = ({
           ) : (
             <TextField
               error
-              label="Address"
+              label="Beneficiary Address"
               variant="outlined"
               helperText="Please Enter a Valid Address"
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
             />
           )}
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Description"
+            disabled={loading}
+            onChange={(e) => setDescriptionValue(e.target.value)}
+            value={description}
+          />
         </Grid>
         <Grid item xs={12}>
           <NumberFormat
@@ -125,7 +135,7 @@ const NewRaffle = ({
           <LoadingButton
             buttonText="Deploy Raffle"
             loading={loading}
-            disabled={!validAddress}
+            disabled={!validAddress || description.length < 1}
             userConnected={userConnected}
           />
         </Grid>

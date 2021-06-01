@@ -38,6 +38,7 @@ const DeployedRaffles = ({
         const contractBalance = await provider.getBalance(raffleAddress);
         const checkOwner = await deployedRaffle.owner();
         const openStatus = await deployedRaffle.open();
+        const description = await deployedRaffle.description();
         const raffle = {
           ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
           beneficiary: raffleBeneficiary,
@@ -47,6 +48,7 @@ const DeployedRaffles = ({
           owner: checkOwner === userAddress,
           openStatus: openStatus,
           raffleAddress: raffleAddress,
+          description: ethers.utils.parseBytes32String(description),
         };
         setRafflesValue((previousRaffles) => [...previousRaffles, raffle]);
       });
