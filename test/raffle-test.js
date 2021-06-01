@@ -22,10 +22,11 @@ beforeEach(async function () {
 });
 
 describe("Raffle", function () {
-  it("Should deploy a raffle with a description owner, ticket price, and beneficiary", async function () {
+  it("Should deploy a raffle with a description, owner, ticket price, and beneficiary", async function () {
     expect(await raffle.owner()).to.equal(accounts[0].address);
     expect(await raffle.beneficiary()).to.equal(accounts[1].address);
     expect(await raffle.ticketPrice()).to.equal(ticketPrice);
+    expect(await raffle.description()).to.equal(description);
     expect(await raffle.open()).to.equal(true);
   });
 
