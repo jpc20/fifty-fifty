@@ -47,6 +47,7 @@ contract Raffle is Ownable {
             _owner
         );
         console.logBytes32(_description);
+        description = _description;
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
