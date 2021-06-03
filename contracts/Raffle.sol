@@ -113,7 +113,7 @@ contract Tickets is ERC721 {
     function mint(address recipient) public returns (uint256) {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
+        _safeMint(recipient, newItemId);
         return newItemId;
     }
 }
