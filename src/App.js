@@ -7,7 +7,7 @@ import LoadingButton from "./components/LoadingButton";
 import { useState, useEffect, useCallback } from "react";
 
 const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
-// const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
+// const raffleFactoryAddress = "0x26F56598895d00d634203bd7e5F86d645bFa62dF"; // ropsten
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
