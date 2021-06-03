@@ -1,20 +1,22 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.3;
-// pragma solidity ^0.8.3 || >=0.6.0;
-// pragma solidity >=0.6.0 <9.0.0;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 // import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract RaffleFactory {
     address[] public deployedRaffles;
 
-    function createRaffle(bytes32 _description, uint256 _ticketPrice, address payable _beneficiary)
-        public
-    {
-        Raffle newRaffle = new Raffle(_description, _ticketPrice, _beneficiary, msg.sender);
+    function createRaffle(
+        bytes32 _description,
+        uint256 _ticketPrice,
+        address payable _beneficiary
+    ) public {
+        Raffle newRaffle =
+            new Raffle(_description, _ticketPrice, _beneficiary, msg.sender);
         console.log("Raffle Address: '%s'", address(newRaffle));
         deployedRaffles.push(address(newRaffle));
     }
@@ -30,9 +32,10 @@ contract Raffle is Ownable {
     bytes32 public description;
     mapping(address => uint256) public ticketCount;
     address[] public allTicketHolders;
+    bool public open;
+    Tickets public tickets;
     event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
     event Distribute(address beneficiary, address winner, uint256 totalAmount);
-    bool public open;
 
     constructor(
         bytes32 _description,
@@ -51,12 +54,14 @@ contract Raffle is Ownable {
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
+        tickets = new Tickets();
         transferOwnership(_owner);
     }
 
     function purchaseTicket() public payable {
         require(msg.value == ticketPrice, "Incorrect Ticket Price");
         allTicketHolders.push(msg.sender);
+        tickets.mint(msg.sender);
         uint256 purchaserTicketCount = ticketCount[msg.sender] += 1;
         emit TicketPurchase(msg.sender, purchaserTicketCount);
     }
@@ -96,5 +101,19 @@ contract Raffle is Ownable {
 
     function getTicketHolders() public view returns (address[] memory) {
         return allTicketHolders;
+    }
+}
+
+contract Tickets is ERC721 {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
+    constructor() ERC721("RaffleTicket", "TKT") {}
+
+    function mint(address recipient) public returns (uint256) {
+        _tokenIds.increment();
+        uint256 newItemId = _tokenIds.current();
+        _mint(recipient, newItemId);
+        return newItemId;
     }
 }
