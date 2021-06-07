@@ -11,12 +11,13 @@ contract RaffleFactory {
     address[] public deployedRaffles;
 
     function createRaffle(
-        bytes32 _description,
+        string memory _description,
+        string memory _symbol,
         uint256 _ticketPrice,
         address payable _beneficiary
     ) public {
         Raffle newRaffle =
-            new Raffle(_description, _ticketPrice, _beneficiary, msg.sender);
+            new Raffle(_description, _symbol, _ticketPrice, _beneficiary, msg.sender);
         console.log("Raffle Address: '%s'", address(newRaffle));
         deployedRaffles.push(address(newRaffle));
     }
@@ -27,9 +28,8 @@ contract RaffleFactory {
 }
 
 contract Raffle is Ownable {
-    uint256 public ticketPrice;
     address payable public beneficiary;
-    bytes32 public description;
+    uint256 public ticketPrice;
     mapping(address => uint256) public ticketCount;
     address[] public allTicketHolders;
     bool public open;
@@ -38,23 +38,23 @@ contract Raffle is Ownable {
     event Distribute(address beneficiary, address winner, uint256 totalAmount);
 
     constructor(
-        bytes32 _description,
+        string memory _description,
+        string memory _symbol,
         uint256 _ticketPrice,
         address payable _beneficiary,
         address _owner
     ) {
         console.log(
-            "Deploying a raffle with ticketPrice: '%s', beneficiary: '%s', owner: '%s', and description: ",
+            "Deploying a raffle with ticketPrice: '%s', beneficiary: '%s', owner: '%s', and description:",
             _ticketPrice,
             _beneficiary,
             _owner
         );
-        console.logBytes32(_description);
-        description = _description;
+        console.log(_description);
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
-        tickets = new Tickets();
+        tickets = new Tickets(_description, _symbol);
         transferOwnership(_owner);
     }
 
@@ -108,7 +108,7 @@ contract Tickets is ERC721 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor() ERC721("RaffleTicket", "TKT") {}
+    constructor(string memory _description, string memory _symbol) ERC721(_description, _symbol) {}
 
     function mint(address recipient) public returns (uint256) {
         _tokenIds.increment();
