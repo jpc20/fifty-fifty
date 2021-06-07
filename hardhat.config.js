@@ -52,7 +52,7 @@ module.exports = {
     },
     rinkeby: {
       url: process.env.RINKEBY_URL,
-      accounts: [process.env.RINKEBY_KEY],
+      accounts: [process.env.REACT_APP_RINKEBY_KEY],
     },
   },
 };
