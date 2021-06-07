@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
 import RaffleTabs from "./RaffleTabs";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
+import Tickets from "../../artifacts/contracts/Raffle.sol/Tickets.json";
 
 const DeployedRaffles = ({
   raffleFactoryAddress,
@@ -38,17 +39,23 @@ const DeployedRaffles = ({
         const contractBalance = await provider.getBalance(raffleAddress);
         const checkOwner = await deployedRaffle.owner();
         const openStatus = await deployedRaffle.open();
-        const description = await deployedRaffle.description();
+        const ticketsAddress = await deployedRaffle.tickets();
+        const tickets = new ethers.Contract(
+          ticketsAddress,
+          Tickets.abi,
+          signer
+        );
+        const description = await tickets.name();
         const raffle = {
           ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
           beneficiary: raffleBeneficiary,
           userTicketCount: userTickets.toString(),
-          totalTicketCount: allTicketHolders.length,
+          totalTicketCount: allTicketHolders.length
           balance: ethers.utils.formatEther(contractBalance.toString()),
           owner: checkOwner === userAddress,
           openStatus: openStatus,
           raffleAddress: raffleAddress,
-          description: ethers.utils.parseBytes32String(description),
+          description: description,
         };
         setRafflesValue((previousRaffles) => [...previousRaffles, raffle]);
       });

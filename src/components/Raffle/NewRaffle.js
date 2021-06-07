@@ -31,6 +31,7 @@ const NewRaffle = ({
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
   const [description, setDescriptionValue] = useState("");
+  const [symbol, setSymbolValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
   const [validAddress, setValidAddressValue] = useState(true);
   const classes = useStyles();
@@ -46,10 +47,10 @@ const NewRaffle = ({
         signer
       );
       const formattedPrice = ethers.utils.parseEther(ticketPrice.toString());
-      const formattedDescription = ethers.utils.formatBytes32String(description);
       try {
         const deployTxn = await factory.createRaffle(
-          formattedDescription,
+          description,
+          symbol,
           formattedPrice,
           beneficiary
         );
@@ -117,6 +118,14 @@ const NewRaffle = ({
             disabled={loading}
             onChange={(e) => setDescriptionValue(e.target.value)}
             value={description}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Symbol"
+            disabled={loading}
+            onChange={(e) => setSymbolValue(e.target.value)}
+            value={symbol}
           />
         </Grid>
         <Grid item xs={12}>
