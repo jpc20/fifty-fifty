@@ -9,14 +9,17 @@ var tickets;
 var raffle;
 var ticketPrice;
 var description;
+var symbol;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();
   Raffle = await ethers.getContractFactory("Raffle");
   ticketPrice = ethers.utils.parseEther(".1");
-  description = ethers.utils.formatBytes32String("test description");
+  description = "test description";
+  symbol = 'TEST-TKT'
   raffle = await Raffle.deploy(
     description,
+    symbol,
     ticketPrice,
     accounts[1].address,
     accounts[0].address
@@ -43,5 +46,7 @@ describe("Ticket", function () {
       const acct2TicketCount = await tickets.balanceOf(accounts[2].address);
       expect(acct2TicketCount.toString()).to.equal("2")
       expect(await tickets.ownerOf('1')).to.equal(accounts[2].address)
+      expect(await tickets.name()).to.equal(description)
+      expect(await tickets.symbol()).to.equal(symbol)
   });
 });
