@@ -50,7 +50,7 @@ const DeployedRaffles = ({
           ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
           beneficiary: raffleBeneficiary,
           userTicketCount: userTickets.toString(),
-          totalTicketCount: allTicketHolders.length
+          totalTicketCount: allTicketHolders.length,
           balance: ethers.utils.formatEther(contractBalance.toString()),
           owner: checkOwner === userAddress,
           openStatus: openStatus,
