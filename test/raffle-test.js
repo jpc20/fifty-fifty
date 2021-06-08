@@ -1,28 +1,37 @@
 /* eslint-disable no-undef */
 const { expect } = require("chai");
+const Tickets = require("../src/artifacts/contracts/Raffle.sol/Tickets.json");
 
 var description;
 var accounts;
 var Raffle;
 var raffle;
 var ticketPrice;
+var symbol;
+var TicketAddress;
+var tickets;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();
   Raffle = await ethers.getContractFactory("Raffle");
   ticketPrice = ethers.utils.parseEther(".1");
-  description = ethers.utils.formatBytes32String("test description");
+  description = "test description";
+  symbol = "TEST-TKT";
+
   raffle = await Raffle.deploy(
     description,
+    symbol,
     ticketPrice,
     accounts[1].address,
     accounts[0].address
   );
   await raffle.deployed();
+  TicketAddress = await raffle.tickets();
+  tickets = new ethers.Contract(TicketAddress, Tickets.abi, accounts[0]);
 });
 
 describe("Raffle", function () {
-  it("Should deploy a raffle with a description owner, ticket price, and beneficiary", async function () {
+  it("Should deploy a raffle with a description, owner, ticket price, and beneficiary", async function () {
     expect(await raffle.owner()).to.equal(accounts[0].address);
     expect(await raffle.beneficiary()).to.equal(accounts[1].address);
     expect(await raffle.ticketPrice()).to.equal(ticketPrice);
@@ -30,11 +39,11 @@ describe("Raffle", function () {
   });
 
   it("Allows an account to purchase a ticket", async function () {
-    expect(await raffle.ticketCount(accounts[2].address)).to.equal(0);
+    expect(await tickets.balanceOf(accounts[2].address)).to.equal(0);
     await raffle
       .connect(accounts[2])
       .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
-    expect(await raffle.ticketCount(accounts[2].address)).to.equal(1);
+    expect(await tickets.balanceOf(accounts[2].address)).to.equal(1);
     expect(await ethers.provider.getBalance(raffle.address)).to.equal(
       ticketPrice
     );

@@ -6,8 +6,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import LoadingButton from "./components/LoadingButton";
 import { useState, useEffect, useCallback } from "react";
 
-const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
-// const raffleFactoryAddress = "0xeee7874BaF2BFEB1df7E09D55A56594A50ACFae2"; // ropsten
+// const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
+const raffleFactoryAddress = "0xE68FfBe40CF75D6D7361b0e28F0e71A9b6AAA920"; // rinkeby
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -66,14 +66,18 @@ function App() {
   }, []);
 
   const connectApi = useCallback(async () => {
-    const providerResp = new ethers.providers.JsonRpcProvider();
-    const signerResp = providerResp.getSigner();
-    const address = await signerResp.getAddress();
-    setUserAddress(address);
-    setProvider(providerResp);
-    setSigner(signerResp);
-    setApiConnected(true);
-    setUserConnected(false);
+    try {
+      const providerResp = new ethers.providers.InfuraProvider("rinkeby");
+      const wallet = new ethers.Wallet(process.env.REACT_APP_RINKEBY_KEY);
+      const signerResp = new ethers.VoidSigner(wallet.address, providerResp);
+      setUserAddress(wallet.address);
+      setProvider(providerResp);
+      setSigner(signerResp);
+      setApiConnected(true);
+      setUserConnected(false);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const isMetaMaskConnected = useCallback(async () => {

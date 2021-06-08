@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const Raffle = ({
   raffleTicketPrice,
   beneficiary,
+  description,
   userTicketCount,
   totalTicketCount,
   balance,
@@ -134,7 +135,7 @@ const Raffle = ({
           <Grid item xs={10}>
             {!expanded && (
               <Typography variant="h6" noWrap gutterBottom>
-                12.20 Giants vs Rockies Raffle Test Test Test | Balance: {balance} ETH
+                {description} | Balance: {balance} ETH
                 <IconButton onClick={() => setExpandedalue(!expanded)}>
                   {expanded ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
@@ -143,7 +144,7 @@ const Raffle = ({
             {expanded && (
               <>
                 <Typography variant="h6" noWrap gutterBottom>
-                  Description | Balance: {balance} ETH
+                  {description} | Balance: {balance} ETH
                   <IconButton onClick={() => setExpandedalue(!expanded)}>
                     {expanded ? <ExpandLess /> : <ExpandMore />}
                   </IconButton>

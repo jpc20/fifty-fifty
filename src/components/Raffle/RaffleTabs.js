@@ -90,6 +90,7 @@ const RaffleTabs = ({
         <Raffle
           raffleTicketPrice={raffle.ticketPrice}
           beneficiary={raffle.beneficiary}
+          description={raffle.description}
           userTicketCount={raffle.userTicketCount}
           totalTicketCount={raffle.totalTicketCount}
           balance={raffle.balance}

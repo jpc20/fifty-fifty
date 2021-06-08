@@ -48,7 +48,11 @@ module.exports = {
     },
     ropsten: {
       url: process.env.ROPSTEN_URL,
-      accounts: [process.env.PRIVATE_KEY],
+      accounts: [process.env.ROPSTEN_KEY],
+    },
+    rinkeby: {
+      url: process.env.RINKEBY_URL,
+      accounts: [process.env.REACT_APP_RINKEBY_KEY],
     },
   },
 };
