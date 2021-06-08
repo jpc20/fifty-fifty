@@ -1,4 +1,3 @@
-import {useState, useEffect } from 'react';
 import { Button, CircularProgress } from "@material-ui/core";
 import { AccountBalance, AccountCircle, ReceiptSharp } from "@material-ui/icons";
 
