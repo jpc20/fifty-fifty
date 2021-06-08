@@ -2,7 +2,7 @@
 const Raffle = require("../src/artifacts/contracts/Raffle.sol/Raffle.json");
 const { expect } = require("chai");
 
-describe("RaffleaFactory", function () {
+describe("RaffelFactory", function () {
   it("Should deploy a raffle with an owner, ticket price, and beneficiary", async function () {
     const accounts = await ethers.getSigners();
     const RaffleFactory = await ethers.getContractFactory("RaffleFactory");
