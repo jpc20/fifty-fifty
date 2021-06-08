@@ -4,6 +4,7 @@ pragma solidity ^0.8.3;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 // import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
@@ -31,7 +32,6 @@ contract Raffle is Ownable {
     address payable public beneficiary;
     uint256 public ticketPrice;
     mapping(address => uint256) public ticketCount;
-    address[] public allTicketHolders;
     bool public open;
     Tickets public tickets;
     event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
@@ -44,13 +44,6 @@ contract Raffle is Ownable {
         address payable _beneficiary,
         address _owner
     ) {
-        console.log(
-            "Deploying a raffle with ticketPrice: '%s', beneficiary: '%s', owner: '%s', and description:",
-            _ticketPrice,
-            _beneficiary,
-            _owner
-        );
-        console.log(_description);
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
@@ -60,7 +53,6 @@ contract Raffle is Ownable {
 
     function purchaseTicket() public payable {
         require(msg.value == ticketPrice, "Incorrect Ticket Price");
-        allTicketHolders.push(msg.sender);
         tickets.mint(msg.sender);
         uint256 purchaserTicketCount = ticketCount[msg.sender] += 1;
         emit TicketPurchase(msg.sender, purchaserTicketCount);
@@ -74,16 +66,16 @@ contract Raffle is Ownable {
                     abi.encodePacked(
                         block.difficulty,
                         block.timestamp,
-                        allTicketHolders
+                        tickets.totalSupply()
                     )
                 )
             );
     }
 
     function pickWinner() public view onlyOwner returns (address) {
-        uint256 index = randomNum() % allTicketHolders.length;
-        console.log(allTicketHolders[index]);
-        return allTicketHolders[index];
+        uint256 index = randomNum() % tickets.totalSupply();
+        uint256 winningTicket = tickets.tokenByIndex(index);
+        return tickets.ownerOf(winningTicket);
     }
 
     function distribute() public payable onlyOwner {
@@ -98,13 +90,9 @@ contract Raffle is Ownable {
         open = false;
         emit Distribute(beneficiary, winner, totalAmount);
     }
-
-    function getTicketHolders() public view returns (address[] memory) {
-        return allTicketHolders;
-    }
 }
 
-contract Tickets is ERC721 {
+contract Tickets is ERC721Enumerable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
