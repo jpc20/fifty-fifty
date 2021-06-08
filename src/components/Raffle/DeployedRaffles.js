@@ -59,26 +59,15 @@ const DeployedRaffles = ({
         };
         setRafflesValue((previousRaffles) => [...previousRaffles, raffle]);
       });
+
     } catch (error) {
       console.log(error);
-      const network = await checkNetwork();
-      if (network && network !== "rinkeby") {
-        console.log("Wrong Network -- Switch to Rinkeby");
-      }
     }
-  }, [
-    checkNetwork,
-    userConnected,
-    provider,
-    raffleFactoryAddress,
-    signer,
-    userAddress,
-    apiConnected,
-  ]);
+  }, [userConnected, apiConnected, raffleFactoryAddress, signer, provider, userAddress]);
 
   useEffect(() => {
     getRaffles();
-  }, [userConnected, apiConnected]);
+  }, [getRaffles]);
 
   return (
     <div>
