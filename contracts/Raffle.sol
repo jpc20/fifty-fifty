@@ -18,7 +18,13 @@ contract RaffleFactory {
         address payable _beneficiary
     ) public {
         Raffle newRaffle =
-            new Raffle(_description, _symbol, _ticketPrice, _beneficiary, msg.sender);
+            new Raffle(
+                _description,
+                _symbol,
+                _ticketPrice,
+                _beneficiary,
+                msg.sender
+            );
         console.log("Raffle Address: '%s'", address(newRaffle));
         deployedRaffles.push(address(newRaffle));
     }
@@ -31,7 +37,6 @@ contract RaffleFactory {
 contract Raffle is Ownable {
     address payable public beneficiary;
     uint256 public ticketPrice;
-    mapping(address => uint256) public ticketCount;
     bool public open;
     Tickets public tickets;
     event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
@@ -54,8 +59,7 @@ contract Raffle is Ownable {
     function purchaseTicket() public payable {
         require(msg.value == ticketPrice, "Incorrect Ticket Price");
         tickets.mint(msg.sender);
-        uint256 purchaserTicketCount = ticketCount[msg.sender] += 1;
-        emit TicketPurchase(msg.sender, purchaserTicketCount);
+        emit TicketPurchase(msg.sender, tickets.balanceOf(msg.sender));
     }
 
     function randomNum() private view returns (uint256) {
@@ -96,7 +100,9 @@ contract Tickets is ERC721Enumerable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor(string memory _description, string memory _symbol) ERC721(_description, _symbol) {}
+    constructor(string memory _description, string memory _symbol)
+        ERC721(_description, _symbol)
+    {}
 
     function mint(address recipient) public returns (uint256) {
         _tokenIds.increment();
