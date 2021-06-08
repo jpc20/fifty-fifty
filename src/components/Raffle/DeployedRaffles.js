@@ -35,7 +35,6 @@ const DeployedRaffles = ({
         const raffleTicketPrice = await deployedRaffle.ticketPrice();
         const raffleBeneficiary = await deployedRaffle.beneficiary();
         const userTickets = await deployedRaffle.ticketCount(userAddress);
-        const allTicketHolders = await deployedRaffle.getTicketHolders();
         const contractBalance = await provider.getBalance(raffleAddress);
         const checkOwner = await deployedRaffle.owner();
         const openStatus = await deployedRaffle.open();
@@ -44,13 +43,14 @@ const DeployedRaffles = ({
           ticketsAddress,
           Tickets.abi,
           signer
-        );
+          );
+        const ticketSupply = await tickets.totalSupply();
         const description = await tickets.name();
         const raffle = {
           ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
           beneficiary: raffleBeneficiary,
           userTicketCount: userTickets.toString(),
-          totalTicketCount: allTicketHolders.length,
+          totalTicketCount: ticketSupply.toString(),
           balance: ethers.utils.formatEther(contractBalance.toString()),
           owner: checkOwner === userAddress,
           openStatus: openStatus,
