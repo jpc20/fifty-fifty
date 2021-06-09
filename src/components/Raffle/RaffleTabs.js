@@ -8,7 +8,7 @@ import { Tabs, Tab, AppBar, Box } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
     width: "90%",
     display: "flex",
     flexDirection: "column",
