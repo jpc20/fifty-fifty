@@ -7,7 +7,6 @@ import Tickets from "../../artifacts/contracts/Raffle.sol/Tickets.json";
 
 const DeployedRaffles = ({
   raffleFactoryAddress,
-  checkNetwork,
   signer,
   provider,
   userAddress,
@@ -17,7 +16,6 @@ const DeployedRaffles = ({
   const [raffles, setRafflesValue] = useState([]);
 
   const getRaffles = useCallback(async () => {
-    if (userConnected === false && apiConnected === false) return;
     try {
       setRafflesValue([]);
       const factory = new ethers.Contract(
@@ -26,48 +24,50 @@ const DeployedRaffles = ({
         signer
       );
       const rafflesAddresses = await factory.getDeployedRaffles();
-      rafflesAddresses.forEach(async (raffleAddress) => {
-        const deployedRaffle = new ethers.Contract(
-          raffleAddress,
-          RaffleContract.abi,
-          signer
-        );
-        const raffleTicketPrice = await deployedRaffle.ticketPrice();
-        const raffleBeneficiary = await deployedRaffle.beneficiary();
-        const contractBalance = await provider.getBalance(raffleAddress);
-        const checkOwner = await deployedRaffle.owner();
-        const openStatus = await deployedRaffle.open();
-        const ticketsAddress = await deployedRaffle.tickets();
-        const tickets = new ethers.Contract(
-          ticketsAddress,
-          Tickets.abi,
-          signer
-        );
-        const userTickets = await tickets.balanceOf(userAddress);
-        const ticketSupply = await tickets.totalSupply();
-        const description = await tickets.name();
-        const raffle = {
-          ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
-          beneficiary: raffleBeneficiary,
-          userTicketCount: userTickets.toString(),
-          totalTicketCount: ticketSupply.toString(),
-          balance: ethers.utils.formatEther(contractBalance.toString()),
-          owner: checkOwner === userAddress,
-          openStatus: openStatus,
-          raffleAddress: raffleAddress,
-          description: description,
-        };
-        setRafflesValue((previousRaffles) => [...previousRaffles, raffle]);
-      });
-
+      const raffleResp = await Promise.all(
+        rafflesAddresses.map(async (raffleAddress) => {
+          const deployedRaffle = new ethers.Contract(
+            raffleAddress,
+            RaffleContract.abi,
+            signer
+          );
+          const raffleTicketPrice = await deployedRaffle.ticketPrice();
+          const raffleBeneficiary = await deployedRaffle.beneficiary();
+          const contractBalance = await provider.getBalance(raffleAddress);
+          const checkOwner = await deployedRaffle.owner();
+          const openStatus = await deployedRaffle.open();
+          const ticketsAddress = await deployedRaffle.tickets();
+          const tickets = new ethers.Contract(
+            ticketsAddress,
+            Tickets.abi,
+            signer
+          );
+          const userTickets = await tickets.balanceOf(userAddress);
+          const ticketSupply = await tickets.totalSupply();
+          const description = await tickets.name();
+          return {
+            ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
+            beneficiary: raffleBeneficiary,
+            userTicketCount: userTickets.toString(),
+            totalTicketCount: ticketSupply.toString(),
+            balance: ethers.utils.formatEther(contractBalance.toString()),
+            owner: checkOwner === userAddress,
+            openStatus: openStatus,
+            raffleAddress: raffleAddress,
+            description: description,
+          };
+        })
+      );
+      setRafflesValue(raffleResp);
     } catch (error) {
       console.log(error);
     }
-  }, [userConnected, apiConnected, raffleFactoryAddress, signer, provider, userAddress]);
+  }, [raffleFactoryAddress, signer, provider, userAddress]);
 
   useEffect(() => {
+    if (userConnected === false && apiConnected === false) return;
     getRaffles();
-  }, [getRaffles]);
+  }, [getRaffles, userConnected, apiConnected]);
 
   return (
     <div>
