@@ -1,5 +1,5 @@
-![android-chrome-192x192](https://user-images.githubusercontent.com/56480486/121592906-837cd200-c9f8-11eb-9de9-f86c4bdf4c83.png)
-# 50/50 Raffle
+# 50/50 Raffle ![apple-touch-icon](https://user-images.githubusercontent.com/56480486/121592982-9b545600-c9f8-11eb-8537-59208f3e66f1.png) 
+
 ## Available Scripts
 
 In the project directory, you can run:
