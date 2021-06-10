@@ -1,6 +1,7 @@
 # ![favicon-32x32](https://user-images.githubusercontent.com/56480486/121593062-b58e3400-c9f8-11eb-8fa2-7156dcb09e1b.png) 50/50 Raffle ![favicon-32x32](https://user-images.githubusercontent.com/56480486/121593062-b58e3400-c9f8-11eb-8fa2-7156dcb09e1b.png)
 
-Front-end: https://fiftyfiftyraffle.netlify.app/
+Front-end: https://fiftyfiftyraffle.netlify.app/ 
+
 Contracts: ---
 
 ## Tech
