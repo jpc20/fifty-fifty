@@ -154,14 +154,14 @@ const Raffle = ({
                   <div>TicketsOwned: {userTicketCount}</div>
                   <div>TicketCount: {totalTicketCount}</div>
                   <a
-                    href={"https://rinkeby.etherscan.io/address/" + userAddress}
+                    href={"https://rinkeby.etherscan.io/address/" + beneficiary}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     Beneficiary:{" "}
-                    {userAddress.slice(0, 6) +
+                    {beneficiary.slice(0, 6) +
                       "..." +
-                      userAddress.slice(37, -1)}
+                      beneficiary.slice(37, -1)}
                   </a>
                 </Typography>
               </>
