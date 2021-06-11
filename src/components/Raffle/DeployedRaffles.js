@@ -73,7 +73,7 @@ const DeployedRaffles = ({
   }, [getRaffles, userConnected, apiConnected]);
 
   return (
-    <div>
+    <>
       <RaffleTabs
         raffles={raffles}
         raffleFactoryAddress={raffleFactoryAddress}
@@ -86,7 +86,7 @@ const DeployedRaffles = ({
         setFlashMessage={setFlashMessage}
         setFlashType={setFlashType}
       />
-    </div>
+    </>
   );
 };
 
