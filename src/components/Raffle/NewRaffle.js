@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
-import { Grid, TextField, Snackbar } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+import { Grid, TextField, } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
 import LoadingButton from "../LoadingButton";
+import ErrorMessage from "../ErrorMessage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,18 +16,8 @@ const useStyles = makeStyles((theme) => ({
       textAlign: "center",
       justifyContent: "center",
     },
-    alert: {
-      width: "100%",
-      // "& > * + *": {
-      //   marginTop: theme.spacing(2),
-      // },
-    },
   },
 }));
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const NewRaffle = ({
   raffleFactoryAddress,
@@ -99,13 +89,7 @@ const NewRaffle = ({
     checkAddress();
   }, [beneficiary]);
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
 
-    setError(false);
-  };
   return (
     <form
       className={classes.root}
@@ -113,21 +97,7 @@ const NewRaffle = ({
       autoComplete="off"
       onSubmit={(e) => deployRaffle(e)}
     >
-      <div className={classes.alert}>
-        <Snackbar
-          open={error}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error">
-            {errorMessage}
-          </Alert>
-        </Snackbar>
-      </div>
+      <ErrorMessage error={error} errorMessage={errorMessage} setError={setError}/>
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={12}>
           {validAddress ? (
