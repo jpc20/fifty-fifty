@@ -26,7 +26,10 @@ const NewRaffle = ({
   signer,
   provider,
   userAddress,
-  userConnected
+  userConnected,
+  setFlashActive,
+  setFlashMessage,
+  setFlashType,
 }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
@@ -59,9 +62,15 @@ const NewRaffle = ({
           setCurrentTabValue(2);
           setFilter("owned");
           getRaffles();
+          setFlashMessage("Raffle deployed successfully!");
+          setFlashType("success");
+          setFlashActive(true);
+          setLoadingValue(false);
         });
       } catch (err) {
-        console.log("Error: ", err);
+        setFlashMessage(err.message);
+        setFlashType("error");
+        setFlashActive(true);
         setLoadingValue(false);
       }
     }

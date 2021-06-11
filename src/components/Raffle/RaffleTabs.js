@@ -1,14 +1,13 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import Raffle from "./Raffle";
 import NewRaffle from "./NewRaffle";
 import { makeStyles } from "@material-ui/core/styles";
 import { Tabs, Tab, AppBar, Box } from "@material-ui/core";
+import RaffleGroup from "./RaffleGroup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    // backgroundColor: theme.palette.background.paper,
     width: "90%",
     display: "flex",
     flexDirection: "column",
@@ -53,12 +52,6 @@ function a11yProps(index) {
   };
 }
 
-const FILTER_MAP = {
-  open: (raffle) => raffle.openStatus,
-  closed: (raffle) => !raffle.openStatus,
-  owned: (raffle) => raffle.owner,
-};
-
 const RaffleTabs = ({
   raffles,
   raffleFactoryAddress,
@@ -67,6 +60,9 @@ const RaffleTabs = ({
   provider,
   userAddress,
   userConnected,
+  setFlashActive,
+  setFlashMessage,
+  setFlashType,
 }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
@@ -74,40 +70,6 @@ const RaffleTabs = ({
 
   const handleChange = (event, newTab) => {
     setCurrentTabValue(newTab);
-  };
-
-  const RaffleComponents = ({
-    raffles,
-    filter,
-    getRaffles,
-    signer,
-    provider,
-    userAddress,
-    userConnected,
-  }) => {
-    const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
-      return (
-        <Raffle
-          raffleTicketPrice={raffle.ticketPrice}
-          beneficiary={raffle.beneficiary}
-          description={raffle.description}
-          userTicketCount={raffle.userTicketCount}
-          totalTicketCount={raffle.totalTicketCount}
-          balance={raffle.balance}
-          isOwner={raffle.owner}
-          open={raffle.openStatus}
-          raffleAddress={raffle.raffleAddress}
-          key={raffle.raffleAddress}
-          raffleFilter={filter}
-          getRaffles={getRaffles}
-          signer={signer}
-          provider={provider}
-          userAddress={userAddress}
-          userConnected={userConnected}
-        />
-      );
-    });
-    return filtered;
   };
 
   return (
@@ -138,7 +100,7 @@ const RaffleTabs = ({
         </Tabs>
       </AppBar>
       <TabPanel currentTab={currentTab} index={0}>
-        <RaffleComponents
+        <RaffleGroup
           filter={filter}
           raffles={raffles}
           getRaffles={getRaffles}
@@ -146,10 +108,13 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
-        <RaffleComponents
+        <RaffleGroup
           filter={filter}
           raffles={raffles}
           getRaffles={getRaffles}
@@ -157,10 +122,13 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={2}>
-        <RaffleComponents
+        <RaffleGroup
           filter={filter}
           raffles={raffles}
           getRaffles={getRaffles}
@@ -168,6 +136,9 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={3}>
@@ -180,6 +151,9 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
     </div>

@@ -35,6 +35,9 @@ const Raffle = ({
   provider,
   userAddress,
   userConnected,
+  setFlashActive,
+  setFlashMessage,
+  setFlashType,
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
@@ -59,9 +62,14 @@ const Raffle = ({
       provider.once(purchaseTx.hash, (transaction) => {
         setPurchaseLoadingValue(false);
         getRaffles();
+        setFlashMessage("Successfully purchased ticket!");
+        setFlashType("success");
+        setFlashActive(true);
       });
     } catch (error) {
-      console.log(error);
+      setFlashType("error");
+      setFlashMessage(error.message);
+      setFlashActive(true);
       setPurchaseLoadingValue(false);
     }
   }
@@ -78,9 +86,14 @@ const Raffle = ({
       provider.once(distributeTx.hash, (transaction) => {
         setDistributeLoadingValue(false);
         getRaffles();
+        setFlashMessage("Funds Distributed Successfully!");
+        setFlashType("success");
+        setFlashActive(true);
       });
     } catch (error) {
-      console.log(error);
+      setFlashType("error");
+      setFlashMessage(error.message);
+      setFlashActive(true);
       setDistributeLoadingValue(false);
     }
   }
@@ -153,12 +166,12 @@ const Raffle = ({
                   <div>Ticket Price: {raffleTicketPrice} ETH</div>
                   <div>TicketsOwned: {userTicketCount}</div>
                   <div>TicketCount: {totalTicketCount}</div>
+                  Beneficiary:{" "}
                   <a
                     href={"https://rinkeby.etherscan.io/address/" + beneficiary}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Beneficiary:{" "}
                     {beneficiary.slice(0, 6) +
                       "..." +
                       beneficiary.slice(37, -1)}

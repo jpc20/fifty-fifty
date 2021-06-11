@@ -12,6 +12,9 @@ const DeployedRaffles = ({
   userAddress,
   userConnected,
   apiConnected,
+  setFlashActive,
+  setFlashMessage,
+  setFlashType,
 }) => {
   const [raffles, setRafflesValue] = useState([]);
 
@@ -70,7 +73,7 @@ const DeployedRaffles = ({
   }, [getRaffles, userConnected, apiConnected]);
 
   return (
-    <div>
+    <>
       <RaffleTabs
         raffles={raffles}
         raffleFactoryAddress={raffleFactoryAddress}
@@ -79,8 +82,11 @@ const DeployedRaffles = ({
         provider={provider}
         userAddress={userAddress}
         userConnected={userConnected}
+        setFlashActive={setFlashActive}
+        setFlashMessage={setFlashMessage}
+        setFlashType={setFlashType}
       />
-    </div>
+    </>
   );
 };
 
