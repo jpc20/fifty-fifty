@@ -1,8 +1,9 @@
 import "./App.css";
 import { ethers } from "ethers";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
-import { Divider, Typography, CssBaseline } from "@material-ui/core";
+import { Divider, Typography, CssBaseline, IconButton } from "@material-ui/core";
 import { makeStyles, createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { Brightness3, WbSunny } from "@material-ui/icons";
 import LoadingButton from "./components/LoadingButton";
 import { useState, useEffect, useCallback } from "react";
 
@@ -36,9 +37,17 @@ const darkTheme = createMuiTheme({
     secondary: {
       main: "#f44336",
     },
-    // background: {
-    //   default: "",
-    // },
+  },
+});
+const lightTheme = createMuiTheme({
+  palette: {
+    type: "light",
+    primary: {
+      main: "#612ba8",
+    },
+    secondary: {
+      main: "#f44336",
+    },
   },
 });
 
@@ -50,6 +59,7 @@ function App() {
   const [userConnected, setUserConnected] = useState(false);
   const [apiConnected, setApiConnected] = useState(false);
   const [accountLoading, setAccountLoading] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(darkTheme);
   const classes = useStyles();
 
   async function requestAccount() {
@@ -120,10 +130,18 @@ function App() {
   }, [])
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={currentTheme}>
       <CssBaseline />
       <div className={classes.root}>
         <div className="App-header">
+          <div>
+            <IconButton onClick={() => setCurrentTheme(lightTheme)}>
+              <WbSunny />
+            </IconButton>
+            <IconButton onClick={() => setCurrentTheme(darkTheme)}>
+              <Brightness3 />
+            </IconButton>
+          </div>
           <div className="account-button">
             <LoadingButton
               buttonText={
