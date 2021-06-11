@@ -15,19 +15,19 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const ErrorMessage = ({ error, errorMessage, setError }) => {
+const FlashMessage = ({ active, flashMessage, setActive, type }) => {
   const classes = useStyles();
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setError(false);
+    setActive(false);
   };
   return (
     <div className={classes.root}>
       <Snackbar
-        open={error}
+        open={active}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
@@ -35,12 +35,12 @@ const ErrorMessage = ({ error, errorMessage, setError }) => {
         autoHideDuration={9000}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity="error">
-          {errorMessage}
+        <Alert onClose={handleClose} severity={type}>
+          {flashMessage}
         </Alert>
       </Snackbar>
     </div>
   );
 };
 
-export default ErrorMessage;
+export default FlashMessage;

@@ -5,7 +5,7 @@ import { Grid, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
 import LoadingButton from "../LoadingButton";
-import ErrorMessage from "../ErrorMessage";
+import FlashMessage from "../FlashMessage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,8 +35,9 @@ const NewRaffle = ({
   const [symbol, setSymbolValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
   const [validAddress, setValidAddressValue] = useState(true);
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("false");
+  const [flashActive, setFlashActive] = useState(false);
+  const [flashMessage, setFlashMessage] = useState("");
+  const [flashType, setFlashType] = useState("");
   const classes = useStyles();
 
   async function deployRaffle(event) {
@@ -64,8 +65,9 @@ const NewRaffle = ({
           getRaffles();
         });
       } catch (err) {
-        setErrorMessage(err.message);
-        setError(true);
+        setFlashMessage(err.message);
+        setFlashType("error");
+        setFlashActive(true);
         setLoadingValue(false);
       }
     }
@@ -96,10 +98,11 @@ const NewRaffle = ({
       autoComplete="off"
       onSubmit={(e) => deployRaffle(e)}
     >
-      <ErrorMessage
-        error={error}
-        errorMessage={errorMessage}
-        setError={setError}
+      <FlashMessage
+        active={flashActive}
+        flashMessage={flashMessage}
+        setActive={setFlashActive}
+        type={flashType}
       />
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={12}>

@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, IconButton } from "@material-ui/core";
 import { ExpandMore, ExpandLess } from "@material-ui/icons";
 import LoadingButton from "../LoadingButton";
-import ErrorMessage from "../ErrorMessage";
+import FlashMessage from "../FlashMessage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,8 +40,9 @@ const Raffle = ({
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
   const [expanded, setExpandedalue] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("false");
+  const [flashActive, setFlashActive] = useState(false);
+  const [flashMessage, setFlashMessage] = useState("");
+  const [flashType, setFlashType] = useState("");
   const classes = useStyles();
 
   async function purchaseTicket() {
@@ -64,8 +65,9 @@ const Raffle = ({
         getRaffles();
       });
     } catch (error) {
-      setError(true);
-      setErrorMessage(error.message);
+      setFlashType("error");
+      setFlashMessage(error.message);
+      setFlashActive(true);
       setPurchaseLoadingValue(false);
     }
   }
@@ -84,8 +86,9 @@ const Raffle = ({
         getRaffles();
       });
     } catch (error) {
-      setError(true);
-      setErrorMessage(error.message);
+      setFlashType("error");
+      setFlashMessage(error.message);
+      setFlashActive(true);
       setDistributeLoadingValue(false);
     }
   }
@@ -104,10 +107,11 @@ const Raffle = ({
 
   return (
     <div className={classes.root} style={{ display: checkRaffleFilter() }}>
-      <ErrorMessage
-        error={error}
-        errorMessage={errorMessage}
-        setError={setError}
+      <FlashMessage
+        active={flashActive}
+        flashMessage={flashMessage}
+        setActive={setFlashActive}
+        type={flashType}
       />
       <Paper className={classes.paper} elevation={3}>
         <Grid
