@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, TextField, Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
 import LoadingButton from "../LoadingButton";
@@ -15,8 +16,18 @@ const useStyles = makeStyles((theme) => ({
       textAlign: "center",
       justifyContent: "center",
     },
+    alert: {
+      width: "100%",
+      // "& > * + *": {
+      //   marginTop: theme.spacing(2),
+      // },
+    },
   },
 }));
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const NewRaffle = ({
   raffleFactoryAddress,
@@ -26,7 +37,7 @@ const NewRaffle = ({
   signer,
   provider,
   userAddress,
-  userConnected
+  userConnected,
 }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
@@ -34,6 +45,8 @@ const NewRaffle = ({
   const [symbol, setSymbolValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
   const [validAddress, setValidAddressValue] = useState(true);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("false");
   const classes = useStyles();
 
   async function deployRaffle(event) {
@@ -61,7 +74,8 @@ const NewRaffle = ({
           getRaffles();
         });
       } catch (err) {
-        console.log("Error: ", err);
+        setErrorMessage(err.message)
+        setError(true);
         setLoadingValue(false);
       }
     }
@@ -85,6 +99,13 @@ const NewRaffle = ({
     checkAddress();
   }, [beneficiary]);
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setError(false);
+  };
   return (
     <form
       className={classes.root}
@@ -92,6 +113,21 @@ const NewRaffle = ({
       autoComplete="off"
       onSubmit={(e) => deployRaffle(e)}
     >
+      <div className={classes.alert}>
+        <Snackbar
+          open={error}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error">
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      </div>
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={12}>
           {validAddress ? (

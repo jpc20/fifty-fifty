@@ -2,7 +2,11 @@ import "./App.css";
 import { ethers } from "ethers";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import { Divider, Typography, CssBaseline } from "@material-ui/core";
-import { makeStyles, createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import LoadingButton from "./components/LoadingButton";
 import { useState, useEffect, useCallback } from "react";
 
@@ -116,8 +120,8 @@ function App() {
   }, [connectAccount, connectApi, isMetaMaskConnected]);
 
   useEffect(() => {
-    checkNetwork().then((network) => setNetwork(network))
-  }, [])
+    checkNetwork().then((network) => setNetwork(network));
+  }, []);
 
   return (
     <ThemeProvider theme={darkTheme}>
