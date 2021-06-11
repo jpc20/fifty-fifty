@@ -67,6 +67,9 @@ const RaffleTabs = ({
   provider,
   userAddress,
   userConnected,
+  setFlashActive,
+  setFlashMessage,
+  setFlashType,
 }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
@@ -84,6 +87,9 @@ const RaffleTabs = ({
     provider,
     userAddress,
     userConnected,
+    setFlashActive,
+    setFlashMessage,
+    setFlashType,
   }) => {
     const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
       return (
@@ -104,6 +110,9 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       );
     });
@@ -146,6 +155,9 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1}>
@@ -157,6 +169,9 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={2}>
@@ -168,6 +183,9 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={3}>
@@ -180,6 +198,9 @@ const RaffleTabs = ({
           provider={provider}
           userAddress={userAddress}
           userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </TabPanel>
     </div>

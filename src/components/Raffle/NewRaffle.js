@@ -5,7 +5,6 @@ import { Grid, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NumberFormat from "react-number-format";
 import LoadingButton from "../LoadingButton";
-import FlashMessage from "../FlashMessage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,6 +27,9 @@ const NewRaffle = ({
   provider,
   userAddress,
   userConnected,
+  setFlashActive,
+  setFlashMessage,
+  setFlashType,
 }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
   const [beneficiary, setBeneficiaryValue] = useState("");
@@ -35,9 +37,6 @@ const NewRaffle = ({
   const [symbol, setSymbolValue] = useState("");
   const [loading, setLoadingValue] = useState(false);
   const [validAddress, setValidAddressValue] = useState(true);
-  const [flashActive, setFlashActive] = useState(false);
-  const [flashMessage, setFlashMessage] = useState("");
-  const [flashType, setFlashType] = useState("");
   const classes = useStyles();
 
   async function deployRaffle(event) {
@@ -63,6 +62,10 @@ const NewRaffle = ({
           setCurrentTabValue(2);
           setFilter("owned");
           getRaffles();
+          setFlashMessage("Raffle deployed successfully!");
+          setFlashType("success");
+          setFlashActive(true);
+          setLoadingValue(false);
         });
       } catch (err) {
         setFlashMessage(err.message);
@@ -98,12 +101,6 @@ const NewRaffle = ({
       autoComplete="off"
       onSubmit={(e) => deployRaffle(e)}
     >
-      <FlashMessage
-        active={flashActive}
-        flashMessage={flashMessage}
-        setActive={setFlashActive}
-        type={flashType}
-      />
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={12}>
           {validAddress ? (

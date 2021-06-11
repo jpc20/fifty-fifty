@@ -1,14 +1,15 @@
 import "./App.css";
+import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
-import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import { Divider, Typography, CssBaseline } from "@material-ui/core";
 import {
   makeStyles,
   createMuiTheme,
   ThemeProvider,
 } from "@material-ui/core/styles";
+import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import LoadingButton from "./components/LoadingButton";
-import { useState, useEffect, useCallback } from "react";
+import FlashMessage from "./components/FlashMessage";
 
 // const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
 const raffleFactoryAddress = "0xE68FfBe40CF75D6D7361b0e28F0e71A9b6AAA920"; // rinkeby
@@ -54,6 +55,9 @@ function App() {
   const [userConnected, setUserConnected] = useState(false);
   const [apiConnected, setApiConnected] = useState(false);
   const [accountLoading, setAccountLoading] = useState(false);
+  const [flashActive, setFlashActive] = useState(false);
+  const [flashMessage, setFlashMessage] = useState("");
+  const [flashType, setFlashType] = useState("");
   const classes = useStyles();
 
   async function requestAccount() {
@@ -126,6 +130,12 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
+      <FlashMessage
+        active={flashActive}
+        flashMessage={flashMessage}
+        setActive={setFlashActive}
+        type={flashType}
+      />
       <div className={classes.root}>
         <div className="App-header">
           <div className="account-button">
@@ -164,6 +174,9 @@ function App() {
           userAddress={userAddress}
           userConnected={userConnected}
           apiConnected={apiConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
         />
       </div>
     </ThemeProvider>
