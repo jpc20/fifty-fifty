@@ -153,12 +153,12 @@ const Raffle = ({
                   <div>Ticket Price: {raffleTicketPrice} ETH</div>
                   <div>TicketsOwned: {userTicketCount}</div>
                   <div>TicketCount: {totalTicketCount}</div>
+                  Beneficiary:{" "}
                   <a
                     href={"https://rinkeby.etherscan.io/address/" + beneficiary}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Beneficiary:{" "}
                     {beneficiary.slice(0, 6) +
                       "..." +
                       beneficiary.slice(37, -1)}

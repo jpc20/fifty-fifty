@@ -23,7 +23,7 @@ const LoadingButton = ({
         <Button
           type="submit"
           variant={variant || "contained"}
-          color="primary"
+          color={buttonType === "account" ? "inherit" : "primary"}
           onClick={onClickHandler}
           disabled={disabled ? disabled : buttonType !== "account" && !userConnected }
           size="small"

@@ -1,8 +1,8 @@
 import "./App.css";
 import { ethers } from "ethers";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
-import { Divider, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Divider, Typography, CssBaseline } from "@material-ui/core";
+import { makeStyles, createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import LoadingButton from "./components/LoadingButton";
 import { useState, useEffect, useCallback } from "react";
 
@@ -27,10 +27,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#612ba8",
+    },
+    secondary: {
+      main: "#f44336",
+    },
+    // background: {
+    //   default: "",
+    // },
+  },
+});
+
 function App() {
   const [signer, setSigner] = useState("");
   const [provider, setProvider] = useState("");
   const [userAddress, setUserAddress] = useState("");
+  const [network, setNetwork] = useState("");
   const [userConnected, setUserConnected] = useState(false);
   const [apiConnected, setApiConnected] = useState(false);
   const [accountLoading, setAccountLoading] = useState(false);
@@ -99,42 +115,54 @@ function App() {
     });
   }, [connectAccount, connectApi, isMetaMaskConnected]);
 
+  useEffect(() => {
+    checkNetwork().then((network) => setNetwork(network))
+  }, [])
+
   return (
-    <div className={classes.root}>
-      <div className="App-header">
-        <div className="account-button">
-          <LoadingButton
-            buttonText={
-              userConnected
-                ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
-                : "Connect Account"
-            }
-            onClickHandler={connectAccount}
-            loading={accountLoading}
-            variant="outlined"
-            buttonType="account"
-          />
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <div className={classes.root}>
+        <div className="App-header">
+          <div className="account-button">
+            <LoadingButton
+              buttonText={
+                userConnected
+                  ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
+                  : "Connect Account"
+              }
+              onClickHandler={connectAccount}
+              loading={accountLoading}
+              variant="outlined"
+              buttonType="account"
+            />
+          </div>
         </div>
+        <Typography variant="h2">50/50 Raffle</Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          Built by @jpc20
+        </Typography>
+        <Typography
+          variant="caption"
+          color={network === "rinkeby" ? "inherit" : "secondary"}
+          gutterBottom
+        >
+          {network === "rinkeby"
+            ? "[Connected to Rinkbey Testnet]"
+            : "[Please connect to the Rinkeby Testnet]"}
+        </Typography>
+        <Divider className={classes.divider} />
+        <DeployedRaffles
+          connectAccount={connectAccount}
+          raffleFactoryAddress={raffleFactoryAddress}
+          signer={signer}
+          provider={provider}
+          userAddress={userAddress}
+          userConnected={userConnected}
+          apiConnected={apiConnected}
+        />
       </div>
-      <Typography variant="h2">50/50 Raffle</Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        Built by @jpc20
-      </Typography>
-      <Typography variant="caption" color="secondary" gutterBottom>
-        [Rinkbey Testnet]
-      </Typography>
-      <Divider className={classes.divider} />
-      <DeployedRaffles
-        connectAccount={connectAccount}
-        raffleFactoryAddress={raffleFactoryAddress}
-        checkNetwork={checkNetwork}
-        signer={signer}
-        provider={provider}
-        userAddress={userAddress}
-        userConnected={userConnected}
-        apiConnected={apiConnected}
-      />
-    </div>
+    </ThemeProvider>
   );
 }
 
