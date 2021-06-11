@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, IconButton } from "@material-ui/core";
 import { ExpandMore, ExpandLess } from "@material-ui/icons";
 import LoadingButton from "../LoadingButton";
+import ErrorMessage from "../ErrorMessage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +40,8 @@ const Raffle = ({
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
   const [expanded, setExpandedalue] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("false");
   const classes = useStyles();
 
   async function purchaseTicket() {
@@ -61,7 +64,8 @@ const Raffle = ({
         getRaffles();
       });
     } catch (error) {
-      console.log(error);
+      setError(true);
+      setErrorMessage(error.message);
       setPurchaseLoadingValue(false);
     }
   }
@@ -80,7 +84,8 @@ const Raffle = ({
         getRaffles();
       });
     } catch (error) {
-      console.log(error);
+      setError(true);
+      setErrorMessage(error.message);
       setDistributeLoadingValue(false);
     }
   }
@@ -99,6 +104,11 @@ const Raffle = ({
 
   return (
     <div className={classes.root} style={{ display: checkRaffleFilter() }}>
+      <ErrorMessage
+        error={error}
+        errorMessage={errorMessage}
+        setError={setError}
+      />
       <Paper className={classes.paper} elevation={3}>
         <Grid
           container
