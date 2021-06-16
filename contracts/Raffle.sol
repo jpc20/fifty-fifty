@@ -83,6 +83,7 @@ contract Raffle is Ownable {
     }
 
     function distribute() public payable onlyOwner {
+        require(tickets.totalSupply() > 0, "No tickets have been sold");
         address winner = pickWinner();
         uint256 totalAmount = address(this).balance;
         (bool sentToBene, bytes memory beneData) =
