@@ -1,5 +1,7 @@
 # ![favicon-32x32](https://user-images.githubusercontent.com/56480486/121593062-b58e3400-c9f8-11eb-8fa2-7156dcb09e1b.png) 50/50 Raffle ![favicon-32x32](https://user-images.githubusercontent.com/56480486/121593062-b58e3400-c9f8-11eb-8fa2-7156dcb09e1b.png)
 
+Raffle dApp with NFT(ERC721) tickets. Half of the balance gets distributed to a random ticket holder and the other half gets distributed to a beneficiary that the raffle owner sets on creation.
+
 Front-end: https://fiftyfiftyraffle.netlify.app/ 
 
 Contracts: ---
@@ -34,6 +36,6 @@ You will also see any lint errors in the console.
 
 ### `npx hardhat test`
 
-Runs the smart contract test.
+Runs the smart contract tests.
 
 
