@@ -140,6 +140,7 @@ const Raffle = ({
                 onClickHandler={distributeFunds}
                 buttonType="distribute"
                 userConnected={userConnected}
+                disabled={totalTicketCount < 1}
               />
             </Grid>
           ) : (

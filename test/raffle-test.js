@@ -71,6 +71,9 @@ describe("Raffle", function () {
     const beneficiaryBalance = await ethers.provider.getBalance(
       accounts[1].address
     );
+    await expect(raffle.connect(accounts[0]).distribute()).to.be.revertedWith(
+      "No tickets have been sold"
+    );
     await raffle
       .connect(accounts[2])
       .purchaseTicket({ from: accounts[2].address, value: ticketPrice });

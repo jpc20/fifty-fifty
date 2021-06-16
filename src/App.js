@@ -12,7 +12,7 @@ import LoadingButton from "./components/LoadingButton";
 import FlashMessage from "./components/FlashMessage";
 
 // const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
-const raffleFactoryAddress = "0xE68FfBe40CF75D6D7361b0e28F0e71A9b6AAA920"; // rinkeby
+const raffleFactoryAddress = "0x5CAD587c6D124b2d4E32BcC254633c1899a1e24e"; // rinkeby
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
