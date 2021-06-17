@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const Tickets = require("../src/artifacts/contracts/Raffle.sol/Tickets.json");
+const Tickets = require("../src/artifacts/contracts/Tickets.sol/Tickets.json");
 const { expect } = require("chai");
 
 var accounts;
@@ -10,6 +10,7 @@ var raffle;
 var ticketPrice;
 var description;
 var symbol;
+var metadata;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();
@@ -17,6 +18,13 @@ beforeEach(async function () {
   ticketPrice = ethers.utils.parseEther(".1");
   description = "test description";
   symbol = 'TEST-TKT'
+  metadata = {
+    name: "Buzz",
+    description:
+      "Paper collage, using salvaged and original watercolour papers",
+    image:
+      "https://ipfs.infura.io/ipfs/QmWc6YHE815F8kExchG9kd2uSsv7ZF1iQNn23bt5iKC6K3/image",
+  };
   raffle = await Raffle.deploy(
     description,
     symbol,
@@ -37,10 +45,10 @@ describe("Ticket", function () {
   it("Mints a ticket to the account that calls the purchase function", async function () {
     await raffle
       .connect(accounts[2])
-      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
+      .purchaseTicket(metadata, { from: accounts[2].address, value: ticketPrice });
     await raffle
       .connect(accounts[2])
-      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
+      .purchaseTicket(metadata, { from: accounts[2].address, value: ticketPrice });
       const acct1TicketCount = await tickets.balanceOf(accounts[1].address);
       expect(acct1TicketCount.toString()).to.equal("0")
       const acct2TicketCount = await tickets.balanceOf(accounts[2].address);
