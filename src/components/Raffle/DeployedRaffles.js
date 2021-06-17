@@ -17,7 +17,6 @@ const DeployedRaffles = ({
   setFlashType,
 }) => {
   const [raffles, setRafflesValue] = useState([]);
-  const [tickets, setTicketsValue] = useState([]);
 
   const getRaffles = useCallback(async () => {
     try {
@@ -47,9 +46,6 @@ const DeployedRaffles = ({
           );
           const userTickets = await tickets.balanceOf(userAddress);
           const ticketSupply = await tickets.totalSupply();
-          for (let i = 1; i <= ticketSupply; i++) {
-            if (await tickets.ownerOf(i) === userAddress) console.log('Owned');
-          }
           const description = await tickets.name();
           return {
             ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
