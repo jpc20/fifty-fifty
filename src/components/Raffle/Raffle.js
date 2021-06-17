@@ -101,7 +101,7 @@ const Raffle = ({
   const checkRaffleFilter = () => {
     if (raffleFilter === "open" && open) {
       return "block";
-    } else if (raffleFilter === "closed" && open === false) {
+    } else if (raffleFilter === "tickets") {
       return "block";
     } else if (raffleFilter === "owned" && isOwner) {
       return "block";
@@ -131,6 +131,13 @@ const Raffle = ({
             </Grid>
           ) : (
             ""
+          )}
+          {raffleFilter === "tickets" && (
+            <Grid item xs={3}>
+              <Typography variant="h6" noWrap gutterBottom>
+                Tickets: {userTicketCount}
+              </Typography>
+            </Grid>
           )}
           {isOwner && open && raffleFilter === "owned" ? (
             <Grid item xs={3}>
@@ -165,8 +172,8 @@ const Raffle = ({
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   <div>Ticket Price: {raffleTicketPrice} ETH</div>
-                  <div>TicketsOwned: {userTicketCount}</div>
-                  <div>TicketCount: {totalTicketCount}</div>
+                  <div>Tickets You Own: {userTicketCount}</div>
+                  <div>Total Ticket Supply: {totalTicketCount}</div>
                   Beneficiary:{" "}
                   <a
                     href={"https://rinkeby.etherscan.io/address/" + beneficiary}

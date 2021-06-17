@@ -87,9 +87,9 @@ const RaffleTabs = ({
             onClick={() => setFilter("open")}
           />
           <Tab
-            label="Closed Raffles"
+            label="Your Tickets"
             {...a11yProps(1)}
-            onClick={() => setFilter("closed")}
+            onClick={() => setFilter("tickets")}
           />
           <Tab
             label="Your Raffles"
