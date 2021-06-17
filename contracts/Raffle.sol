@@ -3,36 +3,8 @@ pragma solidity ^0.8.3;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "./Tickets.sol";
 // import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
-
-contract RaffleFactory {
-    address[] public deployedRaffles;
-
-    function createRaffle(
-        string memory _description,
-        string memory _symbol,
-        uint256 _ticketPrice,
-        address payable _beneficiary
-    ) public {
-        Raffle newRaffle =
-            new Raffle(
-                _description,
-                _symbol,
-                _ticketPrice,
-                _beneficiary,
-                msg.sender
-            );
-        console.log("Raffle Address: '%s'", address(newRaffle));
-        deployedRaffles.push(address(newRaffle));
-    }
-
-    function getDeployedRaffles() public view returns (address[] memory) {
-        return deployedRaffles;
-    }
-}
 
 contract Raffle is Ownable {
     address payable public beneficiary;
@@ -56,9 +28,9 @@ contract Raffle is Ownable {
         transferOwnership(_owner);
     }
 
-    function purchaseTicket() public payable {
+    function purchaseTicket(string memory _tokenURI) public payable {
         require(msg.value == ticketPrice, "Incorrect Ticket Price");
-        tickets.mint(msg.sender);
+        tickets.mint(msg.sender, _tokenURI);
         emit TicketPurchase(msg.sender, tickets.balanceOf(msg.sender));
     }
 
@@ -94,21 +66,5 @@ contract Raffle is Ownable {
         require(sentToWinner, "Failed to send Ether to Winner");
         open = false;
         emit Distribute(beneficiary, winner, totalAmount);
-    }
-}
-
-contract Tickets is ERC721Enumerable {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-
-    constructor(string memory _description, string memory _symbol)
-        ERC721(_description, _symbol)
-    {}
-
-    function mint(address recipient) public returns (uint256) {
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
-        _safeMint(recipient, newItemId);
-        return newItemId;
     }
 }
