@@ -2,7 +2,7 @@ import Raffle from "./Raffle";
 
 const FILTER_MAP = {
   open: (raffle) => raffle.openStatus,
-  closed: (raffle) => !raffle.openStatus,
+  tickets: (raffle) => raffle.userTicketCount > 0,
   owned: (raffle) => raffle.owner,
 };
 

@@ -20,7 +20,6 @@ const DeployedRaffles = ({
 
   const getRaffles = useCallback(async () => {
     try {
-      setRafflesValue([]);
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
