@@ -71,7 +71,7 @@ describe("Raffle", function () {
         .purchaseTicket(metadata, { from: accounts[2].address, value: ticketPrice })
     )
       .to.emit(raffle, "TicketPurchase")
-      .withArgs(accounts[2].address, 1);
+      .withArgs(accounts[2].address, 1, 1);
   });
 
   it("Allows the owner to distribute funds", async function () {
