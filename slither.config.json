@@ -1,0 +1,5 @@
+{
+  "compile_force_framework": "hardhat",
+  "hardhat_artifacts_directory": "src/artifacts",
+  "hardhat_cache_directory": "build/cache"
+}
