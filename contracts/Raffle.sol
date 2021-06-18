@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.3;
 
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Tickets.sol";
 // import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
@@ -11,7 +10,7 @@ contract Raffle is Ownable {
     uint256 public ticketPrice;
     bool public open;
     Tickets public tickets;
-    event TicketPurchase(address purchaser, uint256 purchaserTicketCount);
+    event TicketPurchase(address purchaser, uint256 purchaserTicketCount, uint256 newTicketID);
     event Distribute(address beneficiary, address winner, uint256 totalAmount);
 
     constructor(
@@ -30,8 +29,8 @@ contract Raffle is Ownable {
 
     function purchaseTicket(string memory _tokenURI) public payable {
         require(msg.value == ticketPrice, "Incorrect Ticket Price");
-        tickets.mint(msg.sender, _tokenURI);
-        emit TicketPurchase(msg.sender, tickets.balanceOf(msg.sender));
+        uint newTicketID = tickets.mint(msg.sender, _tokenURI);
+        emit TicketPurchase(msg.sender, tickets.balanceOf(msg.sender), newTicketID);
     }
 
     function randomNum() private view returns (uint256) {
@@ -48,23 +47,23 @@ contract Raffle is Ownable {
             );
     }
 
-    function pickWinner() public view onlyOwner returns (address) {
+    function pickWinner() private view returns (address) {
         uint256 index = randomNum() % tickets.totalSupply();
         uint256 winningTicket = tickets.tokenByIndex(index);
         return tickets.ownerOf(winningTicket);
     }
 
-    function distribute() public payable onlyOwner {
+    function distribute() external {
         require(tickets.totalSupply() > 0, "No tickets have been sold");
+        require(msg.sender == owner());
         address winner = pickWinner();
+        require(tickets.balanceOf(winner) >= 1);
+        open = false;
         uint256 totalAmount = address(this).balance;
-        (bool sentToBene, bytes memory beneData) =
-            beneficiary.call{value: totalAmount / 2}("");
-        (bool sentToWinner, bytes memory winnerData) =
-            winner.call{value: address(this).balance}("");
+        (bool sentToBene, ) = beneficiary.call{value: address(this).balance / 2}("");
+        (bool sentToWinner, ) = winner.call{value: address(this).balance}("");
         require(sentToBene, "Failed to send Ether to Beneficiary");
         require(sentToWinner, "Failed to send Ether to Winner");
-        open = false;
         emit Distribute(beneficiary, winner, totalAmount);
     }
 }
