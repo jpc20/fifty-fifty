@@ -27,9 +27,9 @@ contract Raffle is Ownable {
         transferOwnership(_owner);
     }
 
-    function purchaseTicket(string memory _tokenURI) public payable {
-        require(msg.value == ticketPrice, "Incorrect Ticket Price");
-        uint newTicketID = tickets.mint(msg.sender, _tokenURI);
+    function purchaseTicket() public payable {
+        require(msg.value == ticketPrice, "Incorrect Price");
+        uint newTicketID = tickets.mint(msg.sender);
         emit TicketPurchase(msg.sender, tickets.balanceOf(msg.sender), newTicketID);
     }
 
@@ -54,7 +54,7 @@ contract Raffle is Ownable {
     }
 
     function distribute() external {
-        require(tickets.totalSupply() > 0, "No tickets have been sold");
+        require(tickets.totalSupply() > 0, "No tickets distributed");
         require(msg.sender == owner());
         address winner = pickWinner();
         require(tickets.balanceOf(winner) >= 1);
@@ -62,8 +62,8 @@ contract Raffle is Ownable {
         uint256 totalAmount = address(this).balance;
         (bool sentToBene, ) = beneficiary.call{value: address(this).balance / 2}("");
         (bool sentToWinner, ) = winner.call{value: address(this).balance}("");
-        require(sentToBene, "Failed to send Ether to Beneficiary");
-        require(sentToWinner, "Failed to send Ether to Winner");
+        require(sentToBene, "Failed to send to Beneficiary");
+        require(sentToWinner, "Failed to send to Winner");
         emit Distribute(beneficiary, winner, totalAmount);
     }
 }

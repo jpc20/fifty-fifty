@@ -3,12 +3,11 @@ pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 
-contract Tickets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
+contract Tickets is ERC721, ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
@@ -16,14 +15,13 @@ contract Tickets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         ERC721(_description, _symbol)
     {}
 
-    function mint(address recipient, string memory _tokenURI)
+    function mint(address recipient)
         public onlyOwner
         returns (uint256)
     {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _safeMint(recipient, newItemId);
-        _setTokenURI(newItemId, _tokenURI);
         return newItemId;
     }
 
@@ -37,7 +35,7 @@ contract Tickets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
 
     function _burn(uint256 tokenId)
         internal
-        override(ERC721, ERC721URIStorage)
+        override(ERC721)
     {
         super._burn(tokenId);
     }
@@ -45,7 +43,7 @@ contract Tickets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     function tokenURI(uint256 tokenId)
         public
         view
-        override(ERC721, ERC721URIStorage)
+        override(ERC721)
         returns (string memory)
     {
         return super.tokenURI(tokenId);
