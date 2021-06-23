@@ -30,6 +30,7 @@ const RaffleGroup = ({
         isOwner={raffle.owner}
         open={raffle.openStatus}
         raffleAddress={raffle.raffleAddress}
+        ticketsAddress={raffle.ticketsAddress}
         key={raffle.raffleAddress}
         raffleFilter={filter}
         getRaffles={getRaffles}

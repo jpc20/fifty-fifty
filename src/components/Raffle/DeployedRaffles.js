@@ -57,6 +57,7 @@ const DeployedRaffles = ({
             openStatus: openStatus,
             raffleAddress: raffleAddress,
             description: description,
+            ticketsAddress: ticketsAddress,
           };
         })
       );

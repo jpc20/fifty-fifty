@@ -29,6 +29,7 @@ const Raffle = ({
   isOwner,
   open,
   raffleAddress,
+  ticketsAddress,
   raffleFilter,
   getRaffles,
   signer,
@@ -174,16 +175,35 @@ const Raffle = ({
                   <div>Ticket Price: {raffleTicketPrice} ETH</div>
                   <div>Tickets You Own: {userTicketCount}</div>
                   <div>Total Ticket Supply: {totalTicketCount}</div>
-                  Beneficiary:{" "}
-                  <a
-                    href={"https://rinkeby.etherscan.io/address/" + beneficiary}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {beneficiary.slice(0, 6) +
-                      "..." +
-                      beneficiary.slice(37, -1)}
-                  </a>
+                  <div>
+                    Beneficiary:{" "}
+                    <a
+                      href={
+                        "https://rinkeby.etherscan.io/address/" + beneficiary
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {beneficiary.slice(0, 6) +
+                        "..." +
+                        beneficiary.slice(37, -1)}
+                    </a>
+                  </div>
+                  <IconButton>
+                    <a
+                      href={
+                        "https://rinkeby.etherscan.io/" +
+                        (raffleFilter === "tickets"
+                          ? "token/" + ticketsAddress + "?a=" + userAddress
+                          : "address/" + raffleAddress)
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View {raffleFilter === "tickets" ? "Tickets" : "Raffle"}{" "}
+                      On Etherscan
+                    </a>
+                  </IconButton>
                 </Typography>
               </>
             )}
