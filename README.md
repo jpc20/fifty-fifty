@@ -4,8 +4,6 @@ Raffle dApp with NFT(ERC721) tickets. Half of the balance gets distributed to a 
 
 Front-end: https://fiftyfiftyraffle.netlify.app/ 
 
-Contracts: ---
-
 ## Tech
 * React
 * Harhdat
