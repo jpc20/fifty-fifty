@@ -18,13 +18,6 @@ beforeEach(async function () {
   ticketPrice = ethers.utils.parseEther(".1");
   description = "test description";
   symbol = "TEST-TKT";
-  metadata = {
-    name: "Buzz",
-    description:
-      "Paper collage, using salvaged and original watercolour papers",
-    image:
-      "https://ipfs.infura.io/ipfs/QmWc6YHE815F8kExchG9kd2uSsv7ZF1iQNn23bt5iKC6K3/image",
-  };
   raffle = await Raffle.deploy(
     description,
     symbol,
@@ -49,7 +42,7 @@ describe("Raffle", function () {
     expect(await tickets.balanceOf(accounts[2].address)).to.equal(0);
     await raffle
       .connect(accounts[2])
-      .purchaseTicket(metadata, { from: accounts[2].address, value: ticketPrice });
+      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
     expect(await tickets.balanceOf(accounts[2].address)).to.equal(1);
     expect(await ethers.provider.getBalance(raffle.address)).to.equal(
       ticketPrice
@@ -60,15 +53,15 @@ describe("Raffle", function () {
     await expect(
       raffle
         .connect(accounts[2])
-        .purchaseTicket(metadata, { from: accounts[2].address, value: 100 })
-    ).to.be.revertedWith("Incorrect Ticket Price");
+        .purchaseTicket({ from: accounts[2].address, value: 100 })
+    ).to.be.revertedWith("Incorrect Price");
   });
 
   it("Emits an event after a successful purchase", async function () {
     await expect(
       raffle
         .connect(accounts[2])
-        .purchaseTicket(metadata, { from: accounts[2].address, value: ticketPrice })
+        .purchaseTicket({ from: accounts[2].address, value: ticketPrice })
     )
       .to.emit(raffle, "TicketPurchase")
       .withArgs(accounts[2].address, 1, 1);
@@ -79,11 +72,11 @@ describe("Raffle", function () {
       accounts[1].address
     );
     await expect(raffle.connect(accounts[0]).distribute()).to.be.revertedWith(
-      "No tickets have been sold"
+      "No tickets distributed"
     );
     await raffle
       .connect(accounts[2])
-      .purchaseTicket(metadata, { from: accounts[2].address, value: ticketPrice });
+      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
     const winnerBalance = await ethers.provider.getBalance(accounts[2].address);
     await raffle.connect(accounts[0]).distribute();
 
@@ -112,7 +105,7 @@ describe("Raffle", function () {
   it("Emits an event when and closes the raffle funds are distributed", async function () {
     await raffle
       .connect(accounts[2])
-      .purchaseTicket(metadata, { from: accounts[2].address, value: ticketPrice });
+      .purchaseTicket({ from: accounts[2].address, value: ticketPrice });
     expect(await raffle.connect(accounts[0]).distribute())
       .to.emit(raffle, "Distribute")
       .withArgs(accounts[1].address, accounts[2].address, ticketPrice);
