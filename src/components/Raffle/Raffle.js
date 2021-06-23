@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Paper, IconButton } from "@material-ui/core";
-import { ExpandMore, ExpandLess } from "@material-ui/icons";
+import { Grid, Typography, Paper, IconButton, Button } from "@material-ui/core";
+import { ExpandMore, ExpandLess, OpenInNew } from "@material-ui/icons";
 import LoadingButton from "../LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -189,7 +189,11 @@ const Raffle = ({
                         beneficiary.slice(37, -1)}
                     </a>
                   </div>
-                  <IconButton>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    endIcon={<OpenInNew />}
+                  >
                     <a
                       href={
                         "https://rinkeby.etherscan.io/" +
@@ -203,7 +207,7 @@ const Raffle = ({
                       View {raffleFilter === "tickets" ? "Tickets" : "Raffle"}{" "}
                       On Etherscan
                     </a>
-                  </IconButton>
+                  </Button>
                 </Typography>
               </>
             )}
