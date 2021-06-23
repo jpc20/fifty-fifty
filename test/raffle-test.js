@@ -10,7 +10,6 @@ var ticketPrice;
 var symbol;
 var TicketAddress;
 var tickets;
-var metadata;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();

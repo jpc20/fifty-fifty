@@ -10,7 +10,6 @@ var raffle;
 var ticketPrice;
 var description;
 var symbol;
-var metadata;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();
