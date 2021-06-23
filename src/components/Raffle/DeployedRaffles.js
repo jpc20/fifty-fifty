@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
-import RaffleFactory from "../../artifacts/contracts/Raffle.sol/RaffleFactory.json";
+import RaffleFactory from "../../artifacts/contracts/RaffleFactory.sol/RaffleFactory.json";
 import RaffleTabs from "./RaffleTabs";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
-import Tickets from "../../artifacts/contracts/Raffle.sol/Tickets.json";
+import Tickets from "../../artifacts/contracts/Tickets.sol/Tickets.json";
 
 const DeployedRaffles = ({
   raffleFactoryAddress,
@@ -57,6 +57,7 @@ const DeployedRaffles = ({
             openStatus: openStatus,
             raffleAddress: raffleAddress,
             description: description,
+            ticketsAddress: ticketsAddress,
           };
         })
       );

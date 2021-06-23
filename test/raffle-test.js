@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const { expect } = require("chai");
-const Tickets = require("../src/artifacts/contracts/Raffle.sol/Tickets.json");
+const Tickets = require("../src/artifacts/contracts/Tickets.sol/Tickets.json");
 
 var description;
 var accounts;
@@ -10,6 +10,7 @@ var ticketPrice;
 var symbol;
 var TicketAddress;
 var tickets;
+var metadata;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();
@@ -17,7 +18,6 @@ beforeEach(async function () {
   ticketPrice = ethers.utils.parseEther(".1");
   description = "test description";
   symbol = "TEST-TKT";
-
   raffle = await Raffle.deploy(
     description,
     symbol,
@@ -54,7 +54,7 @@ describe("Raffle", function () {
       raffle
         .connect(accounts[2])
         .purchaseTicket({ from: accounts[2].address, value: 100 })
-    ).to.be.revertedWith("Incorrect Ticket Price");
+    ).to.be.revertedWith("Incorrect Price");
   });
 
   it("Emits an event after a successful purchase", async function () {
@@ -64,7 +64,7 @@ describe("Raffle", function () {
         .purchaseTicket({ from: accounts[2].address, value: ticketPrice })
     )
       .to.emit(raffle, "TicketPurchase")
-      .withArgs(accounts[2].address, 1);
+      .withArgs(accounts[2].address, 1, 1);
   });
 
   it("Allows the owner to distribute funds", async function () {
@@ -72,7 +72,7 @@ describe("Raffle", function () {
       accounts[1].address
     );
     await expect(raffle.connect(accounts[0]).distribute()).to.be.revertedWith(
-      "No tickets have been sold"
+      "No tickets distributed"
     );
     await raffle
       .connect(accounts[2])

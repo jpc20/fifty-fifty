@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Paper, IconButton } from "@material-ui/core";
-import { ExpandMore, ExpandLess } from "@material-ui/icons";
+import { Grid, Typography, Paper, IconButton, Button } from "@material-ui/core";
+import { ExpandMore, ExpandLess, OpenInNew } from "@material-ui/icons";
 import LoadingButton from "../LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +29,7 @@ const Raffle = ({
   isOwner,
   open,
   raffleAddress,
+  ticketsAddress,
   raffleFilter,
   getRaffles,
   signer,
@@ -174,16 +175,39 @@ const Raffle = ({
                   <div>Ticket Price: {raffleTicketPrice} ETH</div>
                   <div>Tickets You Own: {userTicketCount}</div>
                   <div>Total Ticket Supply: {totalTicketCount}</div>
-                  Beneficiary:{" "}
-                  <a
-                    href={"https://rinkeby.etherscan.io/address/" + beneficiary}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <div>
+                    Beneficiary:{" "}
+                    <a
+                      href={
+                        "https://rinkeby.etherscan.io/address/" + beneficiary
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {beneficiary.slice(0, 6) +
+                        "..." +
+                        beneficiary.slice(37, -1)}
+                    </a>
+                  </div>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    endIcon={<OpenInNew />}
                   >
-                    {beneficiary.slice(0, 6) +
-                      "..." +
-                      beneficiary.slice(37, -1)}
-                  </a>
+                    <a
+                      href={
+                        "https://rinkeby.etherscan.io/" +
+                        (raffleFilter === "tickets"
+                          ? "token/" + ticketsAddress + "?a=" + userAddress
+                          : "address/" + raffleAddress)
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View {raffleFilter === "tickets" ? "Tickets" : "Raffle"}{" "}
+                      On Etherscan
+                    </a>
+                  </Button>
                 </Typography>
               </>
             )}

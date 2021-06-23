@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const Tickets = require("../src/artifacts/contracts/Raffle.sol/Tickets.json");
+const Tickets = require("../src/artifacts/contracts/Tickets.sol/Tickets.json");
 const { expect } = require("chai");
 
 var accounts;
@@ -10,6 +10,7 @@ var raffle;
 var ticketPrice;
 var description;
 var symbol;
+var metadata;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();
