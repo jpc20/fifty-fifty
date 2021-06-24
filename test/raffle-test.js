@@ -48,6 +48,18 @@ describe("Raffle", function () {
     );
   });
 
+  it("Requires a ticket price greater than 0", async function () {
+    await expect(
+       Raffle.deploy(
+        description,
+        symbol,
+        0,
+        accounts[1].address,
+        accounts[0].address
+      )
+    ).to.be.revertedWith("Ticket price must be greater than 0");
+  });
+
   it("Requires the exact ticket price", async function () {
     await expect(
       raffle

@@ -20,6 +20,7 @@ contract Raffle is Ownable {
         address payable _beneficiary,
         address _owner
     ) {
+        require(_ticketPrice > 0, "Ticket price must be greater than 0");
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
