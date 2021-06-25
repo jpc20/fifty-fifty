@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require("@nomiclabs/hardhat-waffle");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -25,19 +26,9 @@ module.exports = {
         version: "0.8.3",
       },
       {
-        version: "0.6.0",
+        version: "0.6.6",
       },
     ],
-    overrides: {
-      "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol": {
-        version: "0.6.0",
-        settings: {},
-      },
-      "@chainlink/contracts/src/v0.6/VRFRequestIDBase.sol": {
-        version: "0.6.0",
-        settings: {},
-      },
-    },
   },
   paths: {
     artifacts: "./src/artifacts",
