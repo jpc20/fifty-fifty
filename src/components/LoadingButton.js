@@ -1,5 +1,5 @@
 import { Button, CircularProgress } from "@material-ui/core";
-import { AccountBalance, AccountCircle, ReceiptSharp } from "@material-ui/icons";
+import { AccountBalance, ReceiptSharp, OpenInNew } from "@material-ui/icons";
 
 const LoadingButton = ({
   buttonText,
@@ -8,9 +8,8 @@ const LoadingButton = ({
   userConnected,
   variant,
   buttonType,
-  disabled
+  disabled,
 }) => {
-
   const renderButton = () => {
     if (loading) {
       return (
@@ -25,15 +24,17 @@ const LoadingButton = ({
           variant={variant || "contained"}
           color={buttonType === "account" ? "inherit" : "primary"}
           onClick={onClickHandler}
-          disabled={disabled ? disabled : buttonType !== "account" && !userConnected }
+          disabled={
+            disabled ? disabled : buttonType !== "account" && !userConnected
+          }
           size="small"
         >
-          {buttonType === "account" && <AccountCircle fontSize="small" />}
           {buttonType === "purchase-ticket" && (
             <ReceiptSharp fontSize="small" />
           )}
           {buttonType === "distribute" && <AccountBalance fontSize="small" />}
           {buttonText}
+          {buttonType === "account" && <OpenInNew fontSize="small" />}
         </Button>
       );
     }

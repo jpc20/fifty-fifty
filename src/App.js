@@ -104,6 +104,10 @@ function App() {
     }
   }, []);
 
+  const accountDetails = () => {
+    window.open(`https://rinkeby.etherscan.io/address/${userAddress}`, "_blank");
+  }
+
   const isMetaMaskConnected = useCallback(async () => {
     const { ethereum } = window;
     if (ethereum) {
@@ -145,7 +149,7 @@ function App() {
                   ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
                   : "Connect Account"
               }
-              onClickHandler={connectAccount}
+              onClickHandler={userConnected ? accountDetails : connectAccount}
               loading={accountLoading}
               variant="outlined"
               buttonType="account"
