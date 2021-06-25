@@ -12,7 +12,7 @@ import LoadingButton from "./components/LoadingButton";
 import FlashMessage from "./components/FlashMessage";
 
 // const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
-const raffleFactoryAddress = "0x5B2a08039ec677BED1DDbb387bD2f07f3fa592Fc"; // rinkeby
+const raffleFactoryAddress = "0x9306aC5be1A3D31C5afb47E2dB90354c958cD198"; // rinkeby
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -104,6 +104,10 @@ function App() {
     }
   }, []);
 
+  const accountDetails = () => {
+    window.open(`https://rinkeby.etherscan.io/address/${userAddress}`, "_blank");
+  }
+
   const isMetaMaskConnected = useCallback(async () => {
     const { ethereum } = window;
     if (ethereum) {
@@ -145,7 +149,7 @@ function App() {
                   ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
                   : "Connect Account"
               }
-              onClickHandler={connectAccount}
+              onClickHandler={userConnected ? accountDetails : connectAccount}
               loading={accountLoading}
               variant="outlined"
               buttonType="account"

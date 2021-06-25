@@ -68,7 +68,7 @@ const NewRaffle = ({
           setLoadingValue(false);
         });
       } catch (err) {
-        setFlashMessage(err.message);
+        setFlashMessage(err.error.message);
         setFlashType("error");
         setFlashActive(true);
         setLoadingValue(false);
@@ -153,7 +153,7 @@ const NewRaffle = ({
           <LoadingButton
             buttonText="Deploy Raffle"
             loading={loading}
-            disabled={!validAddress || description.length < 1}
+            disabled={!validAddress || description.length < 1 || symbol.length < 1}
             userConnected={userConnected}
           />
         </Grid>
