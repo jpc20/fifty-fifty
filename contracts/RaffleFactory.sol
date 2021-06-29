@@ -10,7 +10,8 @@ contract RaffleFactory {
         string memory _description,
         string memory _symbol,
         uint256 _ticketPrice,
-        address payable _beneficiary
+        address payable _beneficiary,
+        address _randNumAddress
     ) public {
         Raffle newRaffle =
             new Raffle(
@@ -18,7 +19,8 @@ contract RaffleFactory {
                 _symbol,
                 _ticketPrice,
                 _beneficiary,
-                msg.sender
+                msg.sender,
+                _randNumAddress
             );
         deployedRaffles.push(address(newRaffle));
     }
