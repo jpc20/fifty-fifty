@@ -3,6 +3,7 @@ pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Tickets.sol";
+import "hardhat/console.sol";
 // import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract Raffle is Ownable {
@@ -10,6 +11,7 @@ contract Raffle is Ownable {
     uint256 public ticketPrice;
     bool public open;
     Tickets public tickets;
+    address public randomNumConsumer;
     event TicketPurchase(address purchaser, uint256 purchaserTicketCount, uint256 newTicketID);
     event Distribute(address beneficiary, address winner, uint256 totalAmount);
 
@@ -18,13 +20,15 @@ contract Raffle is Ownable {
         string memory _symbol,
         uint256 _ticketPrice,
         address payable _beneficiary,
-        address _owner
+        address _owner,
+        address _randomNumConsumer
     ) {
         require(_ticketPrice > 0, "Ticket price must be greater than 0");
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
         tickets = new Tickets(_description, _symbol);
+        randomNumConsumer = _randomNumConsumer;
         transferOwnership(_owner);
     }
 
@@ -34,21 +38,24 @@ contract Raffle is Ownable {
         emit TicketPurchase(msg.sender, tickets.balanceOf(msg.sender), newTicketID);
     }
 
-    function randomNum() private view returns (uint256) {
+    function randomNum() private returns (uint256) {
         // integrate Chainlink VRF
-        return
-            uint256(
-                keccak256(
-                    abi.encodePacked(
-                        block.difficulty,
-                        block.timestamp,
-                        tickets.totalSupply()
-                    )
-                )
-            );
+        // return
+        //     uint256(
+        //         keccak256(
+        //             abi.encodePacked(
+        //                 block.difficulty,
+        //                 block.timestamp,
+        //                 tickets.totalSupply()
+        //             )
+        //         )
+        //     );
+        (bool test, bytes memory wow) = randomNumConsumer.call(abi.encodeWithSignature("getRandomNumber()", 4));
+        console.log("Test", test, string(wow));
+        return 2;
     }
 
-    function pickWinner() private view returns (address) {
+    function pickWinner() private returns (address) {
         uint256 index = randomNum() % tickets.totalSupply();
         uint256 winningTicket = tickets.tokenByIndex(index);
         return tickets.ownerOf(winningTicket);

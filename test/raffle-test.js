@@ -10,6 +10,8 @@ var ticketPrice;
 var symbol;
 var TicketAddress;
 var tickets;
+var randNumGenerator;
+var randNumGeneratorAddress;
 
 beforeEach(async function () {
   accounts = await ethers.getSigners();
@@ -17,12 +19,15 @@ beforeEach(async function () {
   ticketPrice = ethers.utils.parseEther(".1");
   description = "test description";
   symbol = "TEST-TKT";
+  randNumGenerator = await ethers.getContractFactory("RandomNumberConsumer")
+  randNumGeneratorAddress = (await randNumGenerator.deploy()).address;
   raffle = await Raffle.deploy(
     description,
     symbol,
     ticketPrice,
     accounts[1].address,
-    accounts[0].address
+    accounts[0].address,
+    randNumGeneratorAddress
   );
   await raffle.deployed();
   TicketAddress = await raffle.tickets();
@@ -50,12 +55,13 @@ describe("Raffle", function () {
 
   it("Requires a ticket price greater than 0", async function () {
     await expect(
-       Raffle.deploy(
+      Raffle.deploy(
         description,
         symbol,
         0,
         accounts[1].address,
-        accounts[0].address
+        accounts[0].address,
+        randNumGeneratorAddress
       )
     ).to.be.revertedWith("Ticket price must be greater than 0");
   });
