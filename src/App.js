@@ -41,9 +41,6 @@ const darkTheme = createMuiTheme({
     secondary: {
       main: "#f44336",
     },
-    // background: {
-    //   default: "",
-    // },
   },
 });
 
@@ -105,8 +102,11 @@ function App() {
   }, []);
 
   const accountDetails = () => {
-    window.open(`https://rinkeby.etherscan.io/address/${userAddress}`, "_blank");
-  }
+    window.open(
+      `https://rinkeby.etherscan.io/address/${userAddress}`,
+      "_blank"
+    );
+  };
 
   const isMetaMaskConnected = useCallback(async () => {
     const { ethereum } = window;
@@ -130,6 +130,18 @@ function App() {
   useEffect(() => {
     checkNetwork().then((network) => setNetwork(network));
   }, []);
+
+  window.ethereum.on("chainChanged", function (accounts) {
+    window.location.reload();
+  });
+
+  window.ethereum.on("disconnect", function (accounts) {
+    window.location.reload();
+  });
+
+  window.ethereum.on("accountsChanged", function (accounts) {
+    window.location.reload();
+  });
 
   return (
     <ThemeProvider theme={darkTheme}>
