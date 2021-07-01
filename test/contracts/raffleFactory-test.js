@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const Raffle = require("../src/artifacts/contracts/Raffle.sol/Raffle.json");
+const Raffle = require("../../src/artifacts/contracts/Raffle.sol/Raffle.json");
 const { expect } = require("chai");
 
 describe("RaffelFactory", function () {
