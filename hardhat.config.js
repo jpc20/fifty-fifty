@@ -28,16 +28,6 @@ module.exports = {
         version: "0.6.0",
       },
     ],
-    overrides: {
-      "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol": {
-        version: "0.6.0",
-        settings: {},
-      },
-      "@chainlink/contracts/src/v0.6/VRFRequestIDBase.sol": {
-        version: "0.6.0",
-        settings: {},
-      },
-    },
   },
   paths: {
     artifacts: "./src/artifacts",
