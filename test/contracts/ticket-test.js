@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const Tickets = require("../src/artifacts/contracts/Tickets.sol/Tickets.json");
+const Tickets = require("../../src/artifacts/contracts/Tickets.sol/Tickets.json");
 const { expect } = require("chai");
 
 var accounts;

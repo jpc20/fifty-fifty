@@ -130,18 +130,20 @@ function App() {
   useEffect(() => {
     checkNetwork().then((network) => setNetwork(network));
   }, []);
-
-  window.ethereum.on("chainChanged", function (accounts) {
-    window.location.reload();
-  });
-
-  window.ethereum.on("disconnect", function (accounts) {
-    window.location.reload();
-  });
-
-  window.ethereum.on("accountsChanged", function (accounts) {
-    window.location.reload();
-  });
+  
+  if (window.ethereum) {
+    window.ethereum.on("chainChanged", function (accounts) {
+      window.location.reload();
+    });
+  
+    window.ethereum.on("disconnect", function (accounts) {
+      window.location.reload();
+    });
+  
+    window.ethereum.on("accountsChanged", function (accounts) {
+      window.location.reload();
+    });
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
