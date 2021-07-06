@@ -27,20 +27,20 @@ const Footer = () => {
             onClick={(event) =>
               (window.location.href = "https://github.com/jpc20")
             }
-            className={classes.clickableIcon}
+            className={classes.clickableIcon + " githubButton"}
           />
           <LinkedIn
             onClick={(event) =>
               (window.location.href =
                 "https://www.linkedin.com/in/jack-cullen-/")
             }
-            className={classes.clickableIcon}
+            className={classes.clickableIcon + " linkedInButton"}
           />
           <Twitter
             onClick={(event) =>
               (window.location.href = "https://twitter.com/jpcullen20")
             }
-            className={classes.clickableIcon}
+            className={classes.clickableIcon + " twitterButton"}
           />
         </Toolbar>
       </AppBar>
