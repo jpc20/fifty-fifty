@@ -16,6 +16,10 @@ const useStyles = makeStyles((theme) => ({
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
     maxWidth: "95%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      padding: "0",
+    },
   },
 }));
 
