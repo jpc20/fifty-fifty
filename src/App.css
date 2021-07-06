@@ -13,6 +13,11 @@
   }
 }
 
+.MuiToolbar-regular {
+  min-height: 40px !important;
+  justify-content: center;
+}
+
 .App-header {
   display: flex;
   align-items: center;
@@ -20,7 +25,7 @@
 }
 
 .account-button {
-  margin: .7rem;
+  margin: 0.7rem;
 }
 
 .closed {
