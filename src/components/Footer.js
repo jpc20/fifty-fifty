@@ -25,20 +25,22 @@ const Footer = () => {
           </Typography>
           <GitHub
             onClick={(event) =>
-              (window.location.href = "https://github.com/jpc20")
+              window.open("https://github.com/jpc20", "_blank")
             }
             className={classes.clickableIcon + " githubButton"}
           />
           <LinkedIn
-            onClick={(event) =>
-              (window.location.href =
-                "https://www.linkedin.com/in/jack-cullen-/")
-            }
+            onClick={(event) => {
+              window.open(
+                "https://www.linkedin.com/in/jack-cullen-/",
+                "_blank"
+              );
+            }}
             className={classes.clickableIcon + " linkedInButton"}
           />
           <Twitter
             onClick={(event) =>
-              (window.location.href = "https://twitter.com/jpcullen20")
+              window.open("https://twitter.com/jpcullen20", "_blank")
             }
             className={classes.clickableIcon + " twitterButton"}
           />
