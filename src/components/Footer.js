@@ -17,31 +17,35 @@ const Footer = () => {
   const classes = useStyles();
 
   return (
-    <AppBar position="sticky" className={classes.appBar} color="primary">
-      <Toolbar>
-        <Typography variant="subtitle1" gutterBottom>
-          Built by @jpc20
-        </Typography>
-        <GitHub
-          onClick={(event) =>
-            (window.location.href = "https://github.com/jpc20")
-          }
-          className={classes.clickableIcon}
-        />
-        <LinkedIn
-          onClick={(event) =>
-            (window.location.href = "https://www.linkedin.com/in/jack-cullen-/")
-          }
-          className={classes.clickableIcon}
-        />
-        <Twitter
-          onClick={(event) =>
-            (window.location.href = "https://twitter.com/jpcullen20")
-          }
-          className={classes.clickableIcon}
-        />
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar position="fixed" className={classes.appBar} color="primary">
+        <Toolbar>
+          <Typography variant="subtitle1" gutterBottom>
+            Built by @jpc20
+          </Typography>
+          <GitHub
+            onClick={(event) =>
+              (window.location.href = "https://github.com/jpc20")
+            }
+            className={classes.clickableIcon}
+          />
+          <LinkedIn
+            onClick={(event) =>
+              (window.location.href =
+                "https://www.linkedin.com/in/jack-cullen-/")
+            }
+            className={classes.clickableIcon}
+          />
+          <Twitter
+            onClick={(event) =>
+              (window.location.href = "https://twitter.com/jpcullen20")
+            }
+            className={classes.clickableIcon}
+          />
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </>
   );
 };
 
