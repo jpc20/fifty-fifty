@@ -1,22 +1,16 @@
 import "./App.css";
 import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
-import {
-  Divider,
-  Typography,
-  CssBaseline,
-  AppBar,
-  Toolbar,
-} from "@material-ui/core";
+import { Divider, Typography, CssBaseline } from "@material-ui/core";
 import {
   makeStyles,
   createMuiTheme,
   ThemeProvider,
 } from "@material-ui/core/styles";
-import { GitHub, LinkedIn, Twitter } from "@material-ui/icons";
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import LoadingButton from "./components/LoadingButton";
 import FlashMessage from "./components/FlashMessage";
+import Footer from "./components/Footer";
 
 const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
 // const raffleFactoryAddress = "0x9306aC5be1A3D31C5afb47E2dB90354c958cD198"; // rinkeby
@@ -36,14 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     margin: theme.spacing(2, 0),
-  },
-  appBar: {
-    top: "auto",
-    bottom: 0,
-  },
-  clickableIcon: {
-    cursor: "pointer",
-    margin: "1rem"
   },
 }));
 
@@ -209,32 +195,7 @@ function App() {
           setFlashType={setFlashType}
         />
       </div>
-      <AppBar position="sticky" className={classes.appBar} color="primary">
-        <Toolbar>
-          <Typography variant="subtitle1" gutterBottom>
-            Built by @jpc20
-          </Typography>
-          <GitHub
-            onClick={(event) =>
-              (window.location.href = "https://github.com/jpc20")
-            }
-            className={classes.clickableIcon}
-          />
-          <LinkedIn
-            onClick={(event) =>
-              (window.location.href =
-                "https://www.linkedin.com/in/jack-cullen-/")
-            }
-            className={classes.clickableIcon}
-          />
-          <Twitter
-            onClick={(event) =>
-              (window.location.href = "https://twitter.com/jpcullen20")
-            }
-            className={classes.clickableIcon}
-          />
-        </Toolbar>
-      </AppBar>
+      <Footer />
     </ThemeProvider>
   );
 }
