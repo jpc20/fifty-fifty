@@ -10,15 +10,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     // overflow: "hidden",
-    padding: theme.spacing(0, 3),
+    // padding: theme.spacing(0, 3),
+    padding: ".5rem",
   },
   paper: {
     margin: `${theme.spacing(1)}px auto`,
-    padding: theme.spacing(2),
+    padding: ".5rem",
     maxWidth: "95%",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      padding: "0",
+      padding: "0.2rem",
     },
   },
 }));
@@ -159,9 +160,10 @@ const Raffle = ({
             ""
           )}
           <Grid item xs={6}>
-            <Typography variant="h6" noWrap gutterBottom>
-              {description} | Balance: {balance} ETH
+            <Typography variant="h6" noWrap>
+              {description}
             </Typography>
+            <Typography variant="body1">Balance: {balance} ETH</Typography>
           </Grid>
           {!expanded ? (
             <Grid item xs>
@@ -179,41 +181,53 @@ const Raffle = ({
         </Grid>
 
         {expanded && (
-          <Typography variant="body1" gutterBottom>
-            <div>Ticket Price: {raffleTicketPrice} ETH</div>
-            <div>Tickets You Own: {userTicketCount}</div>
-            <div>Total Ticket Supply: {totalTicketCount}</div>
-            <div>
-              Beneficiary:{" "}
-              <a
-                href={"https://rinkeby.etherscan.io/address/" + beneficiary}
-                target="_blank"
-                rel="noopener noreferrer"
+          <Grid container direction="column">
+            <Grid item>
+              <Typography>Ticket Price: {raffleTicketPrice} ETH</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>Tickets You Own: {userTicketCount}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>Total Ticket Supply: {totalTicketCount}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>
+                Beneficiary:{" "}
+                <a
+                  href={"https://rinkeby.etherscan.io/address/" + beneficiary}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {beneficiary.slice(0, 6) + "..." + beneficiary.slice(37, -1)}
+                </a>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                endIcon={<OpenInNew />}
+                gutterBottom
               >
-                {beneficiary.slice(0, 6) + "..." + beneficiary.slice(37, -1)}
-              </a>
-            </div>
-            <Button
-              variant="outlined"
-              color="primary"
-              endIcon={<OpenInNew />}
-              gutterBottom
-            >
-              <a
-                href={
-                  "https://rinkeby.etherscan.io/" +
-                  (raffleFilter === "tickets"
-                    ? "token/" + ticketsAddress + "?a=" + userAddress
-                    : "address/" + raffleAddress)
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View {raffleFilter === "tickets" ? "Tickets" : "Raffle"} On
-                Etherscan
-              </a>
-            </Button>
-          </Typography>
+                <a
+                  href={
+                    "https://rinkeby.etherscan.io/" +
+                    (raffleFilter === "tickets"
+                      ? "token/" + ticketsAddress + "?a=" + userAddress
+                      : "address/" + raffleAddress)
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Typography variant="button" display="block" gutterBottom>
+                    View {raffleFilter === "tickets" ? "Tickets" : "Raffle"} On
+                    Etherscan
+                  </Typography>
+                </a>
+              </Button>
+            </Grid>
+          </Grid>
         )}
       </Paper>
     </div>
