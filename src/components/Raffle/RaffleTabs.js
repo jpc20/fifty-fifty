@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "nowrap",
     alignContent: "center",
     margin: "auto",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      padding: "0",
+    },
   },
 }));
 
@@ -27,7 +31,6 @@ function TabPanel(props) {
       hidden={currentTab !== index}
       id={`wrapped-tabpanel-${index}`}
       aria-labelledby={`wrapped-tab-${index}`}
-      className="tabpanel"
       {...other}
     >
       {currentTab === index && (
@@ -99,7 +102,7 @@ const RaffleTabs = ({
           <Tab label="Create New Raffle" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
-      <TabPanel currentTab={currentTab} index={0}>
+      <TabPanel currentTab={currentTab} index={0} className="tabpanel">
         <RaffleGroup
           filter={filter}
           raffles={raffles}
@@ -113,7 +116,7 @@ const RaffleTabs = ({
           setFlashType={setFlashType}
         />
       </TabPanel>
-      <TabPanel currentTab={currentTab} index={1}>
+      <TabPanel currentTab={currentTab} index={1} className="tabpanel">
         <RaffleGroup
           filter={filter}
           raffles={raffles}
@@ -127,7 +130,7 @@ const RaffleTabs = ({
           setFlashType={setFlashType}
         />
       </TabPanel>
-      <TabPanel currentTab={currentTab} index={2}>
+      <TabPanel currentTab={currentTab} index={2} className="tabpanel">
         <RaffleGroup
           filter={filter}
           raffles={raffles}
@@ -141,7 +144,7 @@ const RaffleTabs = ({
           setFlashType={setFlashType}
         />
       </TabPanel>
-      <TabPanel currentTab={currentTab} index={3}>
+      <TabPanel currentTab={currentTab} index={3} className="tabpanel">
         <NewRaffle
           raffleFactoryAddress={raffleFactoryAddress}
           setCurrentTabValue={setCurrentTabValue}

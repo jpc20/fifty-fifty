@@ -10,9 +10,10 @@ import {
 import DeployedRaffles from "./components/Raffle/DeployedRaffles";
 import LoadingButton from "./components/LoadingButton";
 import FlashMessage from "./components/FlashMessage";
+import Footer from "./components/Footer";
 
-// const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
-const raffleFactoryAddress = "0x9306aC5be1A3D31C5afb47E2dB90354c958cD198"; // rinkeby
+const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
+// const raffleFactoryAddress = "0x9306aC5be1A3D31C5afb47E2dB90354c958cD198"; // rinkeby
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -130,16 +131,16 @@ function App() {
   useEffect(() => {
     checkNetwork().then((network) => setNetwork(network));
   }, []);
-  
+
   if (window.ethereum) {
     window.ethereum.on("chainChanged", function (accounts) {
       window.location.reload();
     });
-  
+
     window.ethereum.on("disconnect", function (accounts) {
       window.location.reload();
     });
-  
+
     window.ethereum.on("accountsChanged", function (accounts) {
       window.location.reload();
     });
@@ -171,9 +172,6 @@ function App() {
           </div>
         </div>
         <Typography variant="h2">50/50 Raffle</Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          Built by @jpc20
-        </Typography>
         <Typography
           variant="caption"
           color={network === "rinkeby" ? "inherit" : "secondary"}
@@ -197,6 +195,7 @@ function App() {
           setFlashType={setFlashType}
         />
       </div>
+      <Footer />
     </ThemeProvider>
   );
 }
