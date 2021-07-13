@@ -9,7 +9,7 @@ import LoadingButton from "../LoadingButton";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    overflow: "hidden",
+    // overflow: "hidden",
     padding: theme.spacing(0, 3),
   },
   paper: {
@@ -158,72 +158,62 @@ const Raffle = ({
           ) : (
             ""
           )}
-          {!expanded && (
-            <>
-              <Grid item xs={6}>
-                <Typography variant="h6" noWrap gutterBottom>
-                  {description} | Balance: {balance} ETH
-                </Typography>
-              </Grid>
-              <Grid item xs>
-                <IconButton onClick={() => setExpandedalue(!expanded)}>
-                  {expanded ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Grid>
-            </>
+          <Grid item xs={6}>
+            <Typography variant="h6" noWrap gutterBottom>
+              {description} | Balance: {balance} ETH
+            </Typography>
+          </Grid>
+          {!expanded ? (
+            <Grid item xs>
+              <IconButton onClick={() => setExpandedalue(!expanded)}>
+                {expanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </Grid>
+          ) : (
+            <Grid item xs>
+              <IconButton onClick={() => setExpandedalue(!expanded)}>
+                {expanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </Grid>
           )}
         </Grid>
 
         {expanded && (
-          <>
-            <Grid container wrap="nowrap" spacing={1}>
-              <Grid item xs={10}>
-                <Typography variant="h6" noWrap gutterBottom>
-                  {description} | Balance: {balance} ETH
-                </Typography>
-              </Grid>
-              <Grid item xs>
-                <IconButton onClick={() => setExpandedalue(!expanded)}>
-                  {expanded ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Grid>
-            </Grid>
-            <Typography variant="body1" gutterBottom>
-              <div>Ticket Price: {raffleTicketPrice} ETH</div>
-              <div>Tickets You Own: {userTicketCount}</div>
-              <div>Total Ticket Supply: {totalTicketCount}</div>
-              <div>
-                Beneficiary:{" "}
-                <a
-                  href={"https://rinkeby.etherscan.io/address/" + beneficiary}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {beneficiary.slice(0, 6) + "..." + beneficiary.slice(37, -1)}
-                </a>
-              </div>
-              <Button
-                variant="outlined"
-                color="primary"
-                endIcon={<OpenInNew />}
-                gutterBottom
+          <Typography variant="body1" gutterBottom>
+            <div>Ticket Price: {raffleTicketPrice} ETH</div>
+            <div>Tickets You Own: {userTicketCount}</div>
+            <div>Total Ticket Supply: {totalTicketCount}</div>
+            <div>
+              Beneficiary:{" "}
+              <a
+                href={"https://rinkeby.etherscan.io/address/" + beneficiary}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <a
-                  href={
-                    "https://rinkeby.etherscan.io/" +
-                    (raffleFilter === "tickets"
-                      ? "token/" + ticketsAddress + "?a=" + userAddress
-                      : "address/" + raffleAddress)
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View {raffleFilter === "tickets" ? "Tickets" : "Raffle"} On
-                  Etherscan
-                </a>
-              </Button>
-            </Typography>
-          </>
+                {beneficiary.slice(0, 6) + "..." + beneficiary.slice(37, -1)}
+              </a>
+            </div>
+            <Button
+              variant="outlined"
+              color="primary"
+              endIcon={<OpenInNew />}
+              gutterBottom
+            >
+              <a
+                href={
+                  "https://rinkeby.etherscan.io/" +
+                  (raffleFilter === "tickets"
+                    ? "token/" + ticketsAddress + "?a=" + userAddress
+                    : "address/" + raffleAddress)
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View {raffleFilter === "tickets" ? "Tickets" : "Raffle"} On
+                Etherscan
+              </a>
+            </Button>
+          </Typography>
         )}
       </Paper>
     </div>
