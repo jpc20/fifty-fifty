@@ -6,6 +6,9 @@
   .MuiBox-root { 
     padding: 0 !important;
   }
+  .MuiTab-root {
+    flex-shrink: 1 !important;
+  }
 }
 
 .App-header {
