@@ -50,14 +50,14 @@ describe("Raffle", function () {
 
   it("Requires a ticket price greater than 0", async function () {
     await expect(
-       Raffle.deploy(
+      Raffle.deploy(
         description,
         symbol,
         0,
         accounts[1].address,
         accounts[0].address
       )
-    ).to.be.revertedWith("Ticket price must be greater than 0");
+    ).to.be.revertedWith("Price must be > 0");
   });
 
   it("Requires the exact ticket price", async function () {
@@ -65,7 +65,7 @@ describe("Raffle", function () {
       raffle
         .connect(accounts[2])
         .purchaseTicket({ from: accounts[2].address, value: 100 })
-    ).to.be.revertedWith("Incorrect Price");
+    ).to.be.revertedWith("Wrong Price");
   });
 
   it("Emits an event after a successful purchase", async function () {
@@ -83,7 +83,7 @@ describe("Raffle", function () {
       accounts[1].address
     );
     await expect(raffle.connect(accounts[0]).distribute()).to.be.revertedWith(
-      "No tickets distributed"
+      "No tickets sold"
     );
     await raffle
       .connect(accounts[2])
