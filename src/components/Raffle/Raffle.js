@@ -9,16 +9,17 @@ import LoadingButton from "../LoadingButton";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    overflow: "hidden",
-    padding: theme.spacing(0, 3),
+    // overflow: "hidden",
+    // padding: theme.spacing(0, 3),
+    padding: ".5rem",
   },
   paper: {
     margin: `${theme.spacing(1)}px auto`,
-    padding: theme.spacing(2),
+    padding: ".5rem",
     maxWidth: "95%",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      padding: "0",
+      padding: "0.2rem",
     },
   },
 }));
@@ -158,41 +159,40 @@ const Raffle = ({
           ) : (
             ""
           )}
-          {!expanded && (
-            <>
-              <Grid item xs={6}>
-                <Typography variant="h6" noWrap gutterBottom>
-                  {description} | Balance: {balance} ETH
-                </Typography>
-              </Grid>
-              <Grid item xs>
-                <IconButton onClick={() => setExpandedalue(!expanded)}>
-                  {expanded ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Grid>
-            </>
+          <Grid item xs={6}>
+            <Typography variant="h6" noWrap>
+              {description}
+            </Typography>
+            <Typography variant="body1">Balance: {balance} ETH</Typography>
+          </Grid>
+          {!expanded ? (
+            <Grid item xs>
+              <IconButton onClick={() => setExpandedalue(!expanded)}>
+                {expanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </Grid>
+          ) : (
+            <Grid item xs>
+              <IconButton onClick={() => setExpandedalue(!expanded)}>
+                {expanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </Grid>
           )}
         </Grid>
 
         {expanded && (
-          <>
-            <Grid container wrap="nowrap" spacing={1}>
-              <Grid item xs={10}>
-                <Typography variant="h6" noWrap gutterBottom>
-                  {description} | Balance: {balance} ETH
-                </Typography>
-              </Grid>
-              <Grid item xs>
-                <IconButton onClick={() => setExpandedalue(!expanded)}>
-                  {expanded ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Grid>
+          <Grid container direction="column">
+            <Grid item>
+              <Typography>Ticket Price: {raffleTicketPrice} ETH</Typography>
             </Grid>
-            <Typography variant="body1" gutterBottom>
-              <div>Ticket Price: {raffleTicketPrice} ETH</div>
-              <div>Tickets You Own: {userTicketCount}</div>
-              <div>Total Ticket Supply: {totalTicketCount}</div>
-              <div>
+            <Grid item>
+              <Typography>Tickets You Own: {userTicketCount}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>Total Ticket Supply: {totalTicketCount}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>
                 Beneficiary:{" "}
                 <a
                   href={"https://rinkeby.etherscan.io/address/" + beneficiary}
@@ -201,7 +201,9 @@ const Raffle = ({
                 >
                   {beneficiary.slice(0, 6) + "..." + beneficiary.slice(37, -1)}
                 </a>
-              </div>
+              </Typography>
+            </Grid>
+            <Grid item>
               <Button
                 variant="outlined"
                 color="primary"
@@ -218,12 +220,14 @@ const Raffle = ({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  View {raffleFilter === "tickets" ? "Tickets" : "Raffle"} On
-                  Etherscan
+                  <Typography variant="button" display="block" gutterBottom>
+                    View {raffleFilter === "tickets" ? "Tickets" : "Raffle"} On
+                    Etherscan
+                  </Typography>
                 </a>
               </Button>
-            </Typography>
-          </>
+            </Grid>
+          </Grid>
         )}
       </Paper>
     </div>

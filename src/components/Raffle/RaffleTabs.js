@@ -6,7 +6,7 @@ import { Tabs, Tab, AppBar, Box } from "@material-ui/core";
 import RaffleGroup from "./RaffleGroup";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  appbar: {
     flexGrow: 1,
     width: "90%",
     display: "flex",
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "center",
     margin: "auto",
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
+      width: "auto",
       padding: "0",
     },
   },
@@ -76,8 +76,8 @@ const RaffleTabs = ({
   };
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
+    <div>
+      <AppBar position="static" className={classes.appbar}>
         <Tabs
           value={currentTab}
           onChange={handleChange}
