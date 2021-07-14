@@ -25,6 +25,7 @@ const DeployedRaffles = ({
         RaffleFactory.abi,
         signer
       );
+      const adminAddress = await factory.admin();
       const rafflesAddresses = await factory.getDeployedRaffles();
       const raffleResp = await Promise.all(
         rafflesAddresses.map(async (raffleAddress) => {
@@ -58,6 +59,7 @@ const DeployedRaffles = ({
             raffleAddress: raffleAddress,
             description: description,
             ticketsAddress: ticketsAddress,
+            isAdmin: adminAddress === userAddress,
           };
         })
       );

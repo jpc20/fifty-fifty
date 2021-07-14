@@ -17,6 +17,7 @@ const RaffleGroup = ({
   setFlashActive,
   setFlashMessage,
   setFlashType,
+  raffleFactoryAddress
 }) => {
   const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
     return (
@@ -28,6 +29,7 @@ const RaffleGroup = ({
         totalTicketCount={raffle.totalTicketCount}
         balance={raffle.balance}
         isOwner={raffle.owner}
+        isAdmin={raffle.isAdmin}
         open={raffle.openStatus}
         raffleAddress={raffle.raffleAddress}
         ticketsAddress={raffle.ticketsAddress}
@@ -41,6 +43,7 @@ const RaffleGroup = ({
         setFlashActive={setFlashActive}
         setFlashMessage={setFlashMessage}
         setFlashType={setFlashType}
+        raffleFactoryAddress={raffleFactoryAddress}
       />
     );
   });

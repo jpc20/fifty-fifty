@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
+import RaffleFactory from "../../artifacts/contracts/RaffleFactory.sol/RaffleFactory.json";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, IconButton, Button } from "@material-ui/core";
 import { ExpandMore, ExpandLess, OpenInNew } from "@material-ui/icons";
@@ -32,6 +33,7 @@ const Raffle = ({
   totalTicketCount,
   balance,
   isOwner,
+  isAdmin,
   open,
   raffleAddress,
   ticketsAddress,
@@ -44,9 +46,11 @@ const Raffle = ({
   setFlashActive,
   setFlashMessage,
   setFlashType,
+  raffleFactoryAddress,
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
+  const [closeLoading, setCloseLoadingValue] = useState(false);
   const [expanded, setExpandedalue] = useState(false);
   const classes = useStyles();
 
@@ -116,6 +120,30 @@ const Raffle = ({
     }
   };
 
+  const closeRaffle = async () => {
+    setCloseLoadingValue(true);
+    const factory = new ethers.Contract(
+      raffleFactoryAddress,
+      RaffleFactory.abi,
+      signer
+    );
+    try {
+      const closedTx = await factory.closeRaffle(raffleAddress);
+      provider.once(closedTx.hash, (transaction) => {
+        setCloseLoadingValue(false);
+        getRaffles();
+        setFlashMessage("Closed Raffle");
+        setFlashType("success");
+        setFlashActive(true);
+      });
+    } catch (error) {
+      setFlashType("error");
+      setFlashMessage(error.message);
+      setFlashActive(true);
+      setCloseLoadingValue(false);
+    }
+  };
+
   return (
     <div className={classes.root} style={{ display: checkRaffleFilter() }}>
       <Paper className={classes.paper} elevation={3}>
@@ -145,7 +173,7 @@ const Raffle = ({
               </Typography>
             </Grid>
           )}
-          {isOwner && open && raffleFilter === "owned" ? (
+          {isOwner && raffleFilter === "owned" ? (
             <Grid item xs>
               <LoadingButton
                 buttonText="Distribute Funds"
@@ -153,7 +181,7 @@ const Raffle = ({
                 onClickHandler={distributeFunds}
                 buttonType="distribute"
                 userConnected={userConnected}
-                disabled={totalTicketCount < 1}
+                disabled={totalTicketCount < 1 || !open}
               />
             </Grid>
           ) : (
@@ -226,6 +254,16 @@ const Raffle = ({
                   </Typography>
                 </a>
               </Button>
+              {isAdmin && open && (
+                <Grid item>
+                  <LoadingButton
+                    buttonText="Close Raffle"
+                    loading={closeLoading}
+                    onClickHandler={closeRaffle}
+                    userConnected={userConnected}
+                  ></LoadingButton>
+                </Grid>
+              )}
             </Grid>
           </Grid>
         )}
