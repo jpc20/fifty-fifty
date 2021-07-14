@@ -3,14 +3,18 @@ pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Tickets.sol";
-// import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract Raffle is Ownable {
     address payable public beneficiary;
     uint256 public ticketPrice;
     bool public open;
     Tickets public tickets;
-    event TicketPurchase(address purchaser, uint256 purchaserTicketCount, uint256 newTicketID);
+    address public admin;
+    event TicketPurchase(
+        address purchaser,
+        uint256 purchaserTicketCount,
+        uint256 newTicketID
+    );
     event Distribute(address beneficiary, address winner, uint256 totalAmount);
 
     constructor(
@@ -20,18 +24,23 @@ contract Raffle is Ownable {
         address payable _beneficiary,
         address _owner
     ) {
-        require(_ticketPrice > 0, "Ticket price must be greater than 0");
+        require(_ticketPrice > 0, "Price must be > 0");
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
         tickets = new Tickets(_description, _symbol);
+        admin = msg.sender;
         transferOwnership(_owner);
     }
 
     function purchaseTicket() public payable {
-        require(msg.value == ticketPrice, "Incorrect Price");
-        uint newTicketID = tickets.mint(msg.sender);
-        emit TicketPurchase(msg.sender, tickets.balanceOf(msg.sender), newTicketID);
+        require(msg.value == ticketPrice, "Wrong Price");
+        uint256 newTicketID = tickets.mint(msg.sender);
+        emit TicketPurchase(
+            msg.sender,
+            tickets.balanceOf(msg.sender),
+            newTicketID
+        );
     }
 
     function randomNum() private view returns (uint256) {
@@ -55,16 +64,23 @@ contract Raffle is Ownable {
     }
 
     function distribute() external {
-        require(tickets.totalSupply() > 0, "No tickets distributed");
+        require(tickets.totalSupply() > 0, "No tickets sold");
         require(msg.sender == owner());
         address winner = pickWinner();
         require(tickets.balanceOf(winner) >= 1);
         open = false;
         uint256 totalAmount = address(this).balance;
-        (bool sentToBene, ) = beneficiary.call{value: address(this).balance / 2}("");
+        (bool sentToBene, ) = beneficiary.call{
+            value: address(this).balance / 2
+        }("");
         (bool sentToWinner, ) = winner.call{value: address(this).balance}("");
-        require(sentToBene, "Failed to send to Beneficiary");
-        require(sentToWinner, "Failed to send to Winner");
+        require(sentToBene, "Failed to distribut");
+        require(sentToWinner, "Failed to distribut");
         emit Distribute(beneficiary, winner, totalAmount);
+    }
+
+    function close() external {
+        require(msg.sender == admin);
+        open = false;
     }
 }
