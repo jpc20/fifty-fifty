@@ -110,7 +110,7 @@ const NewRaffle = ({
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
               inputProps={{
-                maxlength: 42,
+                maxLength: 42,
               }}
             />
           ) : (
@@ -122,7 +122,7 @@ const NewRaffle = ({
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
               inputProps={{
-                maxlength: 42,
+                maxLength: 42,
               }}
             />
           )}
@@ -134,7 +134,7 @@ const NewRaffle = ({
             onChange={(e) => setDescriptionValue(e.target.value)}
             value={description}
             inputProps={{
-              maxlength: 30,
+              maxLength: 30,
             }}
           />
         </Grid>
@@ -145,7 +145,7 @@ const NewRaffle = ({
             onChange={(e) => setSymbolValue(e.target.value)}
             value={symbol}
             inputProps={{
-              maxlength: 4,
+              maxLength: 4,
             }}
           />
         </Grid>
