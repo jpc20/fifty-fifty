@@ -68,7 +68,7 @@ const NewRaffle = ({
           setLoadingValue(false);
         });
       } catch (err) {
-        setFlashMessage(err.error.message);
+        setFlashMessage(err.error ? err.error.message : err.message);
         setFlashType("error");
         setFlashActive(true);
         setLoadingValue(false);
@@ -109,6 +109,9 @@ const NewRaffle = ({
               disabled={loading}
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
+              inputProps={{
+                maxLength: 42,
+              }}
             />
           ) : (
             <TextField
@@ -118,6 +121,9 @@ const NewRaffle = ({
               helperText="Please Enter a Valid Address"
               onChange={(e) => setBeneficiaryValue(e.target.value)}
               value={beneficiary}
+              inputProps={{
+                maxLength: 42,
+              }}
             />
           )}
         </Grid>
@@ -127,6 +133,9 @@ const NewRaffle = ({
             disabled={loading}
             onChange={(e) => setDescriptionValue(e.target.value)}
             value={description}
+            inputProps={{
+              maxLength: 30,
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -135,6 +144,9 @@ const NewRaffle = ({
             disabled={loading}
             onChange={(e) => setSymbolValue(e.target.value)}
             value={symbol}
+            inputProps={{
+              maxLength: 4,
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -153,7 +165,9 @@ const NewRaffle = ({
           <LoadingButton
             buttonText="Deploy Raffle"
             loading={loading}
-            disabled={!validAddress || description.length < 1 || symbol.length < 1}
+            disabled={
+              !validAddress || description.length < 1 || symbol.length < 1
+            }
             userConnected={userConnected}
           />
         </Grid>

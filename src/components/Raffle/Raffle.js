@@ -230,6 +230,12 @@ const Raffle = ({
             </Grid>
             <Grid item>
               <Typography>
+                Percent Chance to Win:{" "}
+                {100 * (userTicketCount / totalTicketCount) || 0}%
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography>
                 Beneficiary:{" "}
                 <a
                   href={"https://rinkeby.etherscan.io/address/" + beneficiary}

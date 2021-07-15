@@ -2,7 +2,16 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import NewRaffle from "./NewRaffle";
 import { makeStyles } from "@material-ui/core/styles";
-import { Tabs, Tab, AppBar, Box } from "@material-ui/core";
+import {
+  Tabs,
+  Tab,
+  AppBar,
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@material-ui/core";
 import RaffleGroup from "./RaffleGroup";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
       width: "auto",
       padding: "0",
     },
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
 }));
 
@@ -70,9 +83,23 @@ const RaffleTabs = ({
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
   const [filter, setFilter] = useState("open");
+  const [sortValue, setSortValue] = useState("date");
+  const [sortOpen, setSortOpen] = useState(false);
 
-  const handleChange = (event, newTab) => {
+  const handleTabChange = (event, newTab) => {
     setCurrentTabValue(newTab);
+  };
+
+  const handleSortChange = (event) => {
+    setSortValue(event.target.value);
+  };
+
+  const handleSortClose = () => {
+    setSortOpen(false);
+  };
+
+  const handleSortOpen = () => {
+    setSortOpen(true);
   };
 
   return (
@@ -80,7 +107,7 @@ const RaffleTabs = ({
       <AppBar position="static" className={classes.appbar}>
         <Tabs
           value={currentTab}
-          onChange={handleChange}
+          onChange={handleTabChange}
           aria-label="raffle-tabs"
           centered
         >
@@ -102,6 +129,25 @@ const RaffleTabs = ({
           <Tab label="Create New Raffle" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
+      {currentTab !== 3 && (
+        <FormControl className={classes.formControl}>
+          <InputLabel id="controlled-open-select-label">Sort By</InputLabel>
+          <Select
+            labelId="controlled-open-select-label"
+            id="controlled-open-select"
+            open={sortOpen}
+            onClose={handleSortClose}
+            onOpen={handleSortOpen}
+            value={sortValue}
+            onChange={handleSortChange}
+          >
+            <MenuItem value={"date"}>Date Created (New to Old)</MenuItem>
+            <MenuItem value={"dateReverse"}>Date Created (Old to New)</MenuItem>
+            <MenuItem value={"balance"}>Balance (High to Low)</MenuItem>
+            <MenuItem value={"balanceReverse"}>Balance (Low to High)</MenuItem>
+          </Select>
+        </FormControl>
+      )}
       <TabPanel currentTab={currentTab} index={0} className="tabpanel">
         <RaffleGroup
           filter={filter}
@@ -115,6 +161,7 @@ const RaffleTabs = ({
           setFlashMessage={setFlashMessage}
           setFlashType={setFlashType}
           raffleFactoryAddress={raffleFactoryAddress}
+          sortBy={sortValue}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1} className="tabpanel">
@@ -129,6 +176,7 @@ const RaffleTabs = ({
           setFlashActive={setFlashActive}
           setFlashMessage={setFlashMessage}
           setFlashType={setFlashType}
+          sortBy={sortValue}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={2} className="tabpanel">
@@ -143,6 +191,7 @@ const RaffleTabs = ({
           setFlashActive={setFlashActive}
           setFlashMessage={setFlashMessage}
           setFlashType={setFlashType}
+          sortBy={sortValue}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={3} className="tabpanel">

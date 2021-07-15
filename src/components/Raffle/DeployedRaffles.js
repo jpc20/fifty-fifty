@@ -62,10 +62,18 @@ const DeployedRaffles = ({
             ticketsAddress: ticketsAddress,
             isAdmin: adminAddress === userAddress,
             distributeTx: distributeTx,
+            index: null,
           };
         })
       );
-      setRafflesValue(raffleResp);
+      const orderedRaffles = rafflesAddresses.map((address, index) => {
+        var raffleObject = raffleResp.find(
+          (raffle) => raffle.raffleAddress === address
+        );
+        raffleObject.index = index;
+        return raffleObject;
+      });
+      setRafflesValue(orderedRaffles);
     } catch (error) {
       console.log(error);
     }
