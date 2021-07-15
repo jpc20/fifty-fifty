@@ -83,7 +83,7 @@ const RaffleTabs = ({
   const classes = useStyles();
   const [currentTab, setCurrentTabValue] = useState(0);
   const [filter, setFilter] = useState("open");
-  const [sortValue, setSortValue] = useState("balance");
+  const [sortValue, setSortValue] = useState("date");
   const [sortOpen, setSortOpen] = useState(false);
 
   const handleTabChange = (event, newTab) => {
@@ -129,21 +129,25 @@ const RaffleTabs = ({
           <Tab label="Create New Raffle" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="controlled-open-select-label">Sort By</InputLabel>
-        <Select
-          labelId="controlled-open-select-label"
-          id="controlled-open-select"
-          open={sortOpen}
-          onClose={handleSortClose}
-          onOpen={handleSortOpen}
-          value={sortValue}
-          onChange={handleSortChange}
-        >
-          <MenuItem value={"balance"}>Balance (High to Low)</MenuItem>
-          <MenuItem value={"balanceReverse"}>Balance (Low to High)</MenuItem>
-        </Select>
-      </FormControl>
+      {currentTab !== 3 && (
+        <FormControl className={classes.formControl}>
+          <InputLabel id="controlled-open-select-label">Sort By</InputLabel>
+          <Select
+            labelId="controlled-open-select-label"
+            id="controlled-open-select"
+            open={sortOpen}
+            onClose={handleSortClose}
+            onOpen={handleSortOpen}
+            value={sortValue}
+            onChange={handleSortChange}
+          >
+            <MenuItem value={"date"}>Date Created (New to Old)</MenuItem>
+            <MenuItem value={"dateReverse"}>Date Created (Old to New)</MenuItem>
+            <MenuItem value={"balance"}>Balance (High to Low)</MenuItem>
+            <MenuItem value={"balanceReverse"}>Balance (Low to High)</MenuItem>
+          </Select>
+        </FormControl>
+      )}
       <TabPanel currentTab={currentTab} index={0} className="tabpanel">
         <RaffleGroup
           filter={filter}

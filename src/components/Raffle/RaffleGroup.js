@@ -7,6 +7,8 @@ const FILTER_MAP = {
 };
 
 const SORT_MAP = {
+  date: (a, b) => b.index - a.index,
+  dateReverse: (a, b) => a.index - b.index,
   balance: (a, b) => b.balance - a.balance,
   balanceReverse: (a, b) => a.balance - b.balance,
 };
