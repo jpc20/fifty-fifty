@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require("@nomiclabs/hardhat-waffle");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -22,7 +23,7 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.3",
+        version: "0.8.6",
       },
       {
         version: "0.6.0",

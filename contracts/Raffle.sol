@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.3;
+pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Tickets.sol";
@@ -24,7 +24,7 @@ contract Raffle is Ownable {
         address payable _beneficiary,
         address _owner
     ) {
-        require(_ticketPrice > 0, "Price must be > 0");
+        require(_ticketPrice > 0);
         ticketPrice = _ticketPrice;
         beneficiary = _beneficiary;
         open = true;
@@ -63,7 +63,7 @@ contract Raffle is Ownable {
         return tickets.ownerOf(winningTicket);
     }
 
-    function distribute() external {
+    function distribute() public onlyOwner {
         require(tickets.totalSupply() > 0, "No tickets sold");
         require(msg.sender == owner());
         address winner = pickWinner();
@@ -74,13 +74,16 @@ contract Raffle is Ownable {
             value: address(this).balance / 2
         }("");
         (bool sentToWinner, ) = winner.call{value: address(this).balance}("");
-        require(sentToBene, "Failed to distribut");
-        require(sentToWinner, "Failed to distribut");
+        require(sentToBene && sentToWinner);
         emit Distribute(beneficiary, winner, totalAmount);
     }
 
     function close() external {
         require(msg.sender == admin);
-        open = false;
+        if (tickets.totalSupply() > 0) {
+            distribute();
+        } else {
+            open = false;
+        }
     }
 }
