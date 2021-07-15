@@ -6,6 +6,11 @@ const FILTER_MAP = {
   owned: (raffle) => raffle.owner,
 };
 
+const SORT_MAP = {
+  balance: (a, b) => b.balance - a.balance,
+  balanceReverse: (a, b) => a.balance - b.balance,
+};
+
 const RaffleGroup = ({
   raffles,
   filter,
@@ -18,36 +23,40 @@ const RaffleGroup = ({
   setFlashMessage,
   setFlashType,
   raffleFactoryAddress,
+  sortBy
 }) => {
-  const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
-    return (
-      <Raffle
-        raffleTicketPrice={raffle.ticketPrice}
-        beneficiary={raffle.beneficiary}
-        description={raffle.description}
-        userTicketCount={raffle.userTicketCount}
-        totalTicketCount={raffle.totalTicketCount}
-        balance={raffle.balance}
-        isOwner={raffle.owner}
-        isAdmin={raffle.isAdmin}
-        open={raffle.openStatus}
-        raffleAddress={raffle.raffleAddress}
-        ticketsAddress={raffle.ticketsAddress}
-        key={raffle.raffleAddress}
-        raffleFilter={filter}
-        getRaffles={getRaffles}
-        signer={signer}
-        provider={provider}
-        userAddress={userAddress}
-        userConnected={userConnected}
-        setFlashActive={setFlashActive}
-        setFlashMessage={setFlashMessage}
-        setFlashType={setFlashType}
-        raffleFactoryAddress={raffleFactoryAddress}
-        distributeTx={raffle.distributeTx}
-      />
-    );
-  });
+  const filtered = raffles
+    .sort(SORT_MAP[sortBy])
+    .filter(FILTER_MAP[filter])
+    .map((raffle) => {
+      return (
+        <Raffle
+          raffleTicketPrice={raffle.ticketPrice}
+          beneficiary={raffle.beneficiary}
+          description={raffle.description}
+          userTicketCount={raffle.userTicketCount}
+          totalTicketCount={raffle.totalTicketCount}
+          balance={raffle.balance}
+          isOwner={raffle.owner}
+          isAdmin={raffle.isAdmin}
+          open={raffle.openStatus}
+          raffleAddress={raffle.raffleAddress}
+          ticketsAddress={raffle.ticketsAddress}
+          key={raffle.raffleAddress}
+          raffleFilter={filter}
+          getRaffles={getRaffles}
+          signer={signer}
+          provider={provider}
+          userAddress={userAddress}
+          userConnected={userConnected}
+          setFlashActive={setFlashActive}
+          setFlashMessage={setFlashMessage}
+          setFlashType={setFlashType}
+          raffleFactoryAddress={raffleFactoryAddress}
+          distributeTx={raffle.distributeTx}
+        />
+      );
+    });
   return filtered;
 };
 
