@@ -17,7 +17,7 @@ const RaffleGroup = ({
   setFlashActive,
   setFlashMessage,
   setFlashType,
-  raffleFactoryAddress
+  raffleFactoryAddress,
 }) => {
   const filtered = raffles.filter(FILTER_MAP[filter]).map((raffle) => {
     return (
@@ -44,6 +44,7 @@ const RaffleGroup = ({
         setFlashMessage={setFlashMessage}
         setFlashType={setFlashType}
         raffleFactoryAddress={raffleFactoryAddress}
+        distributeTx={raffle.distributeTx}
       />
     );
   });

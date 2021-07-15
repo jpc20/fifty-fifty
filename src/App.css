@@ -21,11 +21,6 @@
   margin: 0.7rem;
 }
 
-.closed {
-  text-decoration-line: line-through;
-  text-decoration-style: solid;
-}
-
 .tabpanel {
   width: inherit;
 }

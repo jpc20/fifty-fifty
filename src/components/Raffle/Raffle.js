@@ -10,8 +10,6 @@ import LoadingButton from "../LoadingButton";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    // overflow: "hidden",
-    // padding: theme.spacing(0, 3),
     padding: ".5rem",
   },
   paper: {
@@ -47,6 +45,7 @@ const Raffle = ({
   setFlashMessage,
   setFlashType,
   raffleFactoryAddress,
+  distributeTx,
 }) => {
   const [purchaseLoading, setPurchaseLoadingValue] = useState(false);
   const [distributeLoading, setDistributeLoadingValue] = useState(false);
@@ -109,11 +108,11 @@ const Raffle = ({
   }
 
   const checkRaffleFilter = () => {
-    if (raffleFilter === "open" && open) {
-      return "block";
-    } else if (raffleFilter === "tickets") {
-      return "block";
-    } else if (raffleFilter === "owned" && isOwner) {
+    if (
+      (raffleFilter === "open" && open) ||
+      raffleFilter === "tickets" ||
+      (raffleFilter === "owned" && isOwner)
+    ) {
       return "block";
     } else {
       return "none";
@@ -147,12 +146,7 @@ const Raffle = ({
   return (
     <div className={classes.root} style={{ display: checkRaffleFilter() }}>
       <Paper className={classes.paper} elevation={3}>
-        <Grid
-          container
-          wrap="nowrap"
-          spacing={1}
-          className={!open ? "closed" : ""}
-        >
+        <Grid container wrap="nowrap" spacing={1}>
           {open && raffleFilter === "open" ? (
             <Grid item xs>
               <LoadingButton
@@ -173,7 +167,7 @@ const Raffle = ({
               </Typography>
             </Grid>
           )}
-          {isOwner && raffleFilter === "owned" ? (
+          {isOwner && raffleFilter === "owned" && (
             <Grid item xs>
               <LoadingButton
                 buttonText="Distribute Funds"
@@ -184,31 +178,46 @@ const Raffle = ({
                 disabled={totalTicketCount < 1 || !open}
               />
             </Grid>
-          ) : (
-            ""
           )}
           <Grid item xs={6}>
             <Typography variant="h6" noWrap>
               {description}
             </Typography>
-            <Typography variant="body1">Balance: {balance} ETH</Typography>
+            {open ? (
+              <Typography variant="body1">Balance: {balance} ETH</Typography>
+            ) : (
+              <Typography variant="body1">
+                <a
+                  href={
+                    "https://rinkeby.etherscan.io/tx/" +
+                    distributeTx[0].transactionHash
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Winner:{" "}
+                  {distributeTx.length > 0 &&
+                    distributeTx[0].args[1].slice(0, 6) +
+                      "..." +
+                      distributeTx[0].args[1].slice(37, -1)}
+                  {" Prize: Ξ"}
+                  {ethers.utils.formatEther(distributeTx[0].args[2]) / 2}
+                </a>
+              </Typography>
+            )}
           </Grid>
-          {!expanded ? (
-            <Grid item xs>
+          <Grid item xs>
+            {open ? (
               <IconButton onClick={() => setExpandedalue(!expanded)}>
                 {expanded ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
-            </Grid>
-          ) : (
-            <Grid item xs>
-              <IconButton onClick={() => setExpandedalue(!expanded)}>
-                {expanded ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
-            </Grid>
-          )}
+            ) : (
+              <Typography color="secondary">Closed</Typography>
+            )}
+          </Grid>
         </Grid>
 
-        {expanded && (
+        {expanded && open && (
           <Grid container direction="column">
             <Grid item>
               <Typography>Ticket Price: {raffleTicketPrice} ETH</Typography>
@@ -267,6 +276,7 @@ const Raffle = ({
             </Grid>
           </Grid>
         )}
+        {expanded && !open && <Typography>Winner: </Typography>}
       </Paper>
     </div>
   );

@@ -48,6 +48,7 @@ const DeployedRaffles = ({
           const userTickets = await tickets.balanceOf(userAddress);
           const ticketSupply = await tickets.totalSupply();
           const description = await tickets.name();
+          const distributeTx = await deployedRaffle.queryFilter("Distribute");
           return {
             ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
             beneficiary: raffleBeneficiary,
@@ -60,6 +61,7 @@ const DeployedRaffles = ({
             description: description,
             ticketsAddress: ticketsAddress,
             isAdmin: adminAddress === userAddress,
+            distributeTx: distributeTx,
           };
         })
       );
