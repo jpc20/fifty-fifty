@@ -68,7 +68,7 @@ const NewRaffle = ({
           setLoadingValue(false);
         });
       } catch (err) {
-        setFlashMessage(err.error.message);
+        setFlashMessage(err.error ? err.error.message : err.message);
         setFlashType("error");
         setFlashActive(true);
         setLoadingValue(false);
