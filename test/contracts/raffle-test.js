@@ -57,7 +57,7 @@ describe("Raffle", function () {
         accounts[1].address,
         accounts[0].address
       )
-    ).to.be.revertedWith("Price must be > 0");
+    ).to.be.reverted;
   });
 
   it("Requires the exact ticket price", async function () {
