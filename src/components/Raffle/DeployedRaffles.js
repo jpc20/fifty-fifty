@@ -25,6 +25,7 @@ const DeployedRaffles = ({
         RaffleFactory.abi,
         signer
       );
+      const adminAddress = await factory.admin();
       const rafflesAddresses = await factory.getDeployedRaffles();
       const raffleResp = await Promise.all(
         rafflesAddresses.map(async (raffleAddress) => {
@@ -47,6 +48,7 @@ const DeployedRaffles = ({
           const userTickets = await tickets.balanceOf(userAddress);
           const ticketSupply = await tickets.totalSupply();
           const description = await tickets.name();
+          const distributeTx = await deployedRaffle.queryFilter("Distribute");
           return {
             ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
             beneficiary: raffleBeneficiary,
@@ -58,6 +60,8 @@ const DeployedRaffles = ({
             raffleAddress: raffleAddress,
             description: description,
             ticketsAddress: ticketsAddress,
+            isAdmin: adminAddress === userAddress,
+            distributeTx: distributeTx,
           };
         })
       );

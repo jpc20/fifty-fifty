@@ -114,6 +114,7 @@ const RaffleTabs = ({
           setFlashActive={setFlashActive}
           setFlashMessage={setFlashMessage}
           setFlashType={setFlashType}
+          raffleFactoryAddress={raffleFactoryAddress}
         />
       </TabPanel>
       <TabPanel currentTab={currentTab} index={1} className="tabpanel">

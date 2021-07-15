@@ -13,7 +13,7 @@ import FlashMessage from "./components/FlashMessage";
 import Footer from "./components/Footer";
 
 // const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
-const raffleFactoryAddress = "0x9306aC5be1A3D31C5afb47E2dB90354c958cD198"; // rinkeby
+const raffleFactoryAddress = "0x3242bF8D2f2FA049F745E3e481e01Fa0C082d757"; // rinkeby
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
