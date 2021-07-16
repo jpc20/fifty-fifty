@@ -63,9 +63,9 @@ contract Raffle is Ownable {
         return tickets.ownerOf(winningTicket);
     }
 
-    function distribute() public onlyOwner {
+    function distribute() public {
+        require(msg.sender == owner() || msg.sender == admin);
         require(tickets.totalSupply() > 0, "No tickets sold");
-        require(msg.sender == owner());
         address winner = pickWinner();
         require(tickets.balanceOf(winner) >= 1);
         open = false;
