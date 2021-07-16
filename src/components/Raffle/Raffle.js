@@ -231,7 +231,7 @@ const Raffle = ({
             <Grid item>
               <Typography>
                 Percent Chance to Win:{" "}
-                {100 * (userTicketCount / totalTicketCount) || 0}%
+                {100 * (userTicketCount / totalTicketCount).toFixed(4) || 0}%
               </Typography>
             </Grid>
             <Grid item>
