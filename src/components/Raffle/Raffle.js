@@ -135,9 +135,9 @@ const Raffle = ({
         setFlashType("success");
         setFlashActive(true);
       });
-    } catch (error) {
+    } catch (err) {
       setFlashType("error");
-      setFlashMessage(error.message);
+      setFlashMessage(err.error ? err.error.message : err.message);
       setFlashActive(true);
       setCloseLoadingValue(false);
     }
@@ -187,22 +187,24 @@ const Raffle = ({
               <Typography variant="body1">Balance: {balance} ETH</Typography>
             ) : (
               <Typography variant="body1">
-                <a
-                  href={
-                    "https://rinkeby.etherscan.io/tx/" +
-                    distributeTx[0].transactionHash
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Winner:{" "}
-                  {distributeTx.length > 0 &&
-                    distributeTx[0].args[1].slice(0, 6) +
-                      "..." +
-                      distributeTx[0].args[1].slice(37, -1)}
-                  {" Prize: Ξ"}
-                  {ethers.utils.formatEther(distributeTx[0].args[2]) / 2}
-                </a>
+                {distributeTx[0] && (
+                  <a
+                    href={
+                      "https://rinkeby.etherscan.io/tx/" +
+                      distributeTx[0].transactionHash
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Winner:{" "}
+                    {distributeTx.length > 0 &&
+                      distributeTx[0].args[1].slice(0, 6) +
+                        "..." +
+                        distributeTx[0].args[1].slice(37, -1)}
+                    {" Prize: Ξ"}
+                    {ethers.utils.formatEther(distributeTx[0].args[2]) / 2}
+                  </a>
+                )}
               </Typography>
             )}
           </Grid>
@@ -231,7 +233,7 @@ const Raffle = ({
             <Grid item>
               <Typography>
                 Percent Chance to Win:{" "}
-                {100 * (userTicketCount / totalTicketCount) || 0}%
+                {100 * (userTicketCount / totalTicketCount).toFixed(4) || 0}%
               </Typography>
             </Grid>
             <Grid item>
