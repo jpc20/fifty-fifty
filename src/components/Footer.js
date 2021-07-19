@@ -1,6 +1,6 @@
 import { AppBar, Toolbar } from "@material-ui/core";
 import { GitHub, LinkedIn, Twitter } from "@material-ui/icons";
-import { Typography } from "@material-ui/core";
+import { Typography, Link } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +21,14 @@ const Footer = () => {
       <AppBar position="fixed" className={classes.appBar} color="primary">
         <Toolbar>
           <Typography variant="subtitle1" gutterBottom>
-            Built by @jpc20
+            <Link
+              href="https://jackcullen.xyz/"
+              target="_blank"
+              rel="noopener"
+              color="inherit"
+            >
+              Built by @jpc20
+            </Link>
           </Typography>
           <GitHub
             onClick={(event) =>
