@@ -1,31 +1,31 @@
-import "./App.css";
-import { useState, useEffect, useCallback } from "react";
-import { ethers } from "ethers";
-import { Divider, Typography, CssBaseline } from "@material-ui/core";
+import './App.css';
+import { useState, useEffect, useCallback } from 'react';
+import { ethers } from 'ethers';
+import { Divider, Typography, CssBaseline } from '@material-ui/core';
 import {
   makeStyles,
   createMuiTheme,
   ThemeProvider,
-} from "@material-ui/core/styles";
-import DeployedRaffles from "./components/Raffle/DeployedRaffles";
-import LoadingButton from "./components/LoadingButton";
-import FlashMessage from "./components/FlashMessage";
-import Footer from "./components/Footer";
+} from '@material-ui/core/styles';
+import DeployedRaffles from './components/Raffle/DeployedRaffles';
+import LoadingButton from './components/LoadingButton';
+import FlashMessage from './components/FlashMessage';
+import Footer from './components/Footer';
 
-// const raffleFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // local
-const raffleFactoryAddress = "0x455b30b93E938FaBe9a32816814456234f64e730"; // rinkeby
+// const raffleFactoryAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // local
+const raffleFactoryAddress = '0x98bb0c2368d43c8F8AAAC33184F2fD55ddF20D4f'; // goerli
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    textAlign: "center",
-    justifyContent: "center",
-    alignItems: "center",
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   paper: {
     padding: theme.spacing(1),
-    textAlign: "center",
+    textAlign: 'center',
     color: theme.palette.text.secondary,
-    whiteSpace: "nowrap",
+    whiteSpace: 'nowrap',
     marginBottom: theme.spacing(1),
   },
   divider: {
@@ -35,42 +35,42 @@ const useStyles = makeStyles((theme) => ({
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: "light",
+    type: 'light',
     primary: {
-      main: "#612ba8",
+      main: '#612ba8',
     },
     secondary: {
-      main: "#f44336",
+      main: '#f44336',
     },
   },
 });
 
 function App() {
-  const [signer, setSigner] = useState("");
-  const [provider, setProvider] = useState("");
-  const [userAddress, setUserAddress] = useState("");
-  const [network, setNetwork] = useState("");
+  const [signer, setSigner] = useState('');
+  const [provider, setProvider] = useState('');
+  const [userAddress, setUserAddress] = useState('');
+  const [network, setNetwork] = useState('');
   const [userConnected, setUserConnected] = useState(false);
   const [apiConnected, setApiConnected] = useState(false);
   const [accountLoading, setAccountLoading] = useState(false);
   const [flashActive, setFlashActive] = useState(false);
-  const [flashMessage, setFlashMessage] = useState("");
-  const [flashType, setFlashType] = useState("");
+  const [flashMessage, setFlashMessage] = useState('');
+  const [flashType, setFlashType] = useState('');
   const classes = useStyles();
 
   async function requestAccount() {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
   }
 
   const checkNetwork = async () => {
     const networks = {
-      "0x1": "mainnet",
-      "0x2a": "koval",
-      "0x5": "goerli",
-      "0x3": "ropsten",
-      "0x4": "rinkeby",
+      '0x1': 'mainnet',
+      '0x2a': 'koval',
+      '0x5': 'goerli',
+      '0x3': 'ropsten',
+      '0x4': 'rinkeby',
     };
-    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
     return networks[chainId];
   };
 
@@ -89,7 +89,7 @@ function App() {
 
   const connectApi = useCallback(async () => {
     try {
-      const providerResp = new ethers.providers.InfuraProvider("rinkeby");
+      const providerResp = new ethers.providers.InfuraProvider('rinkeby');
       const wallet = new ethers.Wallet(process.env.REACT_APP_RINKEBY_KEY);
       const signerResp = new ethers.VoidSigner(wallet.address, providerResp);
       setUserAddress(wallet.address);
@@ -103,10 +103,7 @@ function App() {
   }, []);
 
   const accountDetails = () => {
-    window.open(
-      `https://rinkeby.etherscan.io/address/${userAddress}`,
-      "_blank"
-    );
+    window.open(`https://goerli.etherscan.io/address/${userAddress}`, '_blank');
   };
 
   const isMetaMaskConnected = useCallback(async () => {
@@ -133,15 +130,15 @@ function App() {
   }, []);
 
   if (window.ethereum) {
-    window.ethereum.on("chainChanged", function (accounts) {
+    window.ethereum.on('chainChanged', function (accounts) {
       window.location.reload();
     });
 
-    window.ethereum.on("disconnect", function (accounts) {
+    window.ethereum.on('disconnect', function (accounts) {
       window.location.reload();
     });
 
-    window.ethereum.on("accountsChanged", function (accounts) {
+    window.ethereum.on('accountsChanged', function (accounts) {
       window.location.reload();
     });
   }
@@ -161,8 +158,8 @@ function App() {
             <LoadingButton
               buttonText={
                 userConnected
-                  ? userAddress.slice(0, 6) + "..." + userAddress.slice(37, -1)
-                  : "Connect Account"
+                  ? userAddress.slice(0, 6) + '...' + userAddress.slice(37, -1)
+                  : 'Connect Account'
               }
               onClickHandler={userConnected ? accountDetails : connectAccount}
               loading={accountLoading}
@@ -174,12 +171,12 @@ function App() {
         <Typography variant="h2">50/50 Raffle</Typography>
         <Typography
           variant="caption"
-          color={network === "rinkeby" ? "inherit" : "secondary"}
+          color={network === 'goerli' ? 'inherit' : 'secondary'}
           gutterBottom
         >
-          {network === "rinkeby"
-            ? "[Connected to Rinkbey Testnet]"
-            : "[Please connect to the Rinkeby Testnet]"}
+          {network === 'goerli'
+            ? '[Connected to Goerli Testnet]'
+            : '[Please connect to the Goerli Testnet]'}
         </Typography>
         <Divider className={classes.divider} />
         <DeployedRaffles

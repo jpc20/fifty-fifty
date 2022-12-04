@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
-require("@nomiclabs/hardhat-waffle");
-const dotenv = require("dotenv");
+require('@nomiclabs/hardhat-waffle');
+const dotenv = require('dotenv');
 dotenv.config();
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async () => {
+task('accounts', 'Prints the list of accounts', async () => {
   const accounts = await ethers.getSigners();
 
   for (const account of accounts) {
@@ -23,15 +23,15 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.6",
+        version: '0.8.6',
       },
       {
-        version: "0.6.0",
+        version: '0.6.0',
       },
     ],
   },
   paths: {
-    artifacts: "./src/artifacts",
+    artifacts: './src/artifacts',
   },
   networks: {
     hardhat: {
@@ -44,6 +44,10 @@ module.exports = {
     rinkeby: {
       url: process.env.RINKEBY_URL,
       accounts: [process.env.REACT_APP_RINKEBY_KEY],
+    },
+    goerli: {
+      url: process.env.GOERLI_URL,
+      accounts: [process.env.GOERLI_KEY],
     },
   },
 };

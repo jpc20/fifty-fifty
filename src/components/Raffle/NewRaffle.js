@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import RaffleFactory from "../../artifacts/contracts/RaffleFactory.sol/RaffleFactory.json";
-import { Grid, TextField } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import NumberFormat from "react-number-format";
-import LoadingButton from "../LoadingButton";
+import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
+import RaffleFactory from '../../artifacts/contracts/RaffleFactory.sol/RaffleFactory.json';
+import { Grid, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import NumberFormat from 'react-number-format';
+import LoadingButton from '../LoadingButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    "& .MuiTextField-root": {
+    '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: "25ch",
+      width: '25ch',
       flexGrow: 1,
-      textAlign: "center",
-      justifyContent: "center",
+      textAlign: 'center',
+      justifyContent: 'center',
     },
   },
 }));
@@ -32,9 +32,9 @@ const NewRaffle = ({
   setFlashType,
 }) => {
   const [ticketPrice, setTicketPriceValue] = useState(0.001);
-  const [beneficiary, setBeneficiaryValue] = useState("");
-  const [description, setDescriptionValue] = useState("");
-  const [symbol, setSymbolValue] = useState("");
+  const [beneficiary, setBeneficiaryValue] = useState('');
+  const [description, setDescriptionValue] = useState('');
+  const [symbol, setSymbolValue] = useState('');
   const [loading, setLoadingValue] = useState(false);
   const [validAddress, setValidAddressValue] = useState(true);
   const classes = useStyles();
@@ -43,7 +43,7 @@ const NewRaffle = ({
     setLoadingValue(true);
     event.preventDefault();
     if (!ticketPrice || !beneficiary) return;
-    if (typeof window.ethereum !== "undefined") {
+    if (typeof window.ethereum !== 'undefined') {
       const factory = new ethers.Contract(
         raffleFactoryAddress,
         RaffleFactory.abi,
@@ -60,16 +60,16 @@ const NewRaffle = ({
         provider.once(deployTxn.hash, (transaction) => {
           setLoadingValue(false);
           setCurrentTabValue(2);
-          setFilter("owned");
+          setFilter('owned');
           getRaffles();
-          setFlashMessage("Raffle deployed successfully!");
-          setFlashType("success");
+          setFlashMessage('Raffle deployed successfully!');
+          setFlashType('success');
           setFlashActive(true);
           setLoadingValue(false);
         });
       } catch (err) {
         setFlashMessage(err.error ? err.error.message : err.message);
-        setFlashType("error");
+        setFlashType('error');
         setFlashActive(true);
         setLoadingValue(false);
       }
@@ -154,7 +154,7 @@ const NewRaffle = ({
             value={ticketPrice}
             customInput={TextField}
             label="Ticket Price(ETH)"
-            prefix={"Ξ"}
+            prefix={'Ξ'}
             decimalScale={10}
             type="text"
             disabled={loading}

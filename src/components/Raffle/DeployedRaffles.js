@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
-import { ethers } from "ethers";
-import RaffleFactory from "../../artifacts/contracts/RaffleFactory.sol/RaffleFactory.json";
-import RaffleTabs from "./RaffleTabs";
-import RaffleContract from "../../artifacts/contracts/Raffle.sol/Raffle.json";
-import Tickets from "../../artifacts/contracts/Tickets.sol/Tickets.json";
+import { useState, useEffect, useCallback } from 'react';
+import { ethers } from 'ethers';
+import RaffleFactory from '../../artifacts/contracts/RaffleFactory.sol/RaffleFactory.json';
+import RaffleTabs from './RaffleTabs';
+import RaffleContract from '../../artifacts/contracts/Raffle.sol/Raffle.json';
+import Tickets from '../../artifacts/contracts/Tickets.sol/Tickets.json';
 
 const DeployedRaffles = ({
   raffleFactoryAddress,
@@ -48,7 +48,7 @@ const DeployedRaffles = ({
           const userTickets = await tickets.balanceOf(userAddress);
           const ticketSupply = await tickets.totalSupply();
           const description = await tickets.name();
-          const distributeTx = await deployedRaffle.queryFilter("Distribute");
+          const distributeTx = await deployedRaffle.queryFilter('Distribute');
           return {
             ticketPrice: ethers.utils.formatEther(raffleTicketPrice.toString()),
             beneficiary: raffleBeneficiary,
